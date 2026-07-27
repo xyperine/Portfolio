@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Azeret+Mono:ital,wght@0,100..900;1,100..900&display=swap');
+
+
+html {
+	padding: 2rem;
+
+	background-color: hsl(0, 0%, 97%);
+}
+
+h1 {
+	font-family: "Azeret Mono";
+
+	color: hsl(0, 0%, 10%)
+}
+
+h3 {
+	font-family: "Azeret Mono";
+
+	color: hsl(0, 0%, 10%)
+}
+
+p {
+	font-family: "Azeret Mono";
+	font-weight: 300;
+}
+
+
+#subtitle {
+	font-family: "Azeret Mono";
+	font-weight: 500;
+
+	color: hsl(0, 0%, 45%);
+}
+
+.container {
+	/*border: 0.1rem solid blue;*/
+	
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+	align-content: center;
+	justify-content: center;
+	justify-self: center;
+}
+
+.item {
+	/*border: 0.1rem solid red;*/
+	
+	padding: 1rem;
+	margin: 0.2rem;
+	text-align: left;
+	flex: 0 0 calc(25%)
+}
+
+.cover-image {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: calc(100%);
+	border-radius: 1rem;
+}
+
+.footer-navigation {
+	display: flex;
+	gap: 1rem;
+	justify-content: center;
+}
+
+.footer-navigation a {
+	display: flex;
+	border-radius: 0.5rem;
+	padding: 0.6rem;
+
+	background-color: hsl(340, 80%, 50%);
+	color: hsl(0, 0%, 97%);
+	text-decoration: none;
+}
