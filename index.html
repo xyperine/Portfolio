@@ -5,8 +5,18 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Artur Mordvinov | Portfolio</title>
 	<link rel="stylesheet" type="text/css" href="styles.css">
+	<script type="importmap">
+		{
+		"imports": {
+			"three": "https://cdn.jsdelivr.net/npm/three@v0.185.1/build/three.module.js",
+			"three/": "https://cdn.jsdelivr.net/npm/three@v0.185.1/",
+			"three/addons/": "https://cdn.jsdelivr.net/npm/three@v0.185.1/examples/jsm/"
+		}
+	}
+	</script>
 </head>
 <body>
+	<script type="module" src="main.js"></script>
 	<header>
 		<nav>
 			<section>
@@ -14,6 +24,7 @@
 		</nav>
 	</header>
 	<main>
+		<canvas id="terrain"></canvas>
 		<hgroup>
 			<h1>Artur Mordvinov</h1>
 			<p id="subtitle">Unity Developer</p>
@@ -46,7 +57,7 @@
 			</div>
 		</section>
 	</main>
-	<hr/>
+	<br/>
 	<footer>
 		<nav>
 			<div class="footer-navigation">
