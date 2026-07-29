@@ -79,11 +79,10 @@ p {
 .footer-navigation {
 	display: flex;
 	gap: 0.5rem;
-	justify-content: center;
+	justify-content: right;
 }
 
 .footer-navigation a {
-	border-radius: 0.5rem;
 	padding: 0.6rem;
 
 	color: var(--button-normal-color);
@@ -97,8 +96,14 @@ p {
 	color: var(--accent-color);
 }
 
+.footer-navigation p:last-of-type a {
+	padding-right: 0rem;
+}
+
 footer {
-	justify-items: center;
+	display: flex;
+	justify-content: space-between;
+}
 
 #terrain {
 	position: absolute;
