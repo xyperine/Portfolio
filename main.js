@@ -1,18 +1,19 @@
 import * as THREE from 'three';
 import Renderer from 'three/src/renderers/common/Renderer.js';
-import { SimplexNoise } from 'three/addons/math/SimplexNoise.js';
 
 const VECTOR3_RIGHT = new THREE.Vector3(1, 0, 0);
 const VECTOR3_UP = new THREE.Vector3(0, 1, 0);
 const VECTOR3_FORWARD = new THREE.Vector3(0, 0, 1);
 
-const mainElement = document.querySelector("main");
-
 // Scene
-const backgroundColor = new THREE.Color().setHSL(0, 0, 0.93);
+const backgroundColor = new THREE.Color(
+    getComputedStyle(document.documentElement)
+    .getPropertyValue("--background-color")
+    .trim()
+    );
 const scene = new THREE.Scene();
 scene.background = backgroundColor;
-const fog = new THREE.Fog(backgroundColor, 10, 100);
+const fog = new THREE.Fog(backgroundColor, 30, 180);
 scene.fog = fog;
 
 // Camera
@@ -35,7 +36,7 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(window.innerWidth, window.innerHeight);
 
 // Terrain
-const terrainSize = new THREE.Vector2(200, 200);
+const terrainSize = new THREE.Vector2(600, 400);
 const terrainGeometry = new THREE.PlaneGeometry(
     terrainSize.x, terrainSize.y, terrainSize.x, terrainSize.y);
 const vertices = terrainGeometry.attributes.position;
@@ -47,39 +48,33 @@ for (let i = 0; i < vertices.count; i++) {
 }
 terrainGeometry.computeVertexNormals();
 
+
 // Points
-const pointsColor = new THREE.Color().setHSL(0, 0, 0.05);
-const pointsMaterial = new THREE.PointsMaterial( {
-    color: pointsColor,
-    size: 0.1
+const pointsMaterial = new THREE.ShaderMaterial({
+    uniforms: THREE.UniformsUtils.merge([
+        THREE.UniformsLib.fog,
+        {
+            time: {value: 0},
+            pointSize: {value: 0.2}
+        }
+    ]),
+
+    vertexShader: document.getElementById("vertexShader").textContent,
+    fragmentShader: document.getElementById("fragmentShader").textContent,
+    fog: true
 });
 const points = new THREE.Points(terrainGeometry, pointsMaterial);
-points.position.set(0, 0, 0);
 points.rotation.set(
     -90 * THREE.MathUtils.DEG2RAD, 
     0 * THREE.MathUtils.DEG2RAD, 
     0 * THREE.MathUtils.DEG2RAD
 );
-points.rotateOnWorldAxis(VECTOR3_UP, 0);
 scene.add(points);
 
-const originalVertexPositions = [];
-{
-    let vertex = new THREE.Vector3();
-    for (let i = 0; i < vertices.count; i++) {
-        vertex.fromBufferAttribute(vertices, i);
-        points.localToWorld(vertex);
-        originalVertexPositions.push(vertex.clone());
-    }
-}
-
-console.log(originalVertexPositions[0].z);
-
 const timer = new THREE.Timer();
-const simplex = new SimplexNoise();
 
 function animate(deltaTime) {
-    const speed = 0.4;
+    const speed = 1;
     let movement = new THREE.Vector3(0, 0, -speed);
     movement.applyAxisAngle(VECTOR3_UP, cameraRotation.y);
     camera.position.add(movement);
@@ -92,51 +87,17 @@ function animate(deltaTime) {
     timer.update();
     const time = timer.getElapsed();
 
-    console.time("terrain");
-    
-    const positions = vertices.array;
-    for (let i = 0; i < vertices.count; i++) {
-        let vertex = originalVertexPositions[i];
-        const height = getHeight(
-            vertex.x + points.position.x, 
-            vertex.z + points.position.z, 
-            time
-        );
+    pointsMaterial.uniforms.time.value = time;
 
-        positions[i * 3 + 2] = height;
-    }
-    vertices.needsUpdate = true;
-
-    console.timeEnd("terrain");
-
-    const cameraY = 20;//getHeight(camera.position.x, camera.position.z, time) + 20;
+    const cameraY = 30;
     camera.position.setY(cameraY);
 
     renderer.render(scene, camera);
 }
 
-function getHeight(x, y, time) {
-    const octaves = 8;
-    const lacunarity = 2;
-    const persistency = 0.4;
-    
-    let height = 0;
-    let frequency = 0.02;
-    let amplitude = 10;
-    for (let i = 0; i < octaves; i++) {
-        height += simplex.noise(
-            x * frequency, 
-            y * frequency
-        ) * amplitude;
-        
-        frequency *= lacunarity;
-        amplitude *= persistency;
-    }
-
-    return height;
-}
-
 renderer.setAnimationLoop(animate);
+
+const mainElement = document.querySelector("main");
 
 function resize() {
     const width = mainElement.clientWidth;
