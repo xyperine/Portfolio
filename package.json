@@ -1,0 +1,28 @@
+{
+  "name": "site-test",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xyperine/site-test.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xyperine/site-test/issues"
+  },
+  "homepage": "https://github.com/xyperine/site-test#readme",
+  "description": "",
+  "devDependencies": {
+    "@eslint/css": "^1.4.0",
+    "@eslint/js": "^10.0.1",
+    "@eslint/markdown": "^8.0.3",
+    "eslint": "^10.8.0",
+    "globals": "^17.8.0"
+  }
+}
