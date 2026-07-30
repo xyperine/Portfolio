@@ -43,10 +43,10 @@ const vertices = terrainGeometry.attributes.position;
 for (let i = 0; i < vertices.count; i++) {
     const x = vertices.getX(i);
     const y = vertices.getY(i);
-    vertices.setX(i, x + THREE.MathUtils.randFloat(-0.1, 0.1));
-    vertices.setY(i, y + THREE.MathUtils.randFloat(-0.1, 0.1));
+    const offsetMax = 0.1;
+    vertices.setX(i, x + THREE.MathUtils.randFloat(-offsetMax, offsetMax));
+    vertices.setY(i, y + THREE.MathUtils.randFloat(-offsetMax, offsetMax));
 }
-terrainGeometry.computeVertexNormals();
 
 
 // Points
