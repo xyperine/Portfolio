@@ -12,13 +12,13 @@ const mainElement = document.querySelector("main");
 const backgroundColor = new THREE.Color().setHSL(0, 0, 0.93);
 const scene = new THREE.Scene();
 scene.background = backgroundColor;
-const fog = new THREE.Fog(backgroundColor, 10, 120);
+const fog = new THREE.Fog(backgroundColor, 10, 100);
 scene.fog = fog;
 
 // Camera
 const cameraRotation = new THREE.Vector3(
     -15 * THREE.MathUtils.DEG2RAD, 
-    15 * THREE.MathUtils.DEG2RAD, 
+    0 * THREE.MathUtils.DEG2RAD, 
     0 * THREE.MathUtils.DEG2RAD
 );
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -60,21 +60,54 @@ points.rotation.set(
     0 * THREE.MathUtils.DEG2RAD, 
     0 * THREE.MathUtils.DEG2RAD
 );
+points.rotateOnWorldAxis(VECTOR3_UP, 0);
 scene.add(points);
+
+const originalVertexPositions = [];
+{
+    let vertex = new THREE.Vector3();
+    for (let i = 0; i < vertices.count; i++) {
+        vertex.fromBufferAttribute(vertices, i);
+        points.localToWorld(vertex);
+        originalVertexPositions.push(vertex.clone());
+    }
+}
+
+console.log(originalVertexPositions[0].z);
 
 const timer = new THREE.Timer();
 const simplex = new SimplexNoise();
 
 function animate(deltaTime) {
+    const speed = 0.4;
+    let movement = new THREE.Vector3(0, 0, -speed);
+    movement.applyAxisAngle(VECTOR3_UP, cameraRotation.y);
+    camera.position.add(movement);
+
+    const threshold = terrainSize.y * 0.1;
+    if (points.position.z - camera.position.z > threshold) {
+        points.position.z -= threshold * 2;
+    }
+
     timer.update();
     const time = timer.getElapsed();
+
+    console.time("terrain");
+    
+    const positions = vertices.array;
     for (let i = 0; i < vertices.count; i++) {
-        const x = vertices.getX(i);
-        const y = vertices.getY(i);
-        const height = getHeight(x, y, time);
-        vertices.setZ(i, height);
+        let vertex = originalVertexPositions[i];
+        const height = getHeight(
+            vertex.x + points.position.x, 
+            vertex.z + points.position.z, 
+            time
+        );
+
+        positions[i * 3 + 2] = height;
     }
     vertices.needsUpdate = true;
+
+    console.timeEnd("terrain");
 
     const cameraY = 20;//getHeight(camera.position.x, camera.position.z, time) + 20;
     camera.position.setY(cameraY);
@@ -83,23 +116,17 @@ function animate(deltaTime) {
 }
 
 function getHeight(x, y, time) {
-    const speed = 40;
-    const noiseScale = 0.02;
-    const noiseAmplitude = 10;
     const octaves = 8;
     const lacunarity = 2;
     const persistency = 0.4;
-    const offset = new THREE.Vector2(
-        time * speed * Math.sin(cameraRotation.x), 
-        time * speed
-    );
+    
     let height = 0;
-    let frequency = noiseScale;
-    let amplitude = noiseAmplitude;
+    let frequency = 0.02;
+    let amplitude = 10;
     for (let i = 0; i < octaves; i++) {
         height += simplex.noise(
-            (x + offset.x) * frequency, 
-            (y + offset.y) * frequency
+            x * frequency, 
+            y * frequency
         ) * amplitude;
         
         frequency *= lacunarity;
