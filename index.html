@@ -17,14 +17,15 @@
 </head>
 <body>
 	<header>
-		<nav>
-			<section>
-				<hgroup class="tagged-title">
-					<h1>Artur Mordvinov</h1>
-					<p id="subtitle" class="meta-tag">Unity Developer</p>
-				</hgroup>
-			</section>
-		</nav>
+		<hgroup class="tagged-title">
+			<h1>Artur Mordvinov</h1>
+			<p id="subtitle" class="meta-tag">Unity Developer</p>
+		</hgroup>
+		<div id="switches">
+			<button id="dark-mode-switch" class="switch">Light</button>
+			<p>/</p>
+			<button id="mode-switch" class="switch">Simple</button>
+		</div>
 	</header>
 	<main>
 		<canvas id="terrain"></canvas>
@@ -205,9 +206,11 @@
 <script id="fragmentShader" type="x-shader/x-fragment">
 	#include <fog_pars_fragment>
 
+	uniform vec3 terrainColor;
+
 
 	void main() {
-		gl_FragColor = vec4(vec3(0.4), 1.0);
+		gl_FragColor = vec4(terrainColor, 1.0);
 
 		#include <fog_fragment>
 	}

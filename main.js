@@ -4,7 +4,14 @@ const VECTOR3_RIGHT = new THREE.Vector3(1, 0, 0);
 const VECTOR3_UP = new THREE.Vector3(0, 1, 0);
 const VECTOR3_FORWARD = new THREE.Vector3(0, 0, 1);
 
+const settings = {
+    darkMode: false,
+    interactive: false,
+}
+
 const mainElement = document.querySelector("main");
+const darkModeSwitch = document.querySelector("#dark-mode-switch");
+const modeSwitch = document.querySelector("#mode-switch");
 const terrainSize = new THREE.Vector2(600, 400);
 
 let scene = new THREE.Scene();
@@ -14,16 +21,51 @@ let points = new THREE.Points();
 let pointsMaterial = new THREE.ShaderMaterial();
 
 
+darkModeSwitch.addEventListener("click", () => {
+    settings.darkMode = !settings.darkMode;
+
+    document.documentElement.classList.toggle("dark", settings.darkMode);
+
+    darkModeSwitch.textContent = settings.darkMode 
+        ? "Dark"
+        : "Light";
+
+    onDarkModeChanged(settings.darkMode);
+})
+
+function onDarkModeChanged(newValue) {
+    const backgroundColor = getCssColor("--background-color");
+    scene.background = backgroundColor;
+    const fog = new THREE.Fog(backgroundColor, 30, 180);
+    scene.fog = fog;
+
+    pointsMaterial.uniforms.terrainColor.value.set(getCssColor("--terrain-color"));
+}
+
+modeSwitch.addEventListener("click", () => {
+    settings.interactive = !settings.interactive;
+
+    modeSwitch.textContent = settings.interactive
+        ? "Simple"
+        : "Interactive";
+})
+
+
+function getCssColor(name) {
+    return new THREE.Color(
+        getComputedStyle(document.documentElement)
+        .getPropertyValue(name)
+        .trim()
+    );
+}
+
+
 init();
 
 
 function init() {
     // Scene
-    const backgroundColor = new THREE.Color(
-        getComputedStyle(document.documentElement)
-        .getPropertyValue("--background-color")
-        .trim()
-        );
+    const backgroundColor = getCssColor("--background-color");
     scene = new THREE.Scene();
     scene.background = backgroundColor;
     const fog = new THREE.Fog(backgroundColor, 30, 180);
@@ -67,7 +109,8 @@ function init() {
             THREE.UniformsLib.fog,
             {
                 time: {value: 0},
-                pointSize: {value: 0.2}
+                pointSize: {value: 0.2},
+                terrainColor: {value: getCssColor("--terrain-color")}
             }
         ]),
     

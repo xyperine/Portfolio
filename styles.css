@@ -16,8 +16,9 @@
 	--normal-text-color: hsl(0, 0%, 10%);
 	--accent-color:  hsl(340, 100%, 50%);
 	--button-normal-color: grey;
+	--terrain-color: hsl(0, 0%, 40%);
 
-	--font-family: "IBM Plex Sans", monospace;
+	--font-family: "Azeret Mono", monospace;
 	--meta-tag-font-family: "IBM Plex Mono", monospace;
 }
 
@@ -29,8 +30,16 @@ html {
 	padding: 2rem;
 	height: 100%;
 	box-sizing: border-box;
-
 	background-color: var(--background-color);
+}
+
+html.dark {
+	--background-color: hsl(0, 0%, 3%);
+	--heading-text-color: hsl(0, 0%, 90%);
+	--normal-text-color: hsl(0, 0%, 90%);
+	--accent-color:  hsl(340, 100%, 50%);
+	--button-normal-color: grey;
+	--terrain-color: hsl(0, 0%, 60%);
 }
 
 body {
@@ -45,6 +54,9 @@ body {
 
 header {
 	flex-shrink: 0;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
 
 main {
@@ -92,6 +104,25 @@ p {
 	font-family: var(--font-family);
 	font-weight: 300;
 	color: var(--normal-text-color);
+}
+
+.switch {
+	background: none;
+	border: none;
+	cursor: pointer;
+
+	font-family: var(--font-family);
+	font-weight: 600;
+	font-size: 1rem;
+	text-transform: uppercase;
+	padding: 0.6rem;
+	
+	color: var(--button-normal-color);
+	transition: color 0.3s;
+}
+
+.switch:hover {
+	color: var(--accent-color);
 }
 
 .projects-container {
@@ -170,7 +201,7 @@ p {
 }
 
 .meta-tag {
-	color: hsl(0, 0%, 45%);
+	color: hsl(0, 0%, 50%);
 	text-transform: uppercase;
 	font-family: var(--meta-tag-font-family);
 	font-weight: 400;
@@ -185,6 +216,12 @@ p {
 #subtitle {
 	font-weight: 500;
 }
+
+#switches {
+	display: flex;
+	gap: 0.5rem;
+}
+
 
 #terrain {
 	position: absolute;
