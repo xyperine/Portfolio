@@ -94,14 +94,6 @@ function init() {
     // Terrain
     const terrainGeometry = new THREE.PlaneGeometry(
         terrainSize.x, terrainSize.y, terrainSize.x, terrainSize.y);
-    const vertices = terrainGeometry.attributes.position;
-    for (let i = 0; i < vertices.count; i++) {
-        const x = vertices.getX(i);
-        const y = vertices.getY(i);
-        const offsetMax = 0.1;
-        vertices.setX(i, x + THREE.MathUtils.randFloat(-offsetMax, offsetMax));
-        vertices.setY(i, y + THREE.MathUtils.randFloat(-offsetMax, offsetMax));
-    }
 
     // Points
     pointsMaterial = new THREE.ShaderMaterial({
@@ -133,7 +125,7 @@ function init() {
 
 function render(elapsedTime) {
     // Move the camera
-    const speed = 1;
+    const speed = 0.5;
     let movement = new THREE.Vector3(0, 0, -speed);
     movement.applyAxisAngle(VECTOR3_UP, camera.rotation.y);
     camera.position.add(movement);

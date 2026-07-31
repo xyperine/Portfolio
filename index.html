@@ -161,6 +161,14 @@
 	
 	// ---
 
+	// Returns values within [-1, 1] range.
+	float random(vec2 st)
+	{
+		return fract(sin(dot(st.xy,
+			vec2(12.9898,78.233))) * 43758.5453123)
+			* 2.0 - 1.0;
+	}
+
 
 	#include <fog_pars_vertex>
 	
@@ -189,7 +197,13 @@
 		vec4 worldPosition = modelMatrix * vec4(position, 1.0);
 		float height = getHeight(worldPosition.xz);
 
+		const float offsetMax = 0.2;
+		float xOffset = random(worldPosition.xz) * offsetMax;
+		float yOffset = random(worldPosition.zx) * offsetMax;
+
 		vec3 p = position;
+		p.x += xOffset;
+		p.y += yOffset;
 		p.z = height;
 
 		gl_Position =
