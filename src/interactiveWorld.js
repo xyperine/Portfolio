@@ -12,13 +12,14 @@ export class InteractiveWorld extends World {
         this.terrainSize = new THREE.Vector2(600, 400);
 
         this.lookRotation = new THREE.Vector3();
-        document.addEventListener("mousemove", event => {
+        this.onMouseMoved = event => {
             this.lookRotation.x += -event.movementY * 0.002;
             this.lookRotation.y += -event.movementX * 0.002;
             this.lookRotation.z = 0;
         
             this.lookRotation.x = THREE.MathUtils.clamp(this.lookRotation.x, -Math.PI * 0.5, Math.PI * 0.5);
-        })
+        }
+        document.addEventListener("mousemove", this.onMouseMoved);
 
         // Scene
         const backgroundColor = this.getCssColor("--background-color");
@@ -90,9 +91,10 @@ export class InteractiveWorld extends World {
         this.scene.add(this.points);
 
         this.mainElement = document.querySelector("main");
-        window.addEventListener("resize", () => {
+        this.onWindowResized = () => {
             this.resize(this.mainElement.clientWidth, this.mainElement.clientHeight);
-        });
+        };
+        window.addEventListener("resize", this.onWindowResized);
         this.resize(this.mainElement.clientWidth, this.mainElement.clientHeight);
     }
     
@@ -147,5 +149,28 @@ export class InteractiveWorld extends World {
         this.scene.fog = fog;
         
         this.pointsMaterial.uniforms.terrainColor.value.set(this.getCssColor("--terrain-color"));
+    }
+
+    dispose() {
+        this.scene.traverse(object => {
+            if (object.geometry) {
+                object.geometry.dispose();
+            }
+
+            if (object.material) {
+                if (Array.isArray(object.material)) {
+                    object.material.forEach(material => {
+                        material.dispose();
+                    });
+                } else {
+                    object.material.dispose();
+                }
+            }
+        });
+
+        this.renderer.dispose();
+
+        window.removeEventListener("resize", this.onWindowResized);
+        document.removeEventListener("mousemove", this.onMouseMoved);
     }
 }

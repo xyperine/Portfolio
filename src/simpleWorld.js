@@ -69,9 +69,10 @@ export class SimpleWorld extends World {
         this.scene.add(this.points);
 
         this.mainElement = document.querySelector("main");
-        window.addEventListener("resize", () => {
+        this.onWindowResized = () => {
             this.resize(this.mainElement.clientWidth, this.mainElement.clientHeight);
-        });
+        }
+        window.addEventListener("resize", this.onWindowResized);
         this.resize(this.mainElement.clientWidth, this.mainElement.clientHeight);
     }
 
@@ -101,5 +102,27 @@ export class SimpleWorld extends World {
         this.scene.fog = fog;
         
         this.pointsMaterial.uniforms.terrainColor.value.set(this.getCssColor("--terrain-color"));
+    }
+
+    dispose() {
+        this.scene.traverse(object => {
+            if (object.geometry) {
+                object.geometry.dispose();
+            }
+
+            if (object.material) {
+                if (Array.isArray(object.material)) {
+                    object.material.forEach(material => {
+                        material.dispose();
+                    });
+                } else {
+                    object.material.dispose();
+                }
+            }
+        });
+
+        this.renderer.dispose();
+
+        window.removeEventListener("resize", this.onWindowResized);
     }
 }

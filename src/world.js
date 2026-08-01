@@ -12,6 +12,7 @@ export class World {
     init() {}
     render(elapsedTime) {}
     updateColors() {}
+    dispose() {}
 
     resize(width, height) {
         this.renderer.setSize(width, height);
