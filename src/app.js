@@ -1,7 +1,6 @@
 import { InteractiveWorld } from "#src/interactiveWorld.js";
 import { SimpleWorld } from "#src/simpleWorld.js";
 
-
 export class App {
     constructor() {
         this.settings = {
@@ -47,7 +46,7 @@ export class App {
         if (this.world != null) {
             this.world.dispose();
         }
-        
+
         this.world = this.createWorld(this.settings.interactive);
     }
 

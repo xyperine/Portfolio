@@ -10,17 +10,7 @@ export class InteractiveWorld extends World {
     init() {
         this.input = new Input();
         this.terrainSize = new THREE.Vector2(600, 400);
-
-        this.lookRotation = new THREE.Vector3();
-        this.onMouseMoved = event => {
-            this.lookRotation.x += -event.movementY * 0.002;
-            this.lookRotation.y += -event.movementX * 0.002;
-            this.lookRotation.z = 0;
         
-            this.lookRotation.x = THREE.MathUtils.clamp(this.lookRotation.x, -Math.PI * 0.5, Math.PI * 0.5);
-        }
-        document.addEventListener("mousemove", this.onMouseMoved);
-
         // Scene
         const backgroundColor = this.getCssColor("--background-color");
         this.scene = new THREE.Scene();
@@ -66,11 +56,11 @@ export class InteractiveWorld extends World {
             this.terrainSize.x, 
             this.terrainSize.y
         );
-            
+        
         // Points
         this.pointsMaterial = new THREE.ShaderMaterial({
-                uniforms: THREE.UniformsUtils.merge([
-                    THREE.UniformsLib.fog,
+            uniforms: THREE.UniformsUtils.merge([
+                THREE.UniformsLib.fog,
                 {
                     time: {value: 0},
                     pointSize: {value: 0.2},
@@ -89,13 +79,31 @@ export class InteractiveWorld extends World {
             0 * THREE.MathUtils.DEG2RAD
         );
         this.scene.add(this.points);
-
+        
         this.mainElement = document.querySelector("main");
         this.onWindowResized = () => {
             this.resize(this.mainElement.clientWidth, this.mainElement.clientHeight);
         };
         window.addEventListener("resize", this.onWindowResized);
         this.resize(this.mainElement.clientWidth, this.mainElement.clientHeight);
+        
+        this.onMouseClickCanvas = () => {
+            this.renderer.domElement.requestPointerLock();
+        };
+        this.mainElement.addEventListener("click", this.onMouseClickCanvas);
+        this.renderer.domElement.requestPointerLock();
+
+        this.lookRotation = new THREE.Vector3();
+        this.onMouseMoved = event => {
+            if (document.pointerLockElement != null) {
+                this.lookRotation.x += -event.movementY * 0.002;
+                this.lookRotation.y += -event.movementX * 0.002;
+                this.lookRotation.z = 0;
+            
+                this.lookRotation.x = THREE.MathUtils.clamp(this.lookRotation.x, -Math.PI * 0.5, Math.PI * 0.5);
+            }
+        }
+        document.addEventListener("mousemove", this.onMouseMoved);
     }
     
     render(elapsedTime) {
@@ -170,6 +178,7 @@ export class InteractiveWorld extends World {
 
         this.renderer.dispose();
 
+        this.mainElement.removeEventListener("click", this.onMouseClickCanvas);
         window.removeEventListener("resize", this.onWindowResized);
         document.removeEventListener("mousemove", this.onMouseMoved);
     }
