@@ -87,6 +87,12 @@ export class InteractiveWorld {
             0 * THREE.MathUtils.DEG2RAD
         );
         this.scene.add(this.points);
+
+        this.mainElement = document.querySelector("main");
+        window.addEventListener("resize", () => {
+            this.resize(this.mainElement.clientWidth, this.mainElement.clientHeight);
+        });
+        this.simpleWorld.resize(this.mainElement.clientWidth, this.mainElement.clientHeight);
     }
 
     
@@ -134,15 +140,12 @@ export class InteractiveWorld {
         this.renderer.render(this.scene, this.camera);
     }
     
-    
     resize(width, height) {
         this.renderer.setSize(width, height);
         this.camera.aspect = width / height;
         this.camera.updateProjectionMatrix();
     }
-    
 
-    
     getCssColor(name) {
         return new THREE.Color(
             getComputedStyle(document.documentElement)
@@ -150,7 +153,6 @@ export class InteractiveWorld {
             .trim()
         );
     }
-
 
     updateColors() {
         const backgroundColor = this.getCssColor("--background-color");

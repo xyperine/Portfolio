@@ -8,7 +8,6 @@ export class App {
             interactive: false,
         }
 
-        this.mainElement = document.querySelector("main");
         this.darkModeSwitch = document.querySelector("#dark-mode-switch");
         this.modeSwitch = document.querySelector("#mode-switch");
 
@@ -59,25 +58,8 @@ export class App {
     init() {
         if (this.settings.interactive) {
             this.interactiveWorld = new InteractiveWorld();
-            window.addEventListener("resize", () => {
-                this.resize();
-            });
-            this.interactiveWorld.resize(this.mainElement.clientWidth, this.mainElement.clientHeight);
         } else {
             this.simpleWorld = new SimpleWorld();
-            window.addEventListener("resize", () => {
-                this.resize();
-            });
-            this.simpleWorld.resize(this.mainElement.clientWidth, this.mainElement.clientHeight);
-        }
-    }
-
-
-    resize() {
-        if (this.settings.interactive) {
-            this.interactiveWorld.resize(this.mainElement.clientWidth, this.mainElement.clientHeight);
-        } else {
-            this.simpleWorld.resize(this.mainElement.clientWidth, this.mainElement.clientHeight);
         }
     }
 }

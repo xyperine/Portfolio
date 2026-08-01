@@ -66,6 +66,12 @@ export class SimpleWorld {
             0 * THREE.MathUtils.DEG2RAD
         );
         this.scene.add(this.points);
+
+        this.mainElement = document.querySelector("main");
+        window.addEventListener("resize", () => {
+            this.resize(this.mainElement.clientWidth, this.mainElement.clientHeight);
+        });
+        this.simpleWorld.resize(this.mainElement.clientWidth, this.mainElement.clientHeight);
     }
 
     render(elapsedTime) {
@@ -100,7 +106,6 @@ export class SimpleWorld {
         this.camera.aspect = width / height;
         this.camera.updateProjectionMatrix();
     }
-
 
     updateColors() {
         const backgroundColor = this.getCssColor("--background-color");
