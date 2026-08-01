@@ -1,12 +1,16 @@
 import * as THREE from 'three';
-import { Input } from '../src/input.js';
+import { Input } from '#src/input.js';
 
 export class InteractiveWorld {
     constructor() {
         this.VECTOR3_RIGHT = new THREE.Vector3(1, 0, 0);
         this.VECTOR3_UP = new THREE.Vector3(0, 1, 0);
-        this.VECTOR3_FORWARD = new THREE.Vector3(0, 0, 1);
+        this.VECTOR3_FORWARD = new THREE.Vector3(0, 0, -1);
 
+        this.init();
+    }
+
+    init() {
         this.input = new Input();
         this.terrainSize = new THREE.Vector2(600, 400);
 
@@ -92,9 +96,8 @@ export class InteractiveWorld {
         window.addEventListener("resize", () => {
             this.resize(this.mainElement.clientWidth, this.mainElement.clientHeight);
         });
-        this.simpleWorld.resize(this.mainElement.clientWidth, this.mainElement.clientHeight);
+        this.resize(this.mainElement.clientWidth, this.mainElement.clientHeight);
     }
-
     
     render(elapsedTime) {
         // Move the camera

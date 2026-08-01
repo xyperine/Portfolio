@@ -4,8 +4,12 @@ export class SimpleWorld {
     constructor() {
         this.VECTOR3_RIGHT = new THREE.Vector3(1, 0, 0);
         this.VECTOR3_UP = new THREE.Vector3(0, 1, 0);
-        this.VECTOR3_FORWARD = new THREE.Vector3(0, 0, 1);
+        this.VECTOR3_FORWARD = new THREE.Vector3(0, 0, -1);
 
+        this.init();
+    }
+
+    init() {
         this.terrainSize = new THREE.Vector2(600, 400);
 
         const backgroundColor = this.getCssColor("--background-color");
@@ -71,7 +75,7 @@ export class SimpleWorld {
         window.addEventListener("resize", () => {
             this.resize(this.mainElement.clientWidth, this.mainElement.clientHeight);
         });
-        this.simpleWorld.resize(this.mainElement.clientWidth, this.mainElement.clientHeight);
+        this.resize(this.mainElement.clientWidth, this.mainElement.clientHeight);
     }
 
     render(elapsedTime) {
