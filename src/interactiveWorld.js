@@ -1,13 +1,10 @@
 import * as THREE from 'three';
 import { Input } from '#src/input.js';
+import { World } from '#src/world.js';
 
-export class InteractiveWorld {
+export class InteractiveWorld extends World {
     constructor() {
-        this.VECTOR3_RIGHT = new THREE.Vector3(1, 0, 0);
-        this.VECTOR3_UP = new THREE.Vector3(0, 1, 0);
-        this.VECTOR3_FORWARD = new THREE.Vector3(0, 0, -1);
-
-        this.init();
+        super();
     }
 
     init() {
@@ -141,20 +138,6 @@ export class InteractiveWorld {
         this.pointsMaterial.uniforms.time.value = elapsedTime;
         
         this.renderer.render(this.scene, this.camera);
-    }
-    
-    resize(width, height) {
-        this.renderer.setSize(width, height);
-        this.camera.aspect = width / height;
-        this.camera.updateProjectionMatrix();
-    }
-
-    getCssColor(name) {
-        return new THREE.Color(
-            getComputedStyle(document.documentElement)
-            .getPropertyValue(name)
-            .trim()
-        );
     }
 
     updateColors() {

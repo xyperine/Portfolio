@@ -1,5 +1,6 @@
-import { SimpleWorld } from '#src/simpleWorld.js';
-import { InteractiveWorld } from '#src/interactiveWorld.js';
+import { InteractiveWorld } from "#src/interactiveWorld.js";
+import { SimpleWorld } from "#src/simpleWorld.js";
+
 
 export class App {
     constructor() {
@@ -11,8 +12,7 @@ export class App {
         this.darkModeSwitch = document.querySelector("#dark-mode-switch");
         this.modeSwitch = document.querySelector("#mode-switch");
 
-        this.simpleWorld;
-        this.interactiveWorld;
+        this.world = null;
 
         this.darkModeSwitch.addEventListener("click", () => {
             this.settings.darkMode = !this.settings.darkMode;
@@ -33,33 +33,28 @@ export class App {
             ? "Interactive"
             : "Simple";
 
-            if (this.settings.interactive) {
-                this.simpleWorld = null;
-                this.init();
-            } else {
-                this.interactiveWorld = null;
-                this.init();
-            }
+            this.init();
         })
 
         this.init();
     }
 
-    
     onDarkModeChanged(newValue) {
-        if (this.settings.interactive) {
-            this.interactiveWorld.updateColors();
-        } else {
-            this.simpleWorld.updateColors();
-        }
+        this.world.updateColors();
     }
 
-
     init() {
-        if (this.settings.interactive) {
-            this.interactiveWorld = new InteractiveWorld();
+        this.world = this.createWorld(this.settings.interactive);
+    }
+
+    createWorld(interactive) {
+        let world;
+        if (interactive) {
+            world = new InteractiveWorld();
         } else {
-            this.simpleWorld = new SimpleWorld();
+            world = new SimpleWorld();
         }
+
+        return world;
     }
 }
