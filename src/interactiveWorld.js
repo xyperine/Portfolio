@@ -106,29 +106,12 @@ export class InteractiveWorld extends World {
         }
         document.addEventListener("mousemove", this.onMouseMoved);
 
-        const g = new THREE.SphereGeometry(0.5);
-        const m = new THREE.PointsMaterial({
-            color: new THREE.Color().setHSL(0, 1, 0.5),
-            size: 0.1
-        });
-        this.ballMesh = new THREE.Mesh(g, m);
-        this.scene.add(this.ballMesh);
-
         // Setup physics
         this.physicsWorld = new RAPIER.World({
             x: 0,
             y: -9.81,
             z: 0
         });
-
-        const desc = RAPIER.RigidBodyDesc.dynamic().setTranslation(0, 5, 0);
-        this.body = this.physicsWorld.createRigidBody(desc);
-        const collDesc = RAPIER.ColliderDesc.ball(0.5);
-        this.physicsWorld.createCollider(collDesc, this.body);
-        
-        this.groundBody = this.physicsWorld.createRigidBody(RAPIER.RigidBodyDesc.fixed().setTranslation(0, 0, 0));
-        const groundCollider = RAPIER.ColliderDesc.cuboid(10, 0.1, 10);
-        this.physicsWorld.createCollider(groundCollider, this.groundBody);
 
         this.shoot = () => {
             const origin = this.camera.getWorldPosition(new THREE.Vector3());
@@ -142,9 +125,9 @@ export class InteractiveWorld extends World {
             let hit = this.physicsWorld.castRayAndGetNormal(ray, maxToi, solid);
             if (hit != null) {
                 const point = ray.pointAt(hit.timeOfImpact);
-                console.log("Collider", hit.collider, "hit at point", point);
+                console.debug("Collider", hit.collider, "hit at point", point);
 
-                if (hit.collider === this.body.collider()) {
+                if (hit.collider != null) {
                     const force = 10;
                     const impulseDirection = new RAPIER.Vector3(-hit.normal.x, -hit.normal.y, -hit.normal.z);
                     const impulse = new RAPIER.Vector3(
@@ -152,7 +135,7 @@ export class InteractiveWorld extends World {
                         impulseDirection.y * force, 
                         impulseDirection.z * force
                     );
-                    this.body.applyImpulse({
+                    hit.collider.parent().applyImpulse({
                             x: impulse.x, 
                             y: impulse.y, 
                             z: impulse.z
@@ -173,13 +156,6 @@ export class InteractiveWorld extends World {
 
     processPhysics() {
         this.physicsWorld.step();
-
-        const p = this.body.translation();
-        const r = this.body.rotation();
-        this.ballMesh.position.set(p.x, p.y, p.z);
-        this.ballMesh.rotation.set(r.x, r.y, r.z);
-
-
     }
 
     render(elapsedTime) {
