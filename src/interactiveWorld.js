@@ -108,6 +108,7 @@ export class InteractiveWorld extends World {
                 this.lookRotation.z = 0;
             
                 this.lookRotation.x = THREE.MathUtils.clamp(this.lookRotation.x, -Math.PI * 0.5, Math.PI * 0.5);
+                this.lookRotation.y = THREE.MathUtils.euclideanModulo(this.lookRotation.y + Math.PI, Math.PI * 2) - Math.PI; 
             }
         }
         document.addEventListener("mousemove", this.onMouseMoved);
@@ -132,6 +133,18 @@ export class InteractiveWorld extends World {
         this.applyDisplacement();
         const terrainColliderDescription = RAPIER.ColliderDesc.trimesh(this.simplifiedTerrainGeometry.attributes.position.array, this.simplifiedTerrainGeometry.index.array);
         const terrainCollider = this.physicsWorld.createCollider(terrainColliderDescription, this.terrainBody);
+
+        const gliderPosition = this.glider.getWorldPosition(new THREE.Vector3());
+        const gliderBodyDescription = RAPIER.RigidBodyDesc.kinematicPositionBased().setTranslation(
+            gliderPosition.x,
+            gliderPosition.y,
+            gliderPosition.z
+        );
+        this.gliderBody = this.physicsWorld.createRigidBody(gliderBodyDescription);
+        this.gliderBody.setEnabledRotations(false, true, false, true);
+        const gliderColliderDescription = RAPIER.ColliderDesc.ball(1);
+        this.gliderCollider = this.physicsWorld.createCollider(gliderColliderDescription, this.gliderBody);
+        this.gliderController = this.physicsWorld.createCharacterController(0.01);
 
 
         this.shoot = () => {
@@ -186,61 +199,6 @@ export class InteractiveWorld extends World {
 
         vertices.needsUpdate = true;
     }
-    
-    update(elapsedTime) {
-        this.processPhysics();
-
-        this.render(elapsedTime);
-    }
-
-    processPhysics() {
-        this.physicsWorld.step();
-    }
-
-    render(elapsedTime) {
-        // Move the camera
-        const speed = 0.5;
-        const movement = new THREE.Vector3();
-        if (this.input.isKeyDown("KeyW")) {
-            movement.z += -speed;
-        }
-        if (this.input.isKeyDown("KeyS")) {
-            movement.z += speed;
-        }
-        if (this.input.isKeyDown("KeyD")) {
-            movement.x += speed;
-        }
-        if (this.input.isKeyDown("KeyA")) {
-            movement.x += -speed;
-        }
-        
-        movement.normalize();
-        movement.multiplyScalar(speed);
-        
-        if (this.input.isKeyDown("Space")) {
-            movement.y += speed;
-        }
-        if (this.input.isKeyDown("ShiftLeft")) {
-            movement.y += -speed;
-        }
-        
-        movement.applyAxisAngle(this.VECTOR3_UP, this.glider.rotation.y);
-        this.glider.position.add(movement);
-        this.cameraSocket.rotation.x = this.lookRotation.x;
-        this.glider.rotation.y = this.lookRotation.y;
-
-        // Move terrain to make it look infinite
-        const threshold = this.terrainSize.y * 0.1;
-        if (this.points.position.z - this.glider.position.z > threshold) {
-            this.points.position.z -= threshold * 2;
-            this.applyDisplacement();
-        }
-        
-        // Update the shader
-        this.pointsMaterial.uniforms.time.value = elapsedTime;
-        
-        this.renderer.render(this.scene, this.camera);
-    }
 
     debugPhysics() {
         let q = this.points.getWorldQuaternion(new THREE.Quaternion());
@@ -263,6 +221,132 @@ export class InteractiveWorld extends World {
 
         const mesh = new THREE.LineSegments(g, m);
         this.scene.add(mesh);
+    }
+    
+    update(elapsedTime) {
+        this.processInputs();
+
+        this.processPhysics();
+
+        this.render(elapsedTime);
+    }
+
+    processInputs() {
+        this.movementInput = new THREE.Vector3();
+        if (this.input.isKeyDown("KeyW")) {
+            this.movementInput.z += 1;
+        }
+        if (this.input.isKeyDown("KeyS")) {
+            this.movementInput.z += -1;
+        }
+        if (this.input.isKeyDown("KeyD")) {
+            this.movementInput.x += 1;
+        }
+        if (this.input.isKeyDown("KeyA")) {
+            this.movementInput.x += -1;
+        }
+        
+        this.movementInput.normalize();
+        
+        if (this.input.isKeyDown("Space")) {
+            this.movementInput.y += 1;
+        }
+        if (this.input.isKeyDown("ShiftLeft")) {
+            this.movementInput.y += -1;
+        }
+    }
+
+    processPhysics() {
+        // Move the glider
+        const speed = 0.5;
+        
+        const r = this.gliderBody.rotation();
+        const rotation = new THREE.Quaternion(
+            r.x,
+            r.y,
+            r.z,
+            r.w
+        );
+
+        const forward = this.VECTOR3_FORWARD.clone();
+        forward.applyQuaternion(rotation);
+        forward.y = 0;
+        forward.normalize();
+        forward.multiplyScalar(this.movementInput.z);
+
+        const right = this.VECTOR3_RIGHT.clone();
+        right.applyQuaternion(rotation);
+        right.y = 0;
+        right.normalize();
+        right.multiplyScalar(this.movementInput.x);
+
+        const up = this.VECTOR3_UP.clone();
+        up.multiplyScalar(this.movementInput.y);
+        const movement = new THREE.Vector3()
+            .add(forward)
+            .add(right)
+            .add(up)
+            .normalize()
+            .multiplyScalar(speed);
+        
+        this.gliderController.computeColliderMovement(this.gliderCollider, {
+            x: movement.x,
+            y: movement.y,
+            z: movement.z
+        });
+        const actualMovement = {
+            x: this.gliderController.computedMovement().x,
+            y: this.gliderController.computedMovement().y,
+            z: this.gliderController.computedMovement().z,
+        };
+        const currentTranslation = this.gliderBody.translation();
+        this.gliderBody.setNextKinematicTranslation({
+            x: currentTranslation.x + actualMovement.x,
+            y: currentTranslation.y + actualMovement.y,
+            z: currentTranslation.z + actualMovement.z,
+        })
+
+        const q = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, this.lookRotation.y, 0));
+        this.gliderBody.setNextKinematicRotation({
+            x: q.x,
+            y: q.y,
+            z: q.z,
+            w: q.w
+        });
+
+        this.physicsWorld.step();
+
+        this.syncPhysicsAndRendering();
+        
+        if (this.physicsDebug) {
+            if (this.input.isKeyDown("KeyQ")) {
+                this.debugPhysics();
+            }
+        }
+    }
+    
+    syncPhysicsAndRendering() {
+        let pGlider = this.gliderBody.translation();
+        const rGlider = this.gliderBody.rotation();
+        this.glider.position.set(pGlider.x, pGlider.y, pGlider.z);
+        this.glider.quaternion.set(rGlider.x, rGlider.y, rGlider.z, rGlider.w);
+    }
+
+    render(elapsedTime) {
+        // Move the camera
+        this.cameraSocket.rotation.x = this.lookRotation.x;
+
+        // Move terrain to make it look infinite
+        const threshold = this.terrainSize.y * 0.1;
+        if (this.points.position.z - this.glider.position.z > threshold) {
+            this.points.position.z -= threshold * 2;
+            this.applyDisplacement();
+        }
+        
+        // Update the shader
+        this.pointsMaterial.uniforms.time.value = elapsedTime;
+        
+        this.renderer.render(this.scene, this.camera);
     }
 
     updateColors() {
