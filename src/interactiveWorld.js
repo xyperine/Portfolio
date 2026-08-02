@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import * as RAPIER from '@dimforge/rapier3d-compat';
 import { Input } from '#src/input.js';
 import { World } from '#src/world.js';
+import { VertexShaderAlgorithmCopy } from '#src/shaderVertexDisplacementCopy.js';
 
 export class InteractiveWorld extends World {
     constructor() {
@@ -10,7 +11,12 @@ export class InteractiveWorld extends World {
 
     init() {
         this.input = new Input();
+        this.shaderVertexAlgorithm = new VertexShaderAlgorithmCopy();
         this.terrainSize = new THREE.Vector2(600, 400);
+        this.physicsDebug = false;
+        if (this.physicsDebug) {
+            this.terrainSize.set(10, 10);
+        }
         
         // Scene
         const backgroundColor = this.getCssColor("--background-color");
@@ -113,6 +119,21 @@ export class InteractiveWorld extends World {
             z: 0
         });
 
+        let q = this.points.getWorldQuaternion(new THREE.Quaternion());
+        const terrainBodyDescription = RAPIER.RigidBodyDesc.fixed().setRotation({x: q.x, y: q.y, z: q.z, w: q.w});
+        this.terrainBody = this.physicsWorld.createRigidBody(terrainBodyDescription);
+        const terrainPhysicsMeshResolution = 0.1;
+        this.simplifiedTerrainGeometry = new THREE.PlaneGeometry(
+            this.terrainSize.x, 
+            this.terrainSize.y,
+            Math.round(this.terrainSize.x * terrainPhysicsMeshResolution),
+            Math.round(this.terrainSize.y * terrainPhysicsMeshResolution)
+        );
+        this.applyDisplacement();
+        const terrainColliderDescription = RAPIER.ColliderDesc.trimesh(this.simplifiedTerrainGeometry.attributes.position.array, this.simplifiedTerrainGeometry.index.array);
+        const terrainCollider = this.physicsWorld.createCollider(terrainColliderDescription, this.terrainBody);
+
+
         this.shoot = () => {
             const origin = this.camera.getWorldPosition(new THREE.Vector3());
             const direction = new THREE.Vector3(0, 0, -1).applyQuaternion(this.camera.getWorldQuaternion(new THREE.Quaternion()));
@@ -136,16 +157,34 @@ export class InteractiveWorld extends World {
                         impulseDirection.z * force
                     );
                     hit.collider.parent().applyImpulse({
-                            x: impulse.x, 
-                            y: impulse.y, 
-                            z: impulse.z
-                        },
-                        true
-                    );
+                        x: impulse.x, 
+                        y: impulse.y, 
+                        z: impulse.z
+                    },
+                    true
+                );
                 }
             }
         }
         this.mainElement.addEventListener("mousedown", this.shoot);
+        
+        if (this.physicsDebug) {
+            this.debugPhysics();
+        }
+    }
+
+    applyDisplacement() {
+        let vertices = this.simplifiedTerrainGeometry.attributes.position;
+        let vertex = new THREE.Vector3();
+        for (let i = 0; i < vertices.count; i++) {
+            vertex.fromBufferAttribute(vertices, i);
+            let vertexWS = this.points.localToWorld(vertex.clone());
+            let height = this.shaderVertexAlgorithm.getHeight(vertexWS.x, vertexWS.z);
+
+            vertices.setZ(i, height);
+        }
+
+        vertices.needsUpdate = true;
     }
     
     update(elapsedTime) {
@@ -187,19 +226,43 @@ export class InteractiveWorld extends World {
         
         movement.applyAxisAngle(this.VECTOR3_UP, this.glider.rotation.y);
         this.glider.position.add(movement);
-        this.cameraSocket.rotation.x = this.lookRotation.x
+        this.cameraSocket.rotation.x = this.lookRotation.x;
         this.glider.rotation.y = this.lookRotation.y;
 
         // Move terrain to make it look infinite
         const threshold = this.terrainSize.y * 0.1;
         if (this.points.position.z - this.glider.position.z > threshold) {
             this.points.position.z -= threshold * 2;
+            this.applyDisplacement();
         }
         
         // Update the shader
         this.pointsMaterial.uniforms.time.value = elapsedTime;
         
         this.renderer.render(this.scene, this.camera);
+    }
+
+    debugPhysics() {
+        let q = this.points.getWorldQuaternion(new THREE.Quaternion());
+        const terrainColliderDesc = RAPIER.ColliderDesc.trimesh(this.simplifiedTerrainGeometry.attributes.position.array, this.simplifiedTerrainGeometry.index.array);
+        const terrainCollider = this.physicsWorld.createCollider(terrainColliderDesc, this.terrainBody);
+
+        let {vertices, colors} = this.physicsWorld.debugRender();
+
+        console.log(vertices.length);
+        console.log(vertices.slice(0, 20));
+        console.log(colors.length);
+
+        const g = new THREE.BufferGeometry();
+        g.setAttribute("position", new THREE.BufferAttribute(vertices, 3));
+        g.setAttribute("color", new THREE.BufferAttribute(colors, 4));
+
+        const m = new THREE.LineBasicMaterial({
+            vertexColors: true
+        })
+
+        const mesh = new THREE.LineSegments(g, m);
+        this.scene.add(mesh);
     }
 
     updateColors() {
