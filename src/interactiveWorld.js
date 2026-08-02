@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import * as RAPIER from '@dimforge/rapier3d-compat';
 import { Input } from '#src/input.js';
 import { World } from '#src/world.js';
 
@@ -46,7 +47,7 @@ export class InteractiveWorld extends World {
         });
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.setAnimationLoop(elapsedTime => {
-            this.render(elapsedTime);
+            this.update(elapsedTime);
         });
         
         // Terrain
@@ -104,8 +105,83 @@ export class InteractiveWorld extends World {
             }
         }
         document.addEventListener("mousemove", this.onMouseMoved);
+
+        const g = new THREE.SphereGeometry(0.5);
+        const m = new THREE.PointsMaterial({
+            color: new THREE.Color().setHSL(0, 1, 0.5),
+            size: 0.1
+        });
+        this.ballMesh = new THREE.Mesh(g, m);
+        this.scene.add(this.ballMesh);
+
+        // Setup physics
+        this.physicsWorld = new RAPIER.World({
+            x: 0,
+            y: -9.81,
+            z: 0
+        });
+
+        const desc = RAPIER.RigidBodyDesc.dynamic().setTranslation(0, 5, 0);
+        this.body = this.physicsWorld.createRigidBody(desc);
+        const collDesc = RAPIER.ColliderDesc.ball(0.5);
+        this.physicsWorld.createCollider(collDesc, this.body);
+        
+        this.groundBody = this.physicsWorld.createRigidBody(RAPIER.RigidBodyDesc.fixed().setTranslation(0, 0, 0));
+        const groundCollider = RAPIER.ColliderDesc.cuboid(10, 0.1, 10);
+        this.physicsWorld.createCollider(groundCollider, this.groundBody);
+
+        this.shoot = () => {
+            const origin = this.camera.getWorldPosition(new THREE.Vector3());
+            const direction = new THREE.Vector3(0, 0, -1).applyQuaternion(this.camera.getWorldQuaternion(new THREE.Quaternion()));
+            const ray = new RAPIER.Ray(
+                {x: origin.x, y: origin.y, z: origin.z}, 
+                {x: direction.x, y: direction.y, z: direction.z}
+            );
+            const maxToi = 999.0;
+            let solid = true;
+            let hit = this.physicsWorld.castRayAndGetNormal(ray, maxToi, solid);
+            if (hit != null) {
+                const point = ray.pointAt(hit.timeOfImpact);
+                console.log("Collider", hit.collider, "hit at point", point);
+
+                if (hit.collider === this.body.collider()) {
+                    const force = 10;
+                    const impulseDirection = new RAPIER.Vector3(-hit.normal.x, -hit.normal.y, -hit.normal.z);
+                    const impulse = new RAPIER.Vector3(
+                        impulseDirection.x * force, 
+                        impulseDirection.y * force, 
+                        impulseDirection.z * force
+                    );
+                    this.body.applyImpulse({
+                            x: impulse.x, 
+                            y: impulse.y, 
+                            z: impulse.z
+                        },
+                        true
+                    );
+                }
+            }
+        }
+        this.mainElement.addEventListener("mousedown", this.shoot);
     }
     
+    update(elapsedTime) {
+        this.processPhysics();
+
+        this.render(elapsedTime);
+    }
+
+    processPhysics() {
+        this.physicsWorld.step();
+
+        const p = this.body.translation();
+        const r = this.body.rotation();
+        this.ballMesh.position.set(p.x, p.y, p.z);
+        this.ballMesh.rotation.set(r.x, r.y, r.z);
+
+
+    }
+
     render(elapsedTime) {
         // Move the camera
         const speed = 0.5;

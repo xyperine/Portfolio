@@ -1,18 +1,25 @@
+import RAPIER from "@dimforge/rapier3d-compat";
 import { InteractiveWorld } from "#src/interactiveWorld.js";
 import { SimpleWorld } from "#src/simpleWorld.js";
 
 export class App {
     constructor() {
+        this.init();
+    }
+
+    async init() {
         this.settings = {
             darkMode: false,
             interactive: false,
         }
-
+        
         this.canvasElement = document.querySelector("#terrain");
         this.darkModeSwitch = document.querySelector("#dark-mode-switch");
         this.modeSwitch = document.querySelector("#mode-switch");
-
+        
         this.world = null;
+
+        await RAPIER.init();
 
         this.darkModeSwitch.addEventListener("click", () => {
             this.settings.darkMode = !this.settings.darkMode;
@@ -26,7 +33,7 @@ export class App {
             this.setMode(this.settings.interactive);
         })
 
-        this.init();
+        this.changeWorld();
     }
 
     setMode(interactive) {
@@ -40,7 +47,7 @@ export class App {
             this.canvasElement.focus();
         }
 
-        this.init();
+        this.changeWorld();
     }
 
     onDarkModeChanged(newValue) {
@@ -53,7 +60,7 @@ export class App {
         this.world.updateColors();
     }
 
-    init() {
+    changeWorld() {
         if (this.world != null) {
             this.world.dispose();
         }

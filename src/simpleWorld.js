@@ -34,7 +34,7 @@ export class SimpleWorld extends World {
         });
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.setAnimationLoop(elapsedTime => {
-            this.render(elapsedTime);
+            this.update(elapsedTime);
         });
         
         // Terrain
@@ -76,7 +76,7 @@ export class SimpleWorld extends World {
         this.resize(this.mainElement.clientWidth, this.mainElement.clientHeight);
     }
 
-    render(elapsedTime) {
+    update(elapsedTime) {
         // Move the camera
         const speed = 0.5;
         let movement = new THREE.Vector3(0, 0, -speed);

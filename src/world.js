@@ -10,7 +10,7 @@ export class World {
     }
 
     init() {}
-    render(elapsedTime) {}
+    update(elapsedTime) {}
     updateColors() {}
     dispose() {}
 
