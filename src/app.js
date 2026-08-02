@@ -8,6 +8,7 @@ export class App {
             interactive: false,
         }
 
+        this.canvasElement = document.querySelector("#terrain");
         this.darkModeSwitch = document.querySelector("#dark-mode-switch");
         this.modeSwitch = document.querySelector("#mode-switch");
 
@@ -29,11 +30,15 @@ export class App {
     }
 
     setMode(interactive) {
-        this.modeSwitch.textContent = this.settings.interactive
+        this.modeSwitch.textContent = interactive
         ? "Interactive"
         : "Simple";
 
         document.documentElement.classList.toggle("interactive", interactive);
+
+        if (interactive) {
+            this.canvasElement.focus();
+        }
 
         this.init();
     }
