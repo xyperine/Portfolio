@@ -177,6 +177,7 @@ export class InteractiveWorld extends World {
         });
 
         this.renderer.dispose();
+        this.input.dispose();
 
         this.mainElement.removeEventListener("click", this.onMouseClickCanvas);
         window.removeEventListener("resize", this.onWindowResized);
