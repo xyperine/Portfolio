@@ -26,6 +26,10 @@
 	box-sizing: border-box;
 }
 
+*:focus-visible	 {
+	outline-color: var(--accent-color);
+}
+
 html {
 	padding: 2rem;
 	height: 100%;
