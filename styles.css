@@ -129,22 +129,26 @@ p {
 	/*
 	border: 0.1rem solid Sblue;
 	*/
-
+	
 	max-height: 100%;
 	max-width: 90%;
-
+	
     display: grid;
 	grid-template-columns: 30% 30% 30%;
 	grid-template-rows: 50% 50%;
     gap: 10px;
-
+	
 	justify-content: center;
 	justify-self: center;
 	justify-items: center;
 	align-content: center;
-
+	
 	min-height: 0;
 	flex: 1;
+}
+
+html.interactive .projects-container {
+	display: none;
 }
 
 .project-entry {

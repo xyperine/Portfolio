@@ -15,30 +15,36 @@ export class App {
 
         this.darkModeSwitch.addEventListener("click", () => {
             this.settings.darkMode = !this.settings.darkMode;
-            
-            document.documentElement.classList.toggle("dark", this.settings.darkMode);
-            
-            this.darkModeSwitch.textContent = this.settings.darkMode 
-            ? "Dark"
-            : "Light";
-            
+                        
             this.onDarkModeChanged(this.settings.darkMode);
         })
 
         this.modeSwitch.addEventListener("click", () => {
             this.settings.interactive = !this.settings.interactive;
-            
-            this.modeSwitch.textContent = this.settings.interactive
-            ? "Interactive"
-            : "Simple";
 
-            this.init();
+            this.setMode(this.settings.interactive);
         })
 
         this.init();
     }
 
+    setMode(interactive) {
+        this.modeSwitch.textContent = this.settings.interactive
+        ? "Interactive"
+        : "Simple";
+
+        document.documentElement.classList.toggle("interactive", interactive);
+
+        this.init();
+    }
+
     onDarkModeChanged(newValue) {
+        this.darkModeSwitch.textContent = this.settings.darkMode 
+        ? "Dark"
+        : "Light";
+
+        document.documentElement.classList.toggle("dark", this.settings.darkMode);
+
         this.world.updateColors();
     }
 
