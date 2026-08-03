@@ -1,7 +1,7 @@
 {
   "name": "site-test",
   "version": "1.0.0",
-  "main": "main.js",
+  "main": "src/main.js",
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
