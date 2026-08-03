@@ -56,6 +56,9 @@ export class Glider {
         this.gliderCollider = this.physicsWorld.createCollider(gliderColliderDescription, this.body);
         this.controller = this.physicsWorld.createCharacterController(0.01);
 
+        // For smoothing
+        this.smoothedMovement = new THREE.Vector3();
+
         this.pitchLookRotation = 0;
         this.yawLookRotation = 0;
 
@@ -151,12 +154,15 @@ export class Glider {
 
         const up = this.VECTOR3_UP.clone();
         up.multiplyScalar(this.movementInput.y);
-        const movement = new THREE.Vector3()
+        let movement = new THREE.Vector3()
             .add(forward)
             .add(right)
             .add(up)
             .normalize()
             .multiplyScalar(speed);
+        
+        this.smoothedMovement.lerp(movement, 0.04);
+        movement = this.smoothedMovement;
         
         this.controller.computeColliderMovement(this.gliderCollider, {
             x: movement.x,
@@ -173,11 +179,15 @@ export class Glider {
             {x: currentTranslation.x, y: currentTranslation.y - 2, z: currentTranslation.z},
             {x: 0, y: -1, z: 0}
         )
+
+        // Ground snapping
         const maxToi = 999.0;
         const solid = false;
         const hit = this.physicsWorld.castRayAndGetNormal(ray, maxToi, solid);
-        const minGroundDistance = 5.0;
+        const minGroundDistance = 10.0;
         if (hit != null) {
+            this.groundPoint = ray.pointAt(hit.timeOfImpact);
+            currentTranslation.y = this.groundPoint.y + minGroundDistance;
             
         }
         this.body.setNextKinematicTranslation({
