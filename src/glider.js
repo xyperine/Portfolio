@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import * as RAPIER from '@dimforge/rapier3d-compat';
-import { Input } from '#src/input.js';
 
 export class Glider {
     /**
@@ -131,9 +130,10 @@ export class Glider {
         }
     }
 
-    processPhysics(elapsedTime) {
+    processPhysics() {
+        // Calculate movement
         const speed = 0.5;
-                
+
         const r = this.body.rotation();
         const rotation = new THREE.Quaternion(
             r.x,
@@ -176,13 +176,14 @@ export class Glider {
             y: this.controller.computedMovement().y,
             z: this.controller.computedMovement().z,
         };
+        
         const currentTranslation = this.body.translation();
+
+        // Ground snapping
         const ray = new RAPIER.Ray(
             {x: currentTranslation.x, y: currentTranslation.y - 2, z: currentTranslation.z},
             {x: 0, y: -1, z: 0}
         )
-
-        // Ground snapping
         const maxToi = 999.0;
         const solid = false;
         const hit = this.physicsWorld.castRayAndGetNormal(ray, maxToi, solid);
@@ -192,12 +193,15 @@ export class Glider {
             currentTranslation.y = this.groundPoint.y + minGroundDistance;
             
         }
+
+        // Apply movement
         this.body.setNextKinematicTranslation({
             x: currentTranslation.x + actualMovement.x,
             y: currentTranslation.y + actualMovement.y,
             z: currentTranslation.z + actualMovement.z,
         })
 
+        // Apply rotation
         const q = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, this.lookRotation.y, 0));
         this.body.setNextKinematicRotation({
             x: q.x,
