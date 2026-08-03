@@ -1,21 +1,25 @@
 /**
  * Must have exactly the same values and operations as the shader 
  * to be able to produce the same outputs.
- */
+*/
 export class VertexShaderAlgorithmCopy {
-    fract(x) {
-        return x - Math.floor(x);
+    getHeight(x, z) {
+        let h = 0.0;
+    
+        let frequency = 0.01;
+        let amplitude = 15.0;
+    
+        for (let i = 0; i < 8; i++) {
+            h += this.#snoise(x * frequency, z * frequency) * amplitude;
+    
+            frequency *= 2.0;
+            amplitude *= 0.4;
+        }
+    
+        return h;
     }
 
-    mod289(x) {
-        return x - Math.floor(x / 289.0) * 289.0;
-    }
-
-    permute(x) {
-        return this.mod289(((x * 34.0) + 10.0) * x);
-    }
-
-    snoise(vx, vy) {
+    #snoise(vx, vy) {
         const Cx = 0.211324865405187;
         const Cy = 0.366025403784439;
         const Cz = -0.577350269189626;
@@ -39,15 +43,15 @@ export class VertexShaderAlgorithmCopy {
         const x12z = x0x + Cz;
         const x12w = x0y + Cz;
 
-        ix = this.mod289(ix);
-        iy = this.mod289(iy);
+        ix = this.#mod289(ix);
+        iy = this.#mod289(iy);
 
-        const p0 = this.permute(this.permute(iy + 0.0) + ix + 0.0);
-        const p1 = this.permute(this.permute(iy + i1y) + ix + i1x);
-        const p2 = this.permute(this.permute(iy + 1.0) + ix + 1.0);
+        const p0 = this.#permute(this.#permute(iy + 0.0) + ix + 0.0);
+        const p1 = this.#permute(this.#permute(iy + i1y) + ix + i1x);
+        const p2 = this.#permute(this.#permute(iy + 1.0) + ix + 1.0);
 
         let grad = (p, x, y) => {
-            const gx = 2.0 * this.fract(p * Cw) - 1.0;
+            const gx = 2.0 * this.#fract(p * Cw) - 1.0;
             const gy = Math.abs(gx) - 0.5;
             const ox = Math.floor(gx + 0.5);
             const ax = gx - ox;
@@ -69,26 +73,15 @@ export class VertexShaderAlgorithmCopy {
         );
     }
 
-    random(x, y) {
-        return (
-            this.fract(Math.sin(x * 12.9898 + y * 78.233) * 43758.5453123)
-            * 2.0 - 1.0
-        );
+    #mod289(x) {
+        return x - Math.floor(x / 289.0) * 289.0;
+    }
+    
+    #permute(x) {
+        return this.#mod289(((x * 34.0) + 10.0) * x);
     }
 
-    getHeight(x, z) {
-        let h = 0.0;
-
-        let frequency = 0.01;
-        let amplitude = 15.0;
-
-        for (let i = 0; i < 8; i++) {
-            h += this.snoise(x * frequency, z * frequency) * amplitude;
-
-            frequency *= 2.0;
-            amplitude *= 0.4;
-        }
-
-        return h;
+    #fract(x) {
+        return x - Math.floor(x);
     }
 }
