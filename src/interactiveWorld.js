@@ -2,7 +2,8 @@ import * as THREE from 'three';
 import * as RAPIER from '@dimforge/rapier3d-compat';
 import { Input } from '#src/input.js';
 import { World } from '#src/world.js';
-import { VertexShaderAlgorithmCopy } from '#src/shaderVertexDisplacementCopy.js';
+import { VertexShaderAlgorithmCopy } from '#src/vertexShaderAlgorithmCopy.js';
+import { Glider } from '#src/glider.js';
 
 export class InteractiveWorld extends World {
     constructor() {
@@ -25,27 +26,6 @@ export class InteractiveWorld extends World {
         const fog = new THREE.Fog(backgroundColor, 30, 180);
         this.scene.fog = fog;
         
-        // Camera
-        this.glider = new THREE.Object3D();
-        this.scene.add(this.glider);
-        this.glider.position.set(0, 30, 6);
-        this.cameraSocket = new THREE.Object3D();
-        this.glider.add(this.cameraSocket);
-        this.cameraSocket.position.set(0, 0, 0);
-        this.cameraSocket.rotation.set(0, 0, 0);
-        const cameraRotation = new THREE.Vector3(
-            -15 * THREE.MathUtils.DEG2RAD, 
-            0 * THREE.MathUtils.DEG2RAD, 
-            0 * THREE.MathUtils.DEG2RAD
-        );
-        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        this.cameraSocket.add(this.camera);
-        this.camera.rotateOnWorldAxis(this.VECTOR3_RIGHT, cameraRotation.x);
-        this.camera.rotateOnWorldAxis(this.VECTOR3_UP, cameraRotation.y);
-        this.camera.rotateOnWorldAxis(this.VECTOR3_FORWARD, cameraRotation.z);
-        this.camera.position.set(0, 0, 0);
-        this.camera.rotation.set(0, 0, 0);
-        
         // Renderer
         this.renderer = new THREE.WebGLRenderer({
             canvas: document.querySelector("#terrain"),
@@ -56,6 +36,9 @@ export class InteractiveWorld extends World {
             this.update(elapsedTime);
         });
         
+        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        this.scene.add(this.camera);
+
         // Terrain
         const terrainGeometry = new THREE.PlaneGeometry(
             this.terrainSize.x, 
@@ -99,27 +82,14 @@ export class InteractiveWorld extends World {
         };
         this.mainElement.addEventListener("click", this.onMouseClickCanvas);
         this.renderer.domElement.requestPointerLock();
-
-        this.lookRotation = new THREE.Vector3();
-        this.onMouseMoved = event => {
-            if (document.pointerLockElement != null) {
-                this.lookRotation.x += -event.movementY * 0.002;
-                this.lookRotation.y += -event.movementX * 0.002;
-                this.lookRotation.z = 0;
-            
-                this.lookRotation.x = THREE.MathUtils.clamp(this.lookRotation.x, -Math.PI * 0.5, Math.PI * 0.5);
-                this.lookRotation.y = THREE.MathUtils.euclideanModulo(this.lookRotation.y + Math.PI, Math.PI * 2) - Math.PI; 
-            }
-        }
-        document.addEventListener("mousemove", this.onMouseMoved);
-
+        
         // Setup physics
         this.physicsWorld = new RAPIER.World({
             x: 0,
             y: -9.81,
             z: 0
         });
-
+        
         let q = this.points.getWorldQuaternion(new THREE.Quaternion());
         const terrainBodyDescription = RAPIER.RigidBodyDesc.fixed().setRotation({x: q.x, y: q.y, z: q.z, w: q.w});
         this.terrainBody = this.physicsWorld.createRigidBody(terrainBodyDescription);
@@ -133,54 +103,10 @@ export class InteractiveWorld extends World {
         this.applyDisplacement();
         const terrainColliderDescription = RAPIER.ColliderDesc.trimesh(this.simplifiedTerrainGeometry.attributes.position.array, this.simplifiedTerrainGeometry.index.array);
         const terrainCollider = this.physicsWorld.createCollider(terrainColliderDescription, this.terrainBody);
-
-        const gliderPosition = this.glider.getWorldPosition(new THREE.Vector3());
-        const gliderBodyDescription = RAPIER.RigidBodyDesc.kinematicPositionBased().setTranslation(
-            gliderPosition.x,
-            gliderPosition.y,
-            gliderPosition.z
-        );
-        this.gliderBody = this.physicsWorld.createRigidBody(gliderBodyDescription);
-        this.gliderBody.setEnabledRotations(false, true, false, true);
-        const gliderColliderDescription = RAPIER.ColliderDesc.ball(1);
-        this.gliderCollider = this.physicsWorld.createCollider(gliderColliderDescription, this.gliderBody);
-        this.gliderController = this.physicsWorld.createCharacterController(0.01);
-
-
-        this.shoot = () => {
-            const origin = this.camera.getWorldPosition(new THREE.Vector3());
-            const direction = new THREE.Vector3(0, 0, -1).applyQuaternion(this.camera.getWorldQuaternion(new THREE.Quaternion()));
-            const ray = new RAPIER.Ray(
-                {x: origin.x, y: origin.y, z: origin.z}, 
-                {x: direction.x, y: direction.y, z: direction.z}
-            );
-            const maxToi = 999.0;
-            let solid = true;
-            let hit = this.physicsWorld.castRayAndGetNormal(ray, maxToi, solid);
-            if (hit != null) {
-                const point = ray.pointAt(hit.timeOfImpact);
-                console.debug("Collider", hit.collider, "hit at point", point);
-
-                if (hit.collider != null) {
-                    const force = 10;
-                    const impulseDirection = new RAPIER.Vector3(-hit.normal.x, -hit.normal.y, -hit.normal.z);
-                    const impulse = new RAPIER.Vector3(
-                        impulseDirection.x * force, 
-                        impulseDirection.y * force, 
-                        impulseDirection.z * force
-                    );
-                    hit.collider.parent().applyImpulse({
-                        x: impulse.x, 
-                        y: impulse.y, 
-                        z: impulse.z
-                    },
-                    true
-                );
-                }
-            }
-        }
-        this.mainElement.addEventListener("mousedown", this.shoot);
         
+        // Glider
+        this.glider = new Glider(this.camera, this.input, this.scene, this.physicsWorld);
+
         if (this.physicsDebug) {
             this.debugPhysics();
         }
@@ -228,95 +154,20 @@ export class InteractiveWorld extends World {
 
         this.processPhysics();
 
+        this.syncPhysicsAndRendering();
+
         this.render(elapsedTime);
     }
 
     processInputs() {
-        this.movementInput = new THREE.Vector3();
-        if (this.input.isKeyDown("KeyW")) {
-            this.movementInput.z += 1;
-        }
-        if (this.input.isKeyDown("KeyS")) {
-            this.movementInput.z += -1;
-        }
-        if (this.input.isKeyDown("KeyD")) {
-            this.movementInput.x += 1;
-        }
-        if (this.input.isKeyDown("KeyA")) {
-            this.movementInput.x += -1;
-        }
-        
-        this.movementInput.normalize();
-        
-        if (this.input.isKeyDown("Space")) {
-            this.movementInput.y += 1;
-        }
-        if (this.input.isKeyDown("ShiftLeft")) {
-            this.movementInput.y += -1;
-        }
+        this.glider.processInputs();
     }
 
     processPhysics() {
         // Move the glider
-        const speed = 0.5;
-        
-        const r = this.gliderBody.rotation();
-        const rotation = new THREE.Quaternion(
-            r.x,
-            r.y,
-            r.z,
-            r.w
-        );
-
-        const forward = this.VECTOR3_FORWARD.clone();
-        forward.applyQuaternion(rotation);
-        forward.y = 0;
-        forward.normalize();
-        forward.multiplyScalar(this.movementInput.z);
-
-        const right = this.VECTOR3_RIGHT.clone();
-        right.applyQuaternion(rotation);
-        right.y = 0;
-        right.normalize();
-        right.multiplyScalar(this.movementInput.x);
-
-        const up = this.VECTOR3_UP.clone();
-        up.multiplyScalar(this.movementInput.y);
-        const movement = new THREE.Vector3()
-            .add(forward)
-            .add(right)
-            .add(up)
-            .normalize()
-            .multiplyScalar(speed);
-        
-        this.gliderController.computeColliderMovement(this.gliderCollider, {
-            x: movement.x,
-            y: movement.y,
-            z: movement.z
-        });
-        const actualMovement = {
-            x: this.gliderController.computedMovement().x,
-            y: this.gliderController.computedMovement().y,
-            z: this.gliderController.computedMovement().z,
-        };
-        const currentTranslation = this.gliderBody.translation();
-        this.gliderBody.setNextKinematicTranslation({
-            x: currentTranslation.x + actualMovement.x,
-            y: currentTranslation.y + actualMovement.y,
-            z: currentTranslation.z + actualMovement.z,
-        })
-
-        const q = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, this.lookRotation.y, 0));
-        this.gliderBody.setNextKinematicRotation({
-            x: q.x,
-            y: q.y,
-            z: q.z,
-            w: q.w
-        });
+        this.glider.processPhysics();
 
         this.physicsWorld.step();
-
-        this.syncPhysicsAndRendering();
         
         if (this.physicsDebug) {
             if (this.input.isKeyDown("KeyQ")) {
@@ -326,19 +177,15 @@ export class InteractiveWorld extends World {
     }
     
     syncPhysicsAndRendering() {
-        let pGlider = this.gliderBody.translation();
-        const rGlider = this.gliderBody.rotation();
-        this.glider.position.set(pGlider.x, pGlider.y, pGlider.z);
-        this.glider.quaternion.set(rGlider.x, rGlider.y, rGlider.z, rGlider.w);
+        this.glider.sync();
     }
 
     render(elapsedTime) {
-        // Move the camera
-        this.cameraSocket.rotation.x = this.lookRotation.x;
+        this.glider.render(elapsedTime);
 
         // Move terrain to make it look infinite
         const threshold = this.terrainSize.y * 0.1;
-        if (this.points.position.z - this.glider.position.z > threshold) {
+        if (this.points.position.z - this.glider.root.position.z > threshold) {
             this.points.position.z -= threshold * 2;
             this.applyDisplacement();
         }
@@ -377,6 +224,7 @@ export class InteractiveWorld extends World {
 
         this.renderer.dispose();
         this.input.dispose();
+        this.glider.dispose();
 
         this.mainElement.removeEventListener("click", this.onMouseClickCanvas);
         window.removeEventListener("resize", this.onWindowResized);

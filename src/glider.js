@@ -1,0 +1,211 @@
+import * as THREE from 'three';
+import * as RAPIER from '@dimforge/rapier3d-compat';
+import { Input } from '#src/input.js';
+
+export class Glider {
+    constructor(camera, input, scene, physicsWorld) {
+        this.VECTOR3_RIGHT = new THREE.Vector3(1, 0, 0);
+        this.VECTOR3_UP = new THREE.Vector3(0, 1, 0);
+        this.VECTOR3_FORWARD = new THREE.Vector3(0, 0, -1);
+
+        this.input = input;
+        this.physicsWorld = physicsWorld;
+        this.camera = camera;
+        this.scene = scene;
+
+        this.init();
+    }
+
+    init() {
+        this.root = new THREE.Object3D();
+        this.scene.add(this.root);
+        this.root.position.set(0, 30, 6);
+
+        this.cameraSocket = new THREE.Object3D();
+        this.root.add(this.cameraSocket);
+        this.cameraSocket.position.set(0, 0, 0);
+        this.cameraSocket.rotation.set(0, 0, 0);
+
+        const cameraRotation = new THREE.Vector3(
+            -15 * THREE.MathUtils.DEG2RAD, 
+            0 * THREE.MathUtils.DEG2RAD, 
+            0 * THREE.MathUtils.DEG2RAD
+        );
+        this.cameraSocket.add(this.camera);
+        this.camera.rotateOnWorldAxis(this.VECTOR3_RIGHT, cameraRotation.x);
+        this.camera.rotateOnWorldAxis(this.VECTOR3_UP, cameraRotation.y);
+        this.camera.rotateOnWorldAxis(this.VECTOR3_FORWARD, cameraRotation.z);
+        this.camera.position.set(0, 0, 0);
+        this.camera.rotation.set(0, 0, 0);
+
+        const gliderPosition = this.root.getWorldPosition(new THREE.Vector3());
+        const gliderBodyDescription = RAPIER.RigidBodyDesc.kinematicPositionBased().setTranslation(
+            gliderPosition.x,
+            gliderPosition.y,
+            gliderPosition.z
+        );
+        this.body = this.physicsWorld.createRigidBody(gliderBodyDescription);
+        this.body.setEnabledRotations(false, true, false, true);
+        const gliderColliderDescription = RAPIER.ColliderDesc.ball(1);
+        this.gliderCollider = this.physicsWorld.createCollider(gliderColliderDescription, this.body);
+        this.controller = this.physicsWorld.createCharacterController(0.01);
+
+        this.lookRotation = new THREE.Vector3();
+        this.onMouseMoved = event => {
+            if (document.pointerLockElement != null) {
+                this.lookRotation.x += -event.movementY * 0.002;
+                this.lookRotation.y += -event.movementX * 0.002;
+                this.lookRotation.z = 0;
+            
+                this.lookRotation.x = THREE.MathUtils.clamp(this.lookRotation.x, -Math.PI * 0.5, Math.PI * 0.5);
+                this.lookRotation.y = THREE.MathUtils.euclideanModulo(this.lookRotation.y + Math.PI, Math.PI * 2) - Math.PI; 
+            }
+        }
+        document.addEventListener("mousemove", this.onMouseMoved);
+
+        this.shoot = () => {
+            const origin = this.camera.getWorldPosition(new THREE.Vector3());
+            const direction = new THREE.Vector3(0, 0, -1).applyQuaternion(this.camera.getWorldQuaternion(new THREE.Quaternion()));
+            const ray = new RAPIER.Ray(
+                {x: origin.x, y: origin.y, z: origin.z}, 
+                {x: direction.x, y: direction.y, z: direction.z}
+            );
+            const maxToi = 999.0;
+            let solid = true;
+            let hit = this.physicsWorld.castRayAndGetNormal(ray, maxToi, solid);
+            if (hit != null) {
+                const point = ray.pointAt(hit.timeOfImpact);
+                console.debug("Collider", hit.collider, "hit at point", point);
+
+                if (hit.collider != null) {
+                    const force = 10;
+                    const impulseDirection = new RAPIER.Vector3(-hit.normal.x, -hit.normal.y, -hit.normal.z);
+                    const impulse = new RAPIER.Vector3(
+                        impulseDirection.x * force, 
+                        impulseDirection.y * force, 
+                        impulseDirection.z * force
+                    );
+                    hit.collider.parent().applyImpulse({
+                        x: impulse.x, 
+                        y: impulse.y, 
+                        z: impulse.z
+                    },
+                    true
+                );
+                }
+            }
+        }
+        this.mainElement = document.querySelector("main");
+        this.mainElement.addEventListener("mousedown", this.shoot);
+    }
+
+    processInputs() {
+        this.movementInput = new THREE.Vector3();
+        if (this.input.isKeyDown("KeyW")) {
+            this.movementInput.z += 1;
+        }
+        if (this.input.isKeyDown("KeyS")) {
+            this.movementInput.z += -1;
+        }
+        if (this.input.isKeyDown("KeyD")) {
+            this.movementInput.x += 1;
+        }
+        if (this.input.isKeyDown("KeyA")) {
+            this.movementInput.x += -1;
+        }
+        
+        this.movementInput.normalize();
+        
+        if (this.input.isKeyDown("Space")) {
+            this.movementInput.y += 1;
+        }
+        if (this.input.isKeyDown("ShiftLeft")) {
+            this.movementInput.y += -1;
+        }
+    }
+
+    processPhysics(elapsedTime) {
+        const speed = 0.5;
+                
+        const r = this.body.rotation();
+        const rotation = new THREE.Quaternion(
+            r.x,
+            r.y,
+            r.z,
+            r.w
+        );
+
+        const forward = this.VECTOR3_FORWARD.clone();
+        forward.applyQuaternion(rotation);
+        forward.y = 0;
+        forward.normalize();
+        forward.multiplyScalar(this.movementInput.z);
+
+        const right = this.VECTOR3_RIGHT.clone();
+        right.applyQuaternion(rotation);
+        right.y = 0;
+        right.normalize();
+        right.multiplyScalar(this.movementInput.x);
+
+        const up = this.VECTOR3_UP.clone();
+        up.multiplyScalar(this.movementInput.y);
+        const movement = new THREE.Vector3()
+            .add(forward)
+            .add(right)
+            .add(up)
+            .normalize()
+            .multiplyScalar(speed);
+        
+        this.controller.computeColliderMovement(this.gliderCollider, {
+            x: movement.x,
+            y: movement.y,
+            z: movement.z
+        });
+        const actualMovement = {
+            x: this.controller.computedMovement().x,
+            y: this.controller.computedMovement().y,
+            z: this.controller.computedMovement().z,
+        };
+        const currentTranslation = this.body.translation();
+        const ray = new RAPIER.Ray(
+            {x: currentTranslation.x, y: currentTranslation.y - 2, z: currentTranslation.z},
+            {x: 0, y: -1, z: 0}
+        )
+        const maxToi = 999.0;
+        const solid = false;
+        const hit = this.physicsWorld.castRayAndGetNormal(ray, maxToi, solid);
+        const minGroundDistance = 5.0;
+        if (hit != null) {
+            
+        }
+        this.body.setNextKinematicTranslation({
+            x: currentTranslation.x + actualMovement.x,
+            y: currentTranslation.y + actualMovement.y,
+            z: currentTranslation.z + actualMovement.z,
+        })
+
+        const q = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, this.lookRotation.y, 0));
+        this.body.setNextKinematicRotation({
+            x: q.x,
+            y: q.y,
+            z: q.z,
+            w: q.w
+        });
+    }
+
+    sync() {
+        let physicsPosition = this.body.translation();
+        const physicsRotation = this.body.rotation();
+        this.root.position.set(physicsPosition.x, physicsPosition.y, physicsPosition.z);
+        this.root.quaternion.set(physicsRotation.x, physicsRotation.y, physicsRotation.z, physicsRotation.w);
+    }
+
+    render(elapsedTime) {
+        this.cameraSocket.rotation.x = this.lookRotation.x;
+    }
+
+    dispose() {
+        document.removeEventListener("mousemove", this.onMouseMoved);
+        this.mainElement.removeEventListener("mousedown", this.shoot);
+    }
+}
