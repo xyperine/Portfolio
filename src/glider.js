@@ -99,10 +99,12 @@ export class Glider {
     }
 
     processInputs() {
-        this.pitchLookRotation = -this.input.getMouseDelta().y * 0.002;
+        const mouseSensitivity = 0.001;
+
+        this.pitchLookRotation = -this.input.getMouseDelta().y * mouseSensitivity;
         this.pitchLookRotation = THREE.MathUtils.clamp(this.pitchLookRotation, -Math.PI * 0.5, Math.PI * 0.5);
 
-        this.yawLookRotation = -this.input.getMouseDelta().x * 0.002;    
+        this.yawLookRotation = -this.input.getMouseDelta().x * mouseSensitivity;    
         this.yawLookRotation = THREE.MathUtils.euclideanModulo(this.yawLookRotation + Math.PI, Math.PI * 2) - Math.PI;
 
         this.movementInput = new THREE.Vector3();
