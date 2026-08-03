@@ -1,42 +1,49 @@
 export class Input {
+    #keys;
+    #mouseDelta;
+
+    #onKeyUp;
+    #onKeyDown;
+    #onMouseMoved;
+
     constructor() {
-        this.keys = {};
+        this.#keys = {};
 
-        this.onKeyDown = event => {
+        this.#onKeyDown = event => {
             event.preventDefault();
 
-            this.keys[event.code] = true;
+            this.#keys[event.code] = true;
         }
-        window.addEventListener("keydown", this.onKeyDown);
+        window.addEventListener("keydown", this.#onKeyDown);
 
-        this.onKeyUp = event => {
+        this.#onKeyUp = event => {
             event.preventDefault();
 
-            this.keys[event.code] = false;
+            this.#keys[event.code] = false;
         }
-        window.addEventListener("keyup", this.onKeyUp);
+        window.addEventListener("keyup", this.#onKeyUp);
 
-        this.mouseDelta = {x: 0, y: 0};
-        this.onMouseMoved = event => {
+        this.#mouseDelta = {x: 0, y: 0};
+        this.#onMouseMoved = event => {
             if (document.pointerLockElement != null) {
-                this.mouseDelta.x += event.movementX;
-                this.mouseDelta.y += event.movementY;            
+                this.#mouseDelta.x += event.movementX;
+                this.#mouseDelta.y += event.movementY;            
             }
         }
-        document.addEventListener("mousemove", this.onMouseMoved);
+        document.addEventListener("mousemove", this.#onMouseMoved);
     }
 
     getMouseDelta() {
-        return this.mouseDelta;
+        return this.#mouseDelta;
     }
     
     isKeyDown(key) {
-        return this.keys[key] === true;
+        return this.#keys[key] === true;
     }
 
     dispose() {
-        window.removeEventListener("keydown", this.onKeyDown);
-        window.removeEventListener("keyup", this.onKeyUp);
-        document.removeEventListener("mousemove", this.onMouseMoved);
+        window.removeEventListener("keydown", this.#onKeyDown);
+        window.removeEventListener("keyup", this.#onKeyUp);
+        document.removeEventListener("mousemove", this.#onMouseMoved);
     }
 }
