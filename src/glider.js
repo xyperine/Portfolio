@@ -56,6 +56,8 @@ export class Glider {
         this.controller = this.physicsWorld.createCharacterController(0.01);
 
         this.smoothedMovement = new THREE.Vector3();
+        this.smoothedPitchRotation = 0;
+        this.smoothedYawRotation = 0;
 
         this.pitchLookRotation = 0;
         this.yawLookRotation = 0;
@@ -99,14 +101,8 @@ export class Glider {
     }
 
     processInputs() {
-        const mouseSensitivity = 0.001;
-
-        this.pitchLookRotation = -this.input.getMouseDelta().y * mouseSensitivity;
-        this.pitchLookRotation = THREE.MathUtils.clamp(this.pitchLookRotation, -Math.PI * 0.5, Math.PI * 0.5);
-
-        this.yawLookRotation = -this.input.getMouseDelta().x * mouseSensitivity;    
-        this.yawLookRotation = THREE.MathUtils.euclideanModulo(this.yawLookRotation + Math.PI, Math.PI * 2) - Math.PI;
-
+        this.calculateLookRotation();
+        
         this.movementInput = new THREE.Vector3();
         if (this.input.isKeyDown("KeyW")) {
             this.movementInput.z += 1;
@@ -129,6 +125,23 @@ export class Glider {
         if (this.input.isKeyDown("ShiftLeft")) {
             this.movementInput.y += -1;
         }
+    }
+
+    calculateLookRotation() {
+        const horizontalMouseSensitivity = 0.001;
+        const verticalMouseSensitivity = 0.001;
+
+        this.pitchLookRotation = -this.input.getMouseDelta().y * verticalMouseSensitivity;
+        const pitchRotationSmoothing = 0.1;
+        this.smoothedPitchRotation = THREE.MathUtils.lerp(this.smoothedPitchRotation, this.pitchLookRotation, pitchRotationSmoothing);
+        this.pitchLookRotation = this.smoothedPitchRotation;
+        this.pitchLookRotation = THREE.MathUtils.clamp(this.pitchLookRotation, -Math.PI * 0.5, Math.PI * 0.5);
+
+        this.yawLookRotation = -this.input.getMouseDelta().x * horizontalMouseSensitivity;    
+        const yawRotationSmoothing = 0.15;
+        this.smoothedYawRotation = THREE.MathUtils.lerp(this.smoothedYawRotation, this.yawLookRotation, yawRotationSmoothing);
+        this.yawLookRotation = this.smoothedYawRotation;
+        this.yawLookRotation = THREE.MathUtils.euclideanModulo(this.yawLookRotation + Math.PI, Math.PI * 2) - Math.PI;
     }
 
     processPhysics() {
