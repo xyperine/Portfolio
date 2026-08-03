@@ -212,6 +212,13 @@ export class InteractiveWorld extends World {
     }
 
     dispose() {
+        // Dispose objects
+        this.glider.dispose();
+        this.glider = null;
+        this.input.dispose();
+        this.input = null;
+        
+        // Dispose rendering
         this.scene.traverse(object => {
             if (object.geometry) {
                 object.geometry.dispose();
@@ -227,11 +234,16 @@ export class InteractiveWorld extends World {
                 }
             }
         });
+        this.scene = null;
 
         this.renderer.dispose();
-        this.input.dispose();
-        this.glider.dispose();
+        this.renderer = null;
 
+        // Dispose physics
+        this.physicsWorld.free();
+        this.physicsWorld = null;
+
+        // Unsubscribe
         this.mainElement.removeEventListener("click", this.onMouseClickCanvas);
         window.removeEventListener("resize", this.onWindowResized);
         document.removeEventListener("mousemove", this.onMouseMoved);

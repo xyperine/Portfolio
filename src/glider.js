@@ -45,15 +45,15 @@ export class Glider {
         this.camera.position.set(0, 0, 0);
         this.camera.rotation.set(0, 0, 0);
 
-        const gliderPosition = this.root.getWorldPosition(new THREE.Vector3());
-        const gliderBodyDescription = RAPIER.RigidBodyDesc.kinematicPositionBased().setTranslation(
-            gliderPosition.x,
-            gliderPosition.y,
-            gliderPosition.z
+        const rootPosition = this.root.getWorldPosition(new THREE.Vector3());
+        const bodyDescription = RAPIER.RigidBodyDesc.kinematicPositionBased().setTranslation(
+            rootPosition.x,
+            rootPosition.y,
+            rootPosition.z
         );
-        this.body = this.physicsWorld.createRigidBody(gliderBodyDescription);
-        const gliderColliderDescription = RAPIER.ColliderDesc.ball(1);
-        this.gliderCollider = this.physicsWorld.createCollider(gliderColliderDescription, this.body);
+        this.body = this.physicsWorld.createRigidBody(bodyDescription);
+        const colliderDescription = RAPIER.ColliderDesc.ball(1);
+        this.collider = this.physicsWorld.createCollider(colliderDescription, this.body);
         this.controller = this.physicsWorld.createCharacterController(0.01);
 
         this.smoothedMovement = new THREE.Vector3();
@@ -184,7 +184,7 @@ export class Glider {
         this.smoothedMovement.lerp(movement, 0.04);
         movement = this.smoothedMovement;
         
-        this.controller.computeColliderMovement(this.gliderCollider, {
+        this.controller.computeColliderMovement(this.collider, {
             x: movement.x,
             y: movement.y,
             z: movement.z
@@ -252,6 +252,8 @@ export class Glider {
     }
 
     dispose() {
+        this.scene.remove(this.root);
+
         this.mainElement.removeEventListener("mousedown", this.shoot);
     }
 }
