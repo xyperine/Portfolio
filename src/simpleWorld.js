@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { World } from '#src/world.js';
+import { FPSCounter } from '#src/fpsCounter.js';
 
 export class SimpleWorld extends World {
     constructor() {
@@ -74,6 +75,8 @@ export class SimpleWorld extends World {
         }
         window.addEventListener("resize", this.onWindowResized);
         this.resize(this.mainElement.clientWidth, this.mainElement.clientHeight);
+
+        this.fpsCounter = new FPSCounter();
     }
 
     update(elapsedTime) {
@@ -92,6 +95,8 @@ export class SimpleWorld extends World {
         // Update the shader
         this.pointsMaterial.uniforms.time.value = elapsedTime;
         
+        this.fpsCounter.update();
+
         this.renderer.render(this.scene, this.camera);
     }
 

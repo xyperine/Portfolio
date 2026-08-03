@@ -242,6 +242,17 @@ html.interactive .projects-container {
 	align-items: center;
 }
 
+#fps-counter {
+	position: absolute;
+	justify-self: right;
+	top: 10px;
+	right: 10px;
+	color: gray;
+	font-family: var(--font-family);
+
+	z-index: 2;
+}
+
 #game-ui {
 	position: relative;
 	width: 100%;

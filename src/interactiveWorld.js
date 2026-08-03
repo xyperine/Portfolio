@@ -4,6 +4,7 @@ import { Input } from '#src/input.js';
 import { World } from '#src/world.js';
 import { VertexShaderAlgorithmCopy } from '#src/vertexShaderAlgorithmCopy.js';
 import { Glider } from '#src/glider.js';
+import { FPSCounter } from '#src/fpsCounter.js';
 
 export class InteractiveWorld extends World {
     constructor() {
@@ -110,6 +111,8 @@ export class InteractiveWorld extends World {
         if (this.physicsDebug) {
             this.debugPhysics();
         }
+
+        this.fpsCounter = new FPSCounter();
     }
 
     applyDisplacement() {
@@ -195,6 +198,8 @@ export class InteractiveWorld extends World {
         // Update the shader
         this.pointsMaterial.uniforms.time.value = elapsedTime;
         
+        this.fpsCounter.update();
+
         this.renderer.render(this.scene, this.camera);
     }
 
