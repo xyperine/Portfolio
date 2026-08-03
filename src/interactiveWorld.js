@@ -157,6 +157,8 @@ export class InteractiveWorld extends World {
         this.syncPhysicsAndRendering();
 
         this.render(elapsedTime);
+
+        this.postUpdate();
     }
 
     processInputs() {
@@ -194,6 +196,10 @@ export class InteractiveWorld extends World {
         this.pointsMaterial.uniforms.time.value = elapsedTime;
         
         this.renderer.render(this.scene, this.camera);
+    }
+
+    postUpdate() {
+        this.input.update();
     }
 
     updateColors() {

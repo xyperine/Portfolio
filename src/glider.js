@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import * as RAPIER from '@dimforge/rapier3d-compat';
+import { Input } from '#src/input.js';
 
 export class Glider {
     /**
@@ -128,20 +129,21 @@ export class Glider {
     }
 
     calculateLookRotation() {
-        const horizontalMouseSensitivity = 0.001;
-        const verticalMouseSensitivity = 0.001;
+        const pitchSpeed = 0.01;
+        const yawSpeed = 0.005;
 
-        this.pitchLookRotation = -this.input.getMouseDelta().y * verticalMouseSensitivity;
+        this.pitchLookRotation += -this.input.getMouseDelta().y * pitchSpeed;
+        const pitchRange = {
+            bottom: -Math.PI * 0.5,
+            up: Math.PI * 0.5
+        };
+        this.pitchLookRotation = THREE.MathUtils.clamp(this.pitchLookRotation, pitchRange.bottom, pitchRange.up);
         const pitchRotationSmoothing = 0.1;
         this.smoothedPitchRotation = THREE.MathUtils.lerp(this.smoothedPitchRotation, this.pitchLookRotation, pitchRotationSmoothing);
-        this.pitchLookRotation = this.smoothedPitchRotation;
-        this.pitchLookRotation = THREE.MathUtils.clamp(this.pitchLookRotation, -Math.PI * 0.5, Math.PI * 0.5);
 
-        this.yawLookRotation = -this.input.getMouseDelta().x * horizontalMouseSensitivity;    
-        const yawRotationSmoothing = 0.15;
+        this.yawLookRotation += -this.input.getMouseDelta().x * yawSpeed;        
+        const yawRotationSmoothing = 0.2;
         this.smoothedYawRotation = THREE.MathUtils.lerp(this.smoothedYawRotation, this.yawLookRotation, yawRotationSmoothing);
-        this.yawLookRotation = this.smoothedYawRotation;
-        this.yawLookRotation = THREE.MathUtils.euclideanModulo(this.yawLookRotation + Math.PI, Math.PI * 2) - Math.PI;
     }
 
     processPhysics() {
@@ -209,7 +211,7 @@ export class Glider {
         })
 
         // Apply rotation
-        const q = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, this.yawLookRotation, 0));
+        const q = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, this.smoothedYawRotation, 0));
         this.body.setNextKinematicRotation({
             x: q.x,
             y: q.y,
@@ -246,7 +248,7 @@ export class Glider {
     }
 
     render(elapsedTime) {
-        this.cameraSocket.rotation.x = this.pitchLookRotation;
+        this.cameraSocket.rotation.x = this.smoothedPitchRotation;
     }
 
     dispose() {

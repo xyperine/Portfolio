@@ -1,7 +1,9 @@
 export class Input {
     #keys;
     #mouseDelta;
-
+    #horizontalMouseSensitivity;
+    #verticalMouseSensitivity;
+    
     #onKeyUp;
     #onKeyDown;
     #onMouseMoved;
@@ -23,14 +25,21 @@ export class Input {
         }
         window.addEventListener("keyup", this.#onKeyUp);
 
+        this.#horizontalMouseSensitivity = 1;
+        this.#verticalMouseSensitivity = 1;
         this.#mouseDelta = {x: 0, y: 0};
         this.#onMouseMoved = event => {
             if (document.pointerLockElement != null) {
-                this.#mouseDelta.x += event.movementX;
-                this.#mouseDelta.y += event.movementY;            
+                this.#mouseDelta.x = event.movementX * this.#horizontalMouseSensitivity;
+                this.#mouseDelta.y = event.movementY * this.#verticalMouseSensitivity;
             }
         }
         document.addEventListener("mousemove", this.#onMouseMoved);
+    }
+
+    update() {
+        this.#mouseDelta.x = 0;
+        this.#mouseDelta.y = 0;
     }
 
     getMouseDelta() {
