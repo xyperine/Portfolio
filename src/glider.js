@@ -55,11 +55,12 @@ export class Glider {
         this.gliderCollider = this.physicsWorld.createCollider(gliderColliderDescription, this.body);
         this.controller = this.physicsWorld.createCharacterController(0.01);
 
-        // For smoothing
         this.smoothedMovement = new THREE.Vector3();
 
         this.pitchLookRotation = 0;
         this.yawLookRotation = 0;
+
+        this.grounded = false;
 
         this.shoot = () => {
             const origin = this.camera.getWorldPosition(new THREE.Vector3());
@@ -131,6 +132,8 @@ export class Glider {
     }
 
     processPhysics() {
+        this.checkGround();
+
         // Calculate movement
         const speed = 0.5;
 
@@ -180,18 +183,9 @@ export class Glider {
         const currentTranslation = this.body.translation();
 
         // Ground snapping
-        const ray = new RAPIER.Ray(
-            {x: currentTranslation.x, y: currentTranslation.y - 2, z: currentTranslation.z},
-            {x: 0, y: -1, z: 0}
-        )
-        const maxToi = 999.0;
-        const solid = false;
-        const hit = this.physicsWorld.castRayAndGetNormal(ray, maxToi, solid);
-        const minGroundDistance = 10.0;
-        if (hit != null) {
-            this.groundPoint = ray.pointAt(hit.timeOfImpact);
-            currentTranslation.y = this.groundPoint.y + minGroundDistance;
-            
+        const groundSnapDistance = 10.0;
+        if (this.grounded) {
+            currentTranslation.y = this.groundPoint.y + groundSnapDistance;
         }
 
         // Apply movement
@@ -202,13 +196,33 @@ export class Glider {
         })
 
         // Apply rotation
-        const q = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, this.lookRotation.y, 0));
+        const q = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, this.yawLookRotation, 0));
         this.body.setNextKinematicRotation({
             x: q.x,
             y: q.y,
             z: q.z,
             w: q.w
         });
+    }
+
+    checkGround() {
+        const currentTranslation = this.body.translation();
+        const ray = new RAPIER.Ray(
+            {x: currentTranslation.x, y: currentTranslation.y - 2, z: currentTranslation.z},
+            {x: 0, y: -1, z: 0}
+        )
+        const maxToi = 999.0;
+        const solid = false;
+        const hit = this.physicsWorld.castRayAndGetNormal(ray, maxToi, solid);
+        if (hit != null) {
+            this.grounded = true;
+            this.groundPoint = ray.pointAt(hit.timeOfImpact);
+            
+        } else {
+            this.grounded = false;
+            this.groundPoint = null;
+        }
+
     }
 
     sync() {
