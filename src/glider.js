@@ -3,6 +3,13 @@ import * as RAPIER from '@dimforge/rapier3d-compat';
 import { Input } from '#src/input.js';
 
 export class Glider {
+    /**
+     * 
+     * @param {THREE.Camera} camera 
+     * @param {Input} input 
+     * @param {THREE.Scene} scene 
+     * @param {RAPIER.World} physicsWorld 
+     */
     constructor(camera, input, scene, physicsWorld) {
         this.VECTOR3_RIGHT = new THREE.Vector3(1, 0, 0);
         this.VECTOR3_UP = new THREE.Vector3(0, 1, 0);
@@ -45,23 +52,12 @@ export class Glider {
             gliderPosition.z
         );
         this.body = this.physicsWorld.createRigidBody(gliderBodyDescription);
-        this.body.setEnabledRotations(false, true, false, true);
         const gliderColliderDescription = RAPIER.ColliderDesc.ball(1);
         this.gliderCollider = this.physicsWorld.createCollider(gliderColliderDescription, this.body);
         this.controller = this.physicsWorld.createCharacterController(0.01);
 
-        this.lookRotation = new THREE.Vector3();
-        this.onMouseMoved = event => {
-            if (document.pointerLockElement != null) {
-                this.lookRotation.x += -event.movementY * 0.002;
-                this.lookRotation.y += -event.movementX * 0.002;
-                this.lookRotation.z = 0;
-            
-                this.lookRotation.x = THREE.MathUtils.clamp(this.lookRotation.x, -Math.PI * 0.5, Math.PI * 0.5);
-                this.lookRotation.y = THREE.MathUtils.euclideanModulo(this.lookRotation.y + Math.PI, Math.PI * 2) - Math.PI; 
-            }
-        }
-        document.addEventListener("mousemove", this.onMouseMoved);
+        this.pitchLookRotation = 0;
+        this.yawLookRotation = 0;
 
         this.shoot = () => {
             const origin = this.camera.getWorldPosition(new THREE.Vector3());
@@ -100,6 +96,12 @@ export class Glider {
     }
 
     processInputs() {
+        this.pitchLookRotation = -this.input.getMouseDelta().y * 0.002;
+        this.pitchLookRotation = THREE.MathUtils.clamp(this.pitchLookRotation, -Math.PI * 0.5, Math.PI * 0.5);
+
+        this.yawLookRotation = -this.input.getMouseDelta().x * 0.002;    
+        this.yawLookRotation = THREE.MathUtils.euclideanModulo(this.yawLookRotation + Math.PI, Math.PI * 2) - Math.PI;
+
         this.movementInput = new THREE.Vector3();
         if (this.input.isKeyDown("KeyW")) {
             this.movementInput.z += 1;
@@ -201,11 +203,10 @@ export class Glider {
     }
 
     render(elapsedTime) {
-        this.cameraSocket.rotation.x = this.lookRotation.x;
+        this.cameraSocket.rotation.x = this.pitchLookRotation;
     }
 
     dispose() {
-        document.removeEventListener("mousemove", this.onMouseMoved);
         this.mainElement.removeEventListener("mousedown", this.shoot);
     }
 }
