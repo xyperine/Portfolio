@@ -33,15 +33,7 @@ export class Glider {
         this.cameraSocket.position.set(0, 0, 0);
         this.cameraSocket.rotation.set(0, 0, 0);
 
-        const cameraRotation = new THREE.Vector3(
-            -15 * THREE.MathUtils.DEG2RAD, 
-            0 * THREE.MathUtils.DEG2RAD, 
-            0 * THREE.MathUtils.DEG2RAD
-        );
         this.cameraSocket.add(this.camera);
-        this.camera.rotateOnWorldAxis(this.VECTOR3_RIGHT, cameraRotation.x);
-        this.camera.rotateOnWorldAxis(this.VECTOR3_UP, cameraRotation.y);
-        this.camera.rotateOnWorldAxis(this.VECTOR3_FORWARD, cameraRotation.z);
         this.camera.position.set(0, 0, 0);
         this.camera.rotation.set(0, 0, 0);
 
@@ -179,7 +171,8 @@ export class Glider {
             .add(right)
             .add(up)
             .normalize()
-            .multiplyScalar(speed);
+            .multiplyScalar(speed)
+        ;
         
         this.smoothedMovement.lerp(movement, 0.04);
         movement = this.smoothedMovement;
