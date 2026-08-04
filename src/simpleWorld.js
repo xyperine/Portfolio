@@ -46,7 +46,7 @@ export class SimpleWorld extends World {
             this.terrainSize.y
         );
             
-            // Points
+        // Points
         this.pointsMaterial = new THREE.ShaderMaterial({
                 uniforms: THREE.UniformsUtils.merge([
                     THREE.UniformsLib.fog,
@@ -69,12 +69,12 @@ export class SimpleWorld extends World {
         );
         this.scene.add(this.points);
 
-        this.mainElement = document.querySelector("main");
+        const mainElement = document.querySelector("main");
         this.onWindowResized = () => {
-            this.resize(this.mainElement.clientWidth, this.mainElement.clientHeight);
+            this.resize(mainElement.clientWidth, mainElement.clientHeight);
         }
         window.addEventListener("resize", this.onWindowResized);
-        this.resize(this.mainElement.clientWidth, this.mainElement.clientHeight);
+        this.resize(mainElement.clientWidth, mainElement.clientHeight);
 
         this.fpsCounter = new FPSCounter();
     }
