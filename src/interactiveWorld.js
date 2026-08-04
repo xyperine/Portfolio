@@ -5,6 +5,7 @@ import { World } from '#src/world.js';
 import { VertexShaderAlgorithmCopy } from '#src/vertexShaderAlgorithmCopy.js';
 import { Glider } from '#src/glider.js';
 import { FPSCounter } from '#src/fpsCounter.js';
+import { getCssColorAsThreeColor } from '#src/utils.js';
 
 export class InteractiveWorld extends World {
     #terrainVertexShader;
@@ -29,7 +30,7 @@ export class InteractiveWorld extends World {
         }
         
         // Scene
-        const backgroundColor = this.getCssColor("--background-color");
+        const backgroundColor = getCssColorAsThreeColor("--background-color");
         this.scene = new THREE.Scene();
         this.scene.background = backgroundColor;
         const fog = new THREE.Fog(backgroundColor, 30, 180);
@@ -64,7 +65,7 @@ export class InteractiveWorld extends World {
                 {
                     time: {value: 0},
                     pointSize: {value: 0.2},
-                    terrainColor: {value: this.getCssColor("--terrain-color")}
+                    terrainColor: {value: getCssColorAsThreeColor("--terrain-color")}
                 }
             ]),
             
@@ -218,12 +219,12 @@ export class InteractiveWorld extends World {
     }
 
     updateColors() {
-        const backgroundColor = this.getCssColor("--background-color");
+        const backgroundColor = getCssColorAsThreeColor("--background-color");
         this.scene.background = backgroundColor;
         const fog = new THREE.Fog(backgroundColor, 30, 180);
         this.scene.fog = fog;
         
-        this.pointsMaterial.uniforms.terrainColor.value.set(this.getCssColor("--terrain-color"));
+        this.pointsMaterial.uniforms.terrainColor.value.set(getCssColorAsThreeColor("--terrain-color"));
     }
 
     dispose() {

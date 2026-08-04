@@ -17,12 +17,4 @@ export class World {
         this.camera.aspect = width / height;
         this.camera.updateProjectionMatrix();
     }
-
-    getCssColor(name) {
-        return new THREE.Color(
-            getComputedStyle(document.documentElement)
-            .getPropertyValue(name)
-            .trim()
-        );
-    }
 }
