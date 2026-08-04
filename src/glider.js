@@ -121,8 +121,8 @@ export class Glider {
     }
 
     calculateLookRotation() {
-        const pitchSpeed = 0.01;
-        const yawSpeed = 0.005;
+        const pitchSpeed = 0.003;
+        const yawSpeed = 0.0015;
 
         this.pitchLookRotation += -this.input.getMouseDelta().y * pitchSpeed;
         const pitchRange = {
