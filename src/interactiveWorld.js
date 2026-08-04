@@ -7,11 +7,19 @@ import { Glider } from '#src/glider.js';
 import { FPSCounter } from '#src/fpsCounter.js';
 
 export class InteractiveWorld extends World {
-    constructor() {
+    #terrainVertexShader;
+    #terrainFragmentShader;
+
+    constructor(terrainVertexShader, terrainFragmentShader) {
         super();
+
+        this.#terrainVertexShader = terrainVertexShader;
+        this.#terrainFragmentShader = terrainFragmentShader;
+
+        this.init();
     }
 
-    init() {
+    async init() {
         this.input = new Input();
         this.shaderVertexAlgorithm = new VertexShaderAlgorithmCopy();
         this.terrainSize = new THREE.Vector2(600, 400);
@@ -37,6 +45,7 @@ export class InteractiveWorld extends World {
             this.update(elapsedTime);
         });
         
+        // Camera
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         this.scene.add(this.camera);
 
@@ -59,8 +68,8 @@ export class InteractiveWorld extends World {
                 }
             ]),
             
-            vertexShader: document.getElementById("vertexShader").textContent,
-            fragmentShader: document.getElementById("fragmentShader").textContent,
+            vertexShader: this.#terrainVertexShader,
+            fragmentShader: this.#terrainFragmentShader,
             fog: true
         });
         this.points = new THREE.Points(terrainGeometry, this.pointsMaterial);
@@ -71,6 +80,7 @@ export class InteractiveWorld extends World {
         );
         this.scene.add(this.points);
         
+        // Events
         this.mainElement = document.querySelector("main");
         this.onWindowResized = () => {
             this.resize(this.mainElement.clientWidth, this.mainElement.clientHeight);

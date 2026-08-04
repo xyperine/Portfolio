@@ -1,6 +1,7 @@
 import RAPIER from "@dimforge/rapier3d-compat";
 import { InteractiveWorld } from "#src/interactiveWorld.js";
 import { SimpleWorld } from "#src/simpleWorld.js";
+import { loadAsText } from '#src/utils.js';
 
 export class App {
     constructor() {
@@ -17,6 +18,9 @@ export class App {
         this.darkModeSwitch = document.querySelector("#dark-mode-switch");
         this.modeSwitch = document.querySelector("#mode-switch");
         
+        this.terrainVertexShader = await loadAsText("src/shaders/terrain.vert.glsl");
+        this.terrainFragmentShader = await loadAsText("src/shaders/terrain.frag.glsl");
+
         this.world = null;
 
         await RAPIER.init();
@@ -71,9 +75,9 @@ export class App {
     createWorld(interactive) {
         let world;
         if (interactive) {
-            world = new InteractiveWorld();
+            world = new InteractiveWorld(this.terrainVertexShader, this.terrainFragmentShader);
         } else {
-            world = new SimpleWorld();
+            world = new SimpleWorld(this.terrainVertexShader, this.terrainFragmentShader);
         }
 
         return world;

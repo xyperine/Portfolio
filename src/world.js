@@ -5,11 +5,9 @@ export class World {
         this.VECTOR3_RIGHT = new THREE.Vector3(1, 0, 0);
         this.VECTOR3_UP = new THREE.Vector3(0, 1, 0);
         this.VECTOR3_FORWARD = new THREE.Vector3(0, 0, -1);
-
-        this.init();
     }
 
-    init() {}
+    async init() {}
     update(elapsedTime) {}
     updateColors() {}
     dispose() {}

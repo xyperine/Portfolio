@@ -3,11 +3,19 @@ import { World } from '#src/world.js';
 import { FPSCounter } from '#src/fpsCounter.js';
 
 export class SimpleWorld extends World {
-    constructor() {
+    #terrainVertexShader;
+    #terrainFragmentShader;
+
+    constructor(terrainVertexShader, terrainFragmentShader) {
         super();
+
+        this.#terrainVertexShader = terrainVertexShader;
+        this.#terrainFragmentShader = terrainFragmentShader;
+
+        this.init();
     }
 
-    init() {
+    async init() {
         this.terrainSize = new THREE.Vector2(600, 400);
 
         const backgroundColor = this.getCssColor("--background-color");
@@ -57,8 +65,8 @@ export class SimpleWorld extends World {
                 }
             ]),
                 
-            vertexShader: document.getElementById("vertexShader").textContent,
-            fragmentShader: document.getElementById("fragmentShader").textContent,
+            vertexShader: this.#terrainVertexShader,
+            fragmentShader: this.#terrainFragmentShader,
             fog: true
         });
         this.points = new THREE.Points(terrainGeometry, this.pointsMaterial);
