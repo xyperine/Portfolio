@@ -71,12 +71,12 @@ main {
 	display: flex;
 	flex-direction: column;
 	box-sizing: border-box;
-
+	
 	justify-items: center;
 	align-items: center;
 	justify-content: center;
 	align-items: center;
-
+	
 	z-index: 10;
 }
 
@@ -87,7 +87,7 @@ main > *:not(#game) {
 footer {
 	display: flex;
 	justify-content: space-between;
-
+	
 	flex-shrink: 0;
 }
 
@@ -113,7 +113,7 @@ p {
 	background: none;
 	border: none;
 	cursor: pointer;
-
+	
 	font-family: var(--font-family);
 	font-weight: 600;
 	font-size: 1rem;
@@ -126,6 +126,10 @@ p {
 
 .switch:hover {
 	color: var(--accent-color);
+}
+
+html.pointer-locked .switch:hover {
+	color: var(--button-normal-color);
 }
 
 .projects-container {

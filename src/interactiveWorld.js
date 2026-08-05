@@ -95,6 +95,12 @@ export class InteractiveWorld extends World {
         };
         this.mainElement.addEventListener("click", this.onMouseClickCanvas);
         this.onMouseClickCanvas();
+
+        this.onPointerLockChange = () => {
+            const pointerLocked = document.pointerLockElement != null;
+            document.documentElement.classList.toggle("pointer-locked", pointerLocked);
+        }
+        document.addEventListener("pointerlockchange", this.onPointerLockChange);
         
         // Setup physics
         this.physicsWorld = new RAPIER.World({
@@ -235,6 +241,7 @@ export class InteractiveWorld extends World {
         this.mainElement.removeEventListener("click", this.onMouseClickCanvas);
         window.removeEventListener("resize", this.onWindowResized);
         document.removeEventListener("mousemove", this.onMouseMoved);
+        document.removeEventListener("pointerlockchange", this.onPointerLockChange);
 
         // Dispose objects
         this.glider.dispose();
