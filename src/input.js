@@ -42,6 +42,17 @@ export class Input {
         this.#mouseDelta.y = 0;
     }
 
+    async requestPointerLock(element) {
+        try {
+            await element.requestPointerLock({
+                unadjustedMovement: true
+            });
+        } catch (error) {
+            console.error(error);
+            await element.requestPointerLock();
+        }
+    }
+
     getMouseDelta() {
         return this.#mouseDelta;
     }

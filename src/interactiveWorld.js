@@ -89,26 +89,12 @@ export class InteractiveWorld extends World {
         window.addEventListener("resize", this.onWindowResized);
         this.onWindowResized();
 
-        this.onMouseClickCanvas = async () => {
-            try {
-                await this.renderingCanvas.requestPointerLock({
-                    unadjustedMovement: true
-                });
-            } catch (error) {
-                console.error(error);
-                await this.renderingCanvas.requestPointerLock();
-            }
-        };
         this.mainElement = document.querySelector("main");
+        this.onMouseClickCanvas = async () => {
+            await this.input.requestPointerLock(this.renderingCanvas);
+        };
         this.mainElement.addEventListener("click", this.onMouseClickCanvas);
-        try {
-            this.renderingCanvas.requestPointerLock({
-                unadjustedMovement: true
-            });
-        } catch (error) {
-            console.error(error);
-            this.renderingCanvas.requestPointerLock();
-        }
+        this.onMouseClickCanvas();
         
         // Setup physics
         this.physicsWorld = new RAPIER.World({
