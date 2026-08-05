@@ -229,6 +229,13 @@ export class InteractiveWorld extends World {
     }
 
     dispose() {
+        this.input.unlockPointer();
+        
+        // Unsubscribe
+        this.mainElement.removeEventListener("click", this.onMouseClickCanvas);
+        window.removeEventListener("resize", this.onWindowResized);
+        document.removeEventListener("mousemove", this.onMouseMoved);
+
         // Dispose objects
         this.glider.dispose();
         this.glider = null;
@@ -259,10 +266,5 @@ export class InteractiveWorld extends World {
         // Dispose physics
         this.physicsWorld.free();
         this.physicsWorld = null;
-
-        // Unsubscribe
-        this.mainElement.removeEventListener("click", this.onMouseClickCanvas);
-        window.removeEventListener("resize", this.onWindowResized);
-        document.removeEventListener("mousemove", this.onMouseMoved);
     }
 }

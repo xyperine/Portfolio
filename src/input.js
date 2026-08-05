@@ -53,6 +53,10 @@ export class Input {
         }
     }
 
+    unlockPointer() {
+        document.exitPointerLock();
+    }
+
     getMouseDelta() {
         return this.#mouseDelta;
     }
