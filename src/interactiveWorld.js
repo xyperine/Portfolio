@@ -37,11 +37,11 @@ export class InteractiveWorld extends World {
         this.scene.fog = fog;
         
         // Renderer
+        this.renderingCanvas = document.querySelector("#terrain");
         this.renderer = new THREE.WebGLRenderer({
-            canvas: document.querySelector("#terrain"),
+            canvas: this.renderingCanvas,
             antialias: true,
         });
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.setAnimationLoop(elapsedTime => {
             this.update(elapsedTime);
         });
@@ -82,18 +82,33 @@ export class InteractiveWorld extends World {
         this.scene.add(this.points);
         
         // Events
-        this.mainElement = document.querySelector("main");
+        this.gameElement = document.querySelector("#game");
         this.onWindowResized = () => {
-            this.resize(this.mainElement.clientWidth, this.mainElement.clientHeight);
+            this.resize(this.gameElement.clientWidth, this.gameElement.clientHeight);
         };
         window.addEventListener("resize", this.onWindowResized);
-        this.resize(this.mainElement.clientWidth, this.mainElement.clientHeight);
-        
-        this.onMouseClickCanvas = () => {
-            this.renderer.domElement.requestPointerLock();
+        this.onWindowResized();
+
+        this.onMouseClickCanvas = async () => {
+            try {
+                await this.renderingCanvas.requestPointerLock({
+                    unadjustedMovement: true
+                });
+            } catch (error) {
+                console.error(error);
+                await this.renderingCanvas.requestPointerLock();
+            }
         };
+        this.mainElement = document.querySelector("main");
         this.mainElement.addEventListener("click", this.onMouseClickCanvas);
-        this.renderer.domElement.requestPointerLock();
+        try {
+            this.renderingCanvas.requestPointerLock({
+                unadjustedMovement: true
+            });
+        } catch (error) {
+            console.error(error);
+            this.renderingCanvas.requestPointerLock();
+        }
         
         // Setup physics
         this.physicsWorld = new RAPIER.World({

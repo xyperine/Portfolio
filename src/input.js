@@ -30,8 +30,8 @@ export class Input {
         this.#mouseDelta = {x: 0, y: 0};
         this.#onMouseMoved = event => {
             if (document.pointerLockElement != null) {
-                this.#mouseDelta.x = event.movementX * this.#horizontalMouseSensitivity;
-                this.#mouseDelta.y = event.movementY * this.#verticalMouseSensitivity;
+                this.#mouseDelta.x += event.movementX * this.#horizontalMouseSensitivity;
+                this.#mouseDelta.y += event.movementY * this.#verticalMouseSensitivity;
             }
         }
         document.addEventListener("mousemove", this.#onMouseMoved);

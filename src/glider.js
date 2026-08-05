@@ -124,7 +124,9 @@ export class Glider {
         const pitchSpeed = 0.003;
         const yawSpeed = 0.0015;
 
-        this.pitchLookRotation += -this.input.getMouseDelta().y * pitchSpeed;
+        const mouseDelta = this.input.getMouseDelta();
+
+        this.pitchLookRotation += -mouseDelta.y * pitchSpeed;
         const pitchRange = {
             bottom: -Math.PI * 0.5,
             up: Math.PI * 0.5
@@ -133,7 +135,7 @@ export class Glider {
         const pitchRotationSmoothing = 0.1;
         this.smoothedPitchRotation = THREE.MathUtils.lerp(this.smoothedPitchRotation, this.pitchLookRotation, pitchRotationSmoothing);
 
-        this.yawLookRotation += -this.input.getMouseDelta().x * yawSpeed;        
+        this.yawLookRotation += -mouseDelta.x * yawSpeed;        
         const yawRotationSmoothing = 0.2;
         this.smoothedYawRotation = THREE.MathUtils.lerp(this.smoothedYawRotation, this.yawLookRotation, yawRotationSmoothing);
     }
