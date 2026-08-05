@@ -10,16 +10,21 @@ export class Input {
 
     constructor() {
         this.#keys = {};
+        this.keysToIgnore = ["KeyW", "KeyA", "KeyS", "KeyD", "Space", "ShiftLeft", "Tab"];
 
         this.#onKeyDown = event => {
-            event.preventDefault();
+            if (this.keysToIgnore.includes(event.code)) {
+                event.preventDefault();
+            }
 
             this.#keys[event.code] = true;
         }
         window.addEventListener("keydown", this.#onKeyDown);
 
         this.#onKeyUp = event => {
-            event.preventDefault();
+            if (this.keysToIgnore.includes(event.code)) {
+                event.preventDefault();
+            }
 
             this.#keys[event.code] = false;
         }
