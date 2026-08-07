@@ -56,6 +56,7 @@ export class Glider {
         this.yawLookRotation = 0;
 
         this.aboveSolidSurface = false;
+        this.altitude = 0;
 
         this.yVelocity = 0;
 
@@ -199,6 +200,8 @@ export class Glider {
             }
 
             movement.y = this.yVelocity * this.physicsWorld.timestep;
+
+            this.altitude = this.body.translation().y - this.groundPoint.y;
         }
 
         this.controller.computeColliderMovement(this.collider, {

@@ -20,6 +20,7 @@
 
 	--font-family: "Azeret Mono", monospace;
 	--meta-tag-font-family: "IBM Plex Mono", monospace;
+	--game-ui-font-family: "Kode Mono", monospace;
 }
 
 *, *::before, *::after {
@@ -258,10 +259,30 @@ html.interactive .projects-container {
 	position: absolute;
 	inset: 0;
 	z-index: 1;
+	padding: 1rem;
 }
 
 html:not(.interactive) #game-ui{
 	display: none;
+}
+
+#game-ui .hud{
+	position: absolute;
+
+	gap: 0.2rem;
+}
+
+#game-ui .hud .hud-entry {
+	display: grid;
+	grid-template-columns: 10rem auto;
+
+	margin-top: 0;
+	margin-bottom: 0;
+
+	color: gray;
+	font-family: var(--game-ui-font-family);
+	font-size: 0.8rem;
+	letter-spacing: 0.08rem;
 }
 
 #crosshair {
@@ -279,8 +300,9 @@ html:not(.interactive) #game-ui{
 	justify-self: right;
 	top: 10px;
 	right: 10px;
+
 	color: gray;
 	font-family: var(--font-family);
-
+	font-size: 0.8rem;
 	z-index: 2;
 }

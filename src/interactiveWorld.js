@@ -6,6 +6,7 @@ import { VertexShaderAlgorithmCopy } from '#src/vertexShaderAlgorithmCopy.js';
 import { Glider } from '#src/glider.js';
 import { FPSCounter } from '#src/fpsCounter.js';
 import { getCssColorAsThreeColor } from '#src/utils.js';
+import { Hud } from '#src/hud.js';
 
 export class InteractiveWorld extends World {
     #terrainVertexShader;
@@ -130,6 +131,8 @@ export class InteractiveWorld extends World {
             this.debugPhysics();
         }
 
+        this.hud = new Hud(this.glider);
+
         this.fpsCounter = new FPSCounter();
     }
 
@@ -216,6 +219,8 @@ export class InteractiveWorld extends World {
         // Update the shader
         this.pointsMaterial.uniforms.time.value = elapsedTime;
         
+        this.hud.update();
+
         this.fpsCounter.update();
 
         this.renderer.render(this.scene, this.camera);
