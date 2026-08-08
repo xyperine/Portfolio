@@ -8,6 +8,7 @@ import { FPSCounter } from '#src/fpsCounter.js';
 import { getCssColorAsThreeColor } from '#src/utils.js';
 import { Hud } from '#src/hud.js';
 import { fract } from 'three/src/nodes/math/MathNode.js';
+import { TerrainChunk } from '#src/terrainChunk.js';
 
 export class InteractiveWorld extends World {
     #terrainVertexShader;
@@ -357,35 +358,5 @@ export class InteractiveWorld extends World {
         // Dispose physics
         this.physicsWorld.free();
         this.physicsWorld = null;
-    }
-}
-
-class TerrainChunk {
-    /**
-     * 
-     * @param {THREE.Points} renderObject 
-     * @param {RAPIER.RigidBody} physicsObject 
-     */
-    constructor(renderObject, physicsObject) {
-        this.renderObject = renderObject;
-        this.physicsObject = physicsObject;
-    }
-
-    isAvailable() {
-
-    }
-
-    getXZPosition() {
-        let p = new THREE.Vector3();
-        this.renderObject.getWorldPosition(p);
-        p.y = 0;
-        return p;
-    }
-
-    relocateTo(x, z) {
-        this.physicsObject.setTranslation({x, y: this.physicsObject.translation().y, z});
-        const p = this.physicsObject.translation();
-        this.renderObject.position.set(p.x, p.y, p.z);
-        this.renderObject.updateMatrixWorld(true);
     }
 }
