@@ -7,6 +7,7 @@ import { Glider } from '#src/glider.js';
 import { FPSCounter } from '#src/fpsCounter.js';
 import { getCssColorAsThreeColor } from '#src/utils.js';
 import { Hud } from '#src/hud.js';
+import { fract } from 'three/src/nodes/math/MathNode.js';
 
 export class InteractiveWorld extends World {
     #terrainVertexShader;
@@ -50,37 +51,6 @@ export class InteractiveWorld extends World {
         // Camera
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         this.scene.add(this.camera);
-
-        // Terrain
-        const terrainGeometry = new THREE.PlaneGeometry(
-            this.terrainSize.x, 
-            this.terrainSize.y, 
-            this.terrainSize.x, 
-            this.terrainSize.y
-        );
-        
-        // Points
-        this.pointsMaterial = new THREE.ShaderMaterial({
-            uniforms: THREE.UniformsUtils.merge([
-                THREE.UniformsLib.fog,
-                {
-                    time: {value: 0},
-                    pointSize: {value: 0.2},
-                    terrainColor: {value: getCssColorAsThreeColor("--terrain-color")}
-                }
-            ]),
-            
-            vertexShader: this.#terrainVertexShader,
-            fragmentShader: this.#terrainFragmentShader,
-            fog: true
-        });
-        this.points = new THREE.Points(terrainGeometry, this.pointsMaterial);
-        this.points.rotation.set(
-            -90 * THREE.MathUtils.DEG2RAD, 
-            0 * THREE.MathUtils.DEG2RAD, 
-            0 * THREE.MathUtils.DEG2RAD
-        );
-        this.scene.add(this.points);
         
         // Events
         this.gameElement = document.querySelector("#game");
@@ -89,14 +59,14 @@ export class InteractiveWorld extends World {
         };
         window.addEventListener("resize", this.onWindowResized);
         this.onWindowResized();
-
+        
         this.mainElement = document.querySelector("main");
         this.onMouseClickCanvas = async () => {
             await this.input.requestPointerLock(this.renderingCanvas);
         };
         this.mainElement.addEventListener("click", this.onMouseClickCanvas);
         this.onMouseClickCanvas();
-
+        
         this.onPointerLockChange = () => {
             const pointerLocked = document.pointerLockElement != null;
             document.documentElement.classList.toggle("pointer-locked", pointerLocked);
@@ -110,20 +80,31 @@ export class InteractiveWorld extends World {
             z: 0
         });
         
-        let q = this.points.getWorldQuaternion(new THREE.Quaternion());
-        const terrainBodyDescription = RAPIER.RigidBodyDesc.fixed().setRotation({x: q.x, y: q.y, z: q.z, w: q.w});
-        this.terrainBody = this.physicsWorld.createRigidBody(terrainBodyDescription);
-        const terrainPhysicsMeshResolution = 0.1;
-        this.simplifiedTerrainGeometry = new THREE.PlaneGeometry(
-            this.terrainSize.x, 
-            this.terrainSize.y,
-            Math.round(this.terrainSize.x * terrainPhysicsMeshResolution),
-            Math.round(this.terrainSize.y * terrainPhysicsMeshResolution)
+        // Terrain
+        this.chunkMap = new Map();
+        this.chunkSize = {w: 180, d: 180};
+        this.chunkGeometry = new THREE.PlaneGeometry(
+            this.chunkSize.w, 
+            this.chunkSize.d, 
+            this.chunkSize.w, 
+            this.chunkSize.d
         );
-        this.applyDisplacement();
-        const terrainColliderDescription = RAPIER.ColliderDesc.trimesh(this.simplifiedTerrainGeometry.attributes.position.array, this.simplifiedTerrainGeometry.index.array);
-        const terrainCollider = this.physicsWorld.createCollider(terrainColliderDescription, this.terrainBody);
-        
+        this.chunkMaterial = new THREE.ShaderMaterial({
+        uniforms: THREE.UniformsUtils.merge([
+                THREE.UniformsLib.fog,
+                {
+                    time: {value: 0},
+                    pointSize: {value: 0.2},
+                    terrainColor: {value: getCssColorAsThreeColor("--terrain-color")}
+                }
+            ]),
+            
+            vertexShader: this.#terrainVertexShader,
+            fragmentShader: this.#terrainFragmentShader,
+            fog: true
+        });
+        this.loadChunk(0, 0);
+
         // Glider
         this.glider = new Glider(this.camera, this.input, this.scene, this.physicsWorld);
 
@@ -136,25 +117,58 @@ export class InteractiveWorld extends World {
         this.fpsCounter = new FPSCounter();
     }
 
-    applyDisplacement() {
-        let vertices = this.simplifiedTerrainGeometry.attributes.position;
+    createChunk(chunkGeometry, chunkMaterial, x, z) {
+        console.debug(this.chunkMap);
+        const points = new THREE.Points(chunkGeometry, chunkMaterial);
+        points.position.set(x * this.chunkSize.w, 0, z * this.chunkSize.d);
+        points.rotation.set(
+            -90 * THREE.MathUtils.DEG2RAD, 
+            0 * THREE.MathUtils.DEG2RAD, 
+            0 * THREE.MathUtils.DEG2RAD
+        );
+        this.scene.add(points);            
+
+        let q = points.getWorldQuaternion(new THREE.Quaternion());
+        let p = points.getWorldPosition(new THREE.Vector3());
+        const bodyDescription = RAPIER.RigidBodyDesc.fixed().setRotation({
+            x: q.x, y: q.y, z: q.z, w: q.w
+        }).setTranslation(p.x, p.y, p.z);
+
+        const body = this.physicsWorld.createRigidBody(bodyDescription);
+        const physicsMeshResolution = 0.1;
+        const physicsGeometry = new THREE.PlaneGeometry(
+            this.chunkSize.w, 
+            this.chunkSize.d,
+            Math.round(this.chunkSize.w * physicsMeshResolution),
+            Math.round(this.chunkSize.d * physicsMeshResolution)
+        );
+        this.applyDisplacement(physicsGeometry, points.matrixWorld, body);
+
+        const chunk = new TerrainChunk(points, body);
+        return chunk;
+    }
+
+    applyDisplacement(geometry, ltwMatrix, rb) {
+        let vertices = geometry.attributes.position;
         let vertex = new THREE.Vector3();
         for (let i = 0; i < vertices.count; i++) {
             vertex.fromBufferAttribute(vertices, i);
-            let vertexWS = this.points.localToWorld(vertex.clone());
+            let vertexWS = vertex.clone().applyMatrix4(ltwMatrix);
             let height = this.shaderVertexAlgorithm.getHeight(vertexWS.x, vertexWS.z);
 
             vertices.setZ(i, height);
         }
-
+        
         vertices.needsUpdate = true;
+
+        const colliderDescription = RAPIER.ColliderDesc.trimesh(geometry.attributes.position.array, geometry.index.array);
+        while (rb.numColliders() > 0) {
+            this.physicsWorld.removeCollider(rb.collider(0), true);
+        }
+        const collider = this.physicsWorld.createCollider(colliderDescription, rb);
     }
 
     debugPhysics() {
-        let q = this.points.getWorldQuaternion(new THREE.Quaternion());
-        const terrainColliderDesc = RAPIER.ColliderDesc.trimesh(this.simplifiedTerrainGeometry.attributes.position.array, this.simplifiedTerrainGeometry.index.array);
-        const terrainCollider = this.physicsWorld.createCollider(terrainColliderDesc, this.terrainBody);
-
         let {vertices, colors} = this.physicsWorld.debugRender();
 
         console.log(vertices.length);
@@ -193,6 +207,18 @@ export class InteractiveWorld extends World {
         // Move the glider
         this.glider.processPhysics();
 
+        const rawX = this.glider.getXZPosition().x / this.chunkSize.w;
+        const rawZ = this.glider.getXZPosition().z / this.chunkSize.d;
+        const chunkX = fract(rawX);
+        const chunkZ = fract(rawZ);
+        const px = Math.floor(this.glider.getXZPosition().x / this.chunkSize.w);
+        const pz = Math.floor(this.glider.getXZPosition().z / this.chunkSize.d);
+        for (let x = px - 1; x <= px + 1; x++) {
+            for (let z = pz - 1; z <= pz + 1; z++) {
+                this.loadChunk(x, z);
+            }            
+        }
+
         this.physicsWorld.step();
         
         if (this.physicsDebug) {
@@ -201,6 +227,66 @@ export class InteractiveWorld extends World {
             }
         }
     }
+
+    // Load chunk at x and z chunk coordinate.
+    // If chunk already exists at x z
+    //  do nothing
+    // else
+    //  try to get chunks that are too far
+    //  if found old chunk that is too far
+    //      reuse old chunk
+    //  else
+    //      create new chunk
+    loadChunk(x, z) {
+        const key = `${x},${z}`;
+        if (!this.chunkMap.has(key)) {
+            const chunkKey = this.getFarChunk(x, z);
+            let chunk = this.chunkMap.get(chunkKey);
+            if (chunk != null) {
+                if (chunkKey !== key) { 
+                    chunk.relocateTo(x * this.chunkSize.w, z * this.chunkSize.d);
+                    const simplifiedTerrainGeometry = new THREE.PlaneGeometry(
+                        this.chunkSize.w, 
+                        this.chunkSize.d,
+                        Math.round(this.chunkSize.w * 0.1),
+                        Math.round(this.chunkSize.d * 0.1)
+                    );
+                    this.applyDisplacement(simplifiedTerrainGeometry, chunk.renderObject.matrixWorld, chunk.physicsObject);
+                    console.log(key);
+                    this.chunkMap.set(key, chunk);
+                    const deletedSuccessfully = this.chunkMap.delete(chunkKey);
+                }
+            } else {
+                chunk = this.createChunk(this.chunkGeometry, this.chunkMaterial, x, z);
+                this.chunkMap.set(key, chunk);
+            }
+        }
+    }
+
+    getFarChunk(x, z) {
+        let maxDist = 0;
+        let chunkKey = null;
+        if (this.chunkMap.size > 0) {
+            this.chunkMap.forEach((v, k) => {
+                const cx = Number.parseInt(k.split(",")[0]);
+                const cz = Number.parseInt(k.split(",")[1]);
+    
+                if (Math.abs(x - cx) >= 3 || Math.abs(z - cz) >= 3) {
+                    let dx = Math.abs(x - cx);
+                    dx *= dx;
+                    let dz = Math.abs(z - cz);
+                    dz *= dz;
+                    const sqDist = dx + dz;
+                    if (sqDist > maxDist) {
+                        maxDist = sqDist;
+                        chunkKey = k;
+                    }
+                }
+            });
+        }
+
+        return chunkKey;
+    }
     
     syncPhysicsAndRendering() {
         this.glider.sync();
@@ -208,16 +294,9 @@ export class InteractiveWorld extends World {
 
     render(elapsedTime) {
         this.glider.render(elapsedTime);
-
-        // Move terrain to make it look infinite
-        const threshold = this.terrainSize.y * 0.1;
-        if (this.points.position.z - this.glider.root.position.z > threshold) {
-            this.points.position.z -= threshold * 2;
-            this.applyDisplacement();
-        }
         
         // Update the shader
-        this.pointsMaterial.uniforms.time.value = elapsedTime;
+        this.chunkMaterial.uniforms.time.value = elapsedTime;
         
         this.hud.update();
 
@@ -236,7 +315,7 @@ export class InteractiveWorld extends World {
         const fog = new THREE.Fog(backgroundColor, 30, 180);
         this.scene.fog = fog;
         
-        this.pointsMaterial.uniforms.terrainColor.value.set(getCssColorAsThreeColor("--terrain-color"));
+        this.chunkMaterial.uniforms.terrainColor.value.set(getCssColorAsThreeColor("--terrain-color"));
     }
 
     dispose() {
@@ -278,5 +357,35 @@ export class InteractiveWorld extends World {
         // Dispose physics
         this.physicsWorld.free();
         this.physicsWorld = null;
+    }
+}
+
+class TerrainChunk {
+    /**
+     * 
+     * @param {THREE.Points} renderObject 
+     * @param {RAPIER.RigidBody} physicsObject 
+     */
+    constructor(renderObject, physicsObject) {
+        this.renderObject = renderObject;
+        this.physicsObject = physicsObject;
+    }
+
+    isAvailable() {
+
+    }
+
+    getXZPosition() {
+        let p = new THREE.Vector3();
+        this.renderObject.getWorldPosition(p);
+        p.y = 0;
+        return p;
+    }
+
+    relocateTo(x, z) {
+        this.physicsObject.setTranslation({x, y: this.physicsObject.translation().y, z});
+        const p = this.physicsObject.translation();
+        this.renderObject.position.set(p.x, p.y, p.z);
+        this.renderObject.updateMatrixWorld(true);
     }
 }

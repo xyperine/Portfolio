@@ -264,6 +264,13 @@ export class Glider {
         this.cameraSocket.rotation.x = this.smoothedPitchRotation;
     }
 
+    getXZPosition() {
+        let p = new THREE.Vector3();
+        this.root.getWorldPosition(p);
+        p.y = 0;
+        return p;
+    }
+
     dispose() {
         this.scene.remove(this.root);
 
