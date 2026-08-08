@@ -7,7 +7,6 @@ import { Glider } from '#src/glider.js';
 import { FPSCounter } from '#src/fpsCounter.js';
 import { getCssColorAsThreeColor } from '#src/utils.js';
 import { Hud } from '#src/hud.js';
-import { fract } from 'three/src/nodes/math/MathNode.js';
 import { TerrainChunk } from '#src/terrainChunk.js';
 
 export class InteractiveWorld extends World {
@@ -26,17 +25,14 @@ export class InteractiveWorld extends World {
     async init() {
         this.input = new Input();
         this.shaderVertexAlgorithm = new VertexShaderAlgorithmCopy();
-        this.terrainSize = new THREE.Vector2(600, 400);
-        this.physicsDebug = false;
-        if (this.physicsDebug) {
-            this.terrainSize.set(10, 10);
-        }
+        this.physicsDebug = true;
+        this.renderingDistance = 180;
         
         // Scene
         const backgroundColor = getCssColorAsThreeColor("--background-color");
         this.scene = new THREE.Scene();
         this.scene.background = backgroundColor;
-        const fog = new THREE.Fog(backgroundColor, 30, 180);
+        const fog = new THREE.Fog(backgroundColor, 30, this.renderingDistance);
         this.scene.fog = fog;
         
         // Renderer
@@ -83,7 +79,11 @@ export class InteractiveWorld extends World {
         
         // Terrain
         this.chunkMap = new Map();
-        this.chunkSize = {w: 180, d: 180};
+        const renderDistanceMultiplier = 1.5;
+        this.chunkSize = {
+            w: this.renderingDistance * renderDistanceMultiplier, 
+            d: this.renderingDistance * renderDistanceMultiplier
+        };
         this.chunkGeometry = new THREE.PlaneGeometry(
             this.chunkSize.w, 
             this.chunkSize.d, 
@@ -172,10 +172,6 @@ export class InteractiveWorld extends World {
     debugPhysics() {
         let {vertices, colors} = this.physicsWorld.debugRender();
 
-        console.log(vertices.length);
-        console.log(vertices.slice(0, 20));
-        console.log(colors.length);
-
         const g = new THREE.BufferGeometry();
         g.setAttribute("position", new THREE.BufferAttribute(vertices, 3));
         g.setAttribute("color", new THREE.BufferAttribute(colors, 4));
@@ -210,10 +206,12 @@ export class InteractiveWorld extends World {
 
         const rawX = this.glider.getXZPosition().x / this.chunkSize.w;
         const rawZ = this.glider.getXZPosition().z / this.chunkSize.d;
-        const chunkX = fract(rawX);
-        const chunkZ = fract(rawZ);
-        const px = Math.floor(this.glider.getXZPosition().x / this.chunkSize.w);
-        const pz = Math.floor(this.glider.getXZPosition().z / this.chunkSize.d);
+        const px = Math.round(rawX);
+        const pz = Math.round(rawZ);
+        console.log(
+            this.glider.getXZPosition().x,
+            px
+        );
         for (let x = px - 1; x <= px + 1; x++) {
             for (let z = pz - 1; z <= pz + 1; z++) {
                 this.loadChunk(x, z);
@@ -229,15 +227,6 @@ export class InteractiveWorld extends World {
         }
     }
 
-    // Load chunk at x and z chunk coordinate.
-    // If chunk already exists at x z
-    //  do nothing
-    // else
-    //  try to get chunks that are too far
-    //  if found old chunk that is too far
-    //      reuse old chunk
-    //  else
-    //      create new chunk
     loadChunk(x, z) {
         const key = `${x},${z}`;
         if (!this.chunkMap.has(key)) {
@@ -253,7 +242,7 @@ export class InteractiveWorld extends World {
                         Math.round(this.chunkSize.d * 0.1)
                     );
                     this.applyDisplacement(simplifiedTerrainGeometry, chunk.renderObject.matrixWorld, chunk.physicsObject);
-                    console.log(key);
+                    console.log(x * this.chunkSize.w, z * this.chunkSize.d);
                     this.chunkMap.set(key, chunk);
                     const deletedSuccessfully = this.chunkMap.delete(chunkKey);
                 }
