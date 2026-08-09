@@ -2,13 +2,13 @@ import * as THREE from 'three';
 import * as RAPIER from '@dimforge/rapier3d-compat';
 import { Input } from '#src/input.js';
 import { World } from '#src/world.js';
-import { VertexShaderAlgorithmCopy } from '#src/vertexShaderAlgorithmCopy.js';
 import { Glider } from '#src/glider.js';
 import { FPSCounter } from '#src/fpsCounter.js';
 import { getCssColorAsThreeColor } from '#src/utils.js';
 import { Hud } from '#src/hud.js';
-import { TerrainChunk } from '#src/terrainChunk.js';
+import { Terrain } from '#src/terrain.js';
 
+// TODO: Render distance to hide chunk thing
 export class InteractiveWorld extends World {
     #terrainVertexShader;
     #terrainFragmentShader;
@@ -24,8 +24,7 @@ export class InteractiveWorld extends World {
 
     async init() {
         this.input = new Input();
-        this.shaderVertexAlgorithm = new VertexShaderAlgorithmCopy();
-        this.physicsDebug = true;
+        this.physicsDebug = false;
         this.renderingDistance = 180;
         
         // Scene
@@ -70,103 +69,24 @@ export class InteractiveWorld extends World {
         }
         document.addEventListener("pointerlockchange", this.onPointerLockChange);
         
-        // Setup physics
         this.physicsWorld = new RAPIER.World({
             x: 0,
             y: -9.81,
             z: 0
         });
         
-        // Terrain
-        this.chunkMap = new Map();
-        const renderDistanceMultiplier = 1.5;
-        this.chunkSize = {
-            w: this.renderingDistance * renderDistanceMultiplier, 
-            d: this.renderingDistance * renderDistanceMultiplier
-        };
-        this.chunkGeometry = new THREE.PlaneGeometry(
-            this.chunkSize.w, 
-            this.chunkSize.d, 
-            this.chunkSize.w, 
-            this.chunkSize.d
-        );
-        this.chunkMaterial = new THREE.ShaderMaterial({
-        uniforms: THREE.UniformsUtils.merge([
-                THREE.UniformsLib.fog,
-                {
-                    time: {value: 0},
-                    pointSize: {value: 0.2},
-                    terrainColor: {value: getCssColorAsThreeColor("--terrain-color")}
-                }
-            ]),
-            
-            vertexShader: this.#terrainVertexShader,
-            fragmentShader: this.#terrainFragmentShader,
-            fog: true
-        });
-        this.loadChunk(0, 0);
+        this.terrain = new Terrain(this.scene, this.physicsWorld, this.#terrainVertexShader, this.#terrainFragmentShader, this.renderingDistance);
 
-        // Glider
         this.glider = new Glider(this.camera, this.input, this.scene, this.physicsWorld);
 
+        this.hud = new Hud(this.glider);
+
+        // Diagnostics
         if (this.physicsDebug) {
             this.debugPhysics();
         }
 
-        this.hud = new Hud(this.glider);
-
         this.fpsCounter = new FPSCounter();
-    }
-
-    createChunk(chunkGeometry, chunkMaterial, x, z) {
-        console.debug(this.chunkMap);
-        const points = new THREE.Points(chunkGeometry, chunkMaterial);
-        points.position.set(x * this.chunkSize.w, 0, z * this.chunkSize.d);
-        points.rotation.set(
-            -90 * THREE.MathUtils.DEG2RAD, 
-            0 * THREE.MathUtils.DEG2RAD, 
-            0 * THREE.MathUtils.DEG2RAD
-        );
-        this.scene.add(points);            
-
-        let q = points.getWorldQuaternion(new THREE.Quaternion());
-        let p = points.getWorldPosition(new THREE.Vector3());
-        const bodyDescription = RAPIER.RigidBodyDesc.fixed().setRotation({
-            x: q.x, y: q.y, z: q.z, w: q.w
-        }).setTranslation(p.x, p.y, p.z);
-
-        const body = this.physicsWorld.createRigidBody(bodyDescription);
-        const physicsMeshResolution = 0.1;
-        const physicsGeometry = new THREE.PlaneGeometry(
-            this.chunkSize.w, 
-            this.chunkSize.d,
-            Math.round(this.chunkSize.w * physicsMeshResolution),
-            Math.round(this.chunkSize.d * physicsMeshResolution)
-        );
-        this.applyDisplacement(physicsGeometry, points.matrixWorld, body);
-
-        const chunk = new TerrainChunk(points, body);
-        return chunk;
-    }
-
-    applyDisplacement(geometry, ltwMatrix, rb) {
-        let vertices = geometry.attributes.position;
-        let vertex = new THREE.Vector3();
-        for (let i = 0; i < vertices.count; i++) {
-            vertex.fromBufferAttribute(vertices, i);
-            let vertexWS = vertex.clone().applyMatrix4(ltwMatrix);
-            let height = this.shaderVertexAlgorithm.getHeight(vertexWS.x, vertexWS.z);
-
-            vertices.setZ(i, height);
-        }
-        
-        vertices.needsUpdate = true;
-
-        const colliderDescription = RAPIER.ColliderDesc.trimesh(geometry.attributes.position.array, geometry.index.array);
-        while (rb.numColliders() > 0) {
-            this.physicsWorld.removeCollider(rb.collider(0), true);
-        }
-        const collider = this.physicsWorld.createCollider(colliderDescription, rb);
     }
 
     debugPhysics() {
@@ -204,20 +124,6 @@ export class InteractiveWorld extends World {
         // Move the glider
         this.glider.processPhysics();
 
-        const rawX = this.glider.getXZPosition().x / this.chunkSize.w;
-        const rawZ = this.glider.getXZPosition().z / this.chunkSize.d;
-        const px = Math.round(rawX);
-        const pz = Math.round(rawZ);
-        console.log(
-            this.glider.getXZPosition().x,
-            px
-        );
-        for (let x = px - 1; x <= px + 1; x++) {
-            for (let z = pz - 1; z <= pz + 1; z++) {
-                this.loadChunk(x, z);
-            }            
-        }
-
         this.physicsWorld.step();
         
         if (this.physicsDebug) {
@@ -225,57 +131,6 @@ export class InteractiveWorld extends World {
                 this.debugPhysics();
             }
         }
-    }
-
-    loadChunk(x, z) {
-        const key = `${x},${z}`;
-        if (!this.chunkMap.has(key)) {
-            const chunkKey = this.getFarChunk(x, z);
-            let chunk = this.chunkMap.get(chunkKey);
-            if (chunk != null) {
-                if (chunkKey !== key) { 
-                    chunk.relocateTo(x * this.chunkSize.w, z * this.chunkSize.d);
-                    const simplifiedTerrainGeometry = new THREE.PlaneGeometry(
-                        this.chunkSize.w, 
-                        this.chunkSize.d,
-                        Math.round(this.chunkSize.w * 0.1),
-                        Math.round(this.chunkSize.d * 0.1)
-                    );
-                    this.applyDisplacement(simplifiedTerrainGeometry, chunk.renderObject.matrixWorld, chunk.physicsObject);
-                    console.log(x * this.chunkSize.w, z * this.chunkSize.d);
-                    this.chunkMap.set(key, chunk);
-                    const deletedSuccessfully = this.chunkMap.delete(chunkKey);
-                }
-            } else {
-                chunk = this.createChunk(this.chunkGeometry, this.chunkMaterial, x, z);
-                this.chunkMap.set(key, chunk);
-            }
-        }
-    }
-
-    getFarChunk(x, z) {
-        let maxDist = 0;
-        let chunkKey = null;
-        if (this.chunkMap.size > 0) {
-            this.chunkMap.forEach((v, k) => {
-                const cx = Number.parseInt(k.split(",")[0]);
-                const cz = Number.parseInt(k.split(",")[1]);
-    
-                if (Math.abs(x - cx) >= 3 || Math.abs(z - cz) >= 3) {
-                    let dx = Math.abs(x - cx);
-                    dx *= dx;
-                    let dz = Math.abs(z - cz);
-                    dz *= dz;
-                    const sqDist = dx + dz;
-                    if (sqDist > maxDist) {
-                        maxDist = sqDist;
-                        chunkKey = k;
-                    }
-                }
-            });
-        }
-
-        return chunkKey;
     }
     
     syncPhysicsAndRendering() {
@@ -285,9 +140,9 @@ export class InteractiveWorld extends World {
     render(elapsedTime) {
         this.glider.render(elapsedTime);
         
-        // Update the shader
-        this.chunkMaterial.uniforms.time.value = elapsedTime;
-        
+        this.terrain.update(this.glider.getRenderPosition());
+        this.terrain.render(elapsedTime);
+
         this.hud.update();
 
         this.fpsCounter.update();
