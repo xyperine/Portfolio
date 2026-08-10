@@ -8,7 +8,6 @@ import { getCssColorAsThreeColor } from '#src/utils.js';
 import { Hud } from '#src/hud.js';
 import { Terrain } from '#src/terrain.js';
 
-// TODO: Render distance to hide chunk thing
 export class InteractiveWorld extends World {
     #terrainVertexShader;
     #terrainFragmentShader;
@@ -31,7 +30,7 @@ export class InteractiveWorld extends World {
         const backgroundColor = getCssColorAsThreeColor("--background-color");
         this.scene = new THREE.Scene();
         this.scene.background = backgroundColor;
-        const fog = new THREE.Fog(backgroundColor, 30, this.renderingDistance);
+        const fog = new THREE.Fog(backgroundColor, 40, this.renderingDistance);
         this.scene.fog = fog;
         
         // Renderer
@@ -39,13 +38,14 @@ export class InteractiveWorld extends World {
         this.renderer = new THREE.WebGLRenderer({
             canvas: this.renderingCanvas,
             antialias: true,
+            powerPreference: "high-performance"
         });
         this.renderer.setAnimationLoop(elapsedTime => {
             this.update(elapsedTime);
         });
         
         // Camera
-        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, this.renderingDistance);
         this.scene.add(this.camera);
         
         // Events

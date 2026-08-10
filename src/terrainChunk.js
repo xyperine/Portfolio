@@ -6,13 +6,12 @@ export class TerrainChunk {
      *
      * @param {THREE.Points} renderObject
      * @param {RAPIER.RigidBody} physicsObject
+     * @param {THREE.BufferGeometry} physicsGeometry
      */
-    constructor(renderObject, physicsObject) {
+    constructor(renderObject, physicsObject, physicsGeometry) {
         this.renderObject = renderObject;
         this.physicsObject = physicsObject;
-    }
-
-    isAvailable() {
+        this.physicsGeometry = physicsGeometry;
     }
 
     getXZPosition() {

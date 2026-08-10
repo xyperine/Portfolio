@@ -52,14 +52,7 @@ export class Terrain {
             if (chunk != null) {
                 if (chunkKey !== key) { 
                     chunk.relocateTo(x * this.chunkSize.w, z * this.chunkSize.d);
-                    const simplifiedTerrainGeometry = new THREE.PlaneGeometry(
-                        this.chunkSize.w, 
-                        this.chunkSize.d,
-                        Math.round(this.chunkSize.w * 0.1),
-                        Math.round(this.chunkSize.d * 0.1)
-                    );
-                    this.applyDisplacement(simplifiedTerrainGeometry, chunk.renderObject.matrixWorld, chunk.physicsObject);
-                    console.log(x * this.chunkSize.w, z * this.chunkSize.d);
+                    this.applyDisplacement(chunk.physicsGeometry, chunk.renderObject.matrixWorld, chunk.physicsObject);
                     this.chunkMap.set(key, chunk);
                     const deletedSuccessfully = this.chunkMap.delete(chunkKey);
                 }
@@ -78,7 +71,7 @@ export class Terrain {
                 const cx = Number.parseInt(k.split(",")[0]);
                 const cz = Number.parseInt(k.split(",")[1]);
     
-                if (Math.abs(x - cx) >= 3 || Math.abs(z - cz) >= 3) {
+                if (Math.abs(x - cx) >= 5 || Math.abs(z - cz) >= 5) {
                     let dx = Math.abs(x - cx);
                     dx *= dx;
                     let dz = Math.abs(z - cz);
@@ -122,16 +115,17 @@ export class Terrain {
         );
         this.applyDisplacement(physicsGeometry, points.matrixWorld, body);
 
-        const chunk = new TerrainChunk(points, body);
+        const chunk = new TerrainChunk(points, body, physicsGeometry);
         return chunk;
     }
 
     applyDisplacement(geometry, ltwMatrix, rb) {
         let vertices = geometry.attributes.position;
         let vertex = new THREE.Vector3();
+        let vertexWS = new THREE.Vector3();
         for (let i = 0; i < vertices.count; i++) {
             vertex.fromBufferAttribute(vertices, i);
-            let vertexWS = vertex.clone().applyMatrix4(ltwMatrix);
+            vertexWS.copy(vertex).applyMatrix4(ltwMatrix);
             let height = this.shaderVertexAlgorithm.getHeight(vertexWS.x, vertexWS.z);
 
             vertices.setZ(i, height);
@@ -151,8 +145,8 @@ export class Terrain {
         const rawZ = playerPosition.z / this.chunkSize.d;
         const px = Math.round(rawX);
         const pz = Math.round(rawZ);
-        for (let x = px - 1; x <= px + 1; x++) {
-            for (let z = pz - 1; z <= pz + 1; z++) {
+        for (let x = px - 2; x <= px + 2; x++) {
+            for (let z = pz - 2; z <= pz + 2; z++) {
                 this.loadChunk(x, z);
             }
         }
