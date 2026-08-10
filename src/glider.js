@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import * as RAPIER from '@dimforge/rapier3d-compat';
 import { Input } from '#src/input.js';
+import { TemperatureMap } from '#src/temperatureMap.js';
 
 export class Glider {
     /**
@@ -9,8 +10,9 @@ export class Glider {
      * @param {Input} input 
      * @param {THREE.Scene} scene 
      * @param {RAPIER.World} physicsWorld 
+     * @param {TemperatureMap} temperatureMap
      */
-    constructor(camera, input, scene, physicsWorld) {
+    constructor(camera, input, scene, physicsWorld, temperatureMap) {
         this.VECTOR3_RIGHT = new THREE.Vector3(1, 0, 0);
         this.VECTOR3_UP = new THREE.Vector3(0, 1, 0);
         this.VECTOR3_FORWARD = new THREE.Vector3(0, 0, -1);
@@ -19,6 +21,7 @@ export class Glider {
         this.physicsWorld = physicsWorld;
         this.camera = camera;
         this.scene = scene;
+        this.temperatureMap = temperatureMap;
 
         this.init();
     }
@@ -268,6 +271,11 @@ export class Glider {
         let p = new THREE.Vector3();
         this.root.getWorldPosition(p);
         return p;
+    }
+
+    getTemperatureReading() {
+        const p = this.getRenderPosition();
+        return this.temperatureMap.temperatureAt(p.x, p.y, p.z);
     }
 
     dispose() {

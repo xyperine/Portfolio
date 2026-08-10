@@ -7,6 +7,7 @@ import { FPSCounter } from '#src/fpsCounter.js';
 import { getCssColorAsThreeColor } from '#src/utils.js';
 import { Hud } from '#src/hud.js';
 import { Terrain } from '#src/terrain.js';
+import { TemperatureMap } from '#src/temperatureMap.js';
 
 export class InteractiveWorld extends World {
     #terrainVertexShader;
@@ -76,8 +77,9 @@ export class InteractiveWorld extends World {
         });
         
         this.terrain = new Terrain(this.scene, this.physicsWorld, this.#terrainVertexShader, this.#terrainFragmentShader, this.renderingDistance);
+        this.temperatureMap = new TemperatureMap();
 
-        this.glider = new Glider(this.camera, this.input, this.scene, this.physicsWorld);
+        this.glider = new Glider(this.camera, this.input, this.scene, this.physicsWorld, this.temperatureMap);
 
         this.hud = new Hud(this.glider);
 
