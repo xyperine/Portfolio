@@ -21,6 +21,9 @@ export class Hud {
         this.altitudeElement.textContent = `${altitude.toFixed(1)}m`;
 
         const temperature = this.glider.getTemperatureReading();
-        this.temperatureElement.textContent = `${temperature.celsius.toFixed(1)}°C / ${temperature.fahrenheit.toFixed(1)}°F / ${temperature.kelvin.toFixed(1)}K`;
+        this.temperatureElement.textContent = 
+            `${temperature.celsius.toFixed(1)}°C / \
+            ${temperature.fahrenheit.toFixed(1)}°F / \
+            ${temperature.kelvin.toFixed(1)}K`;
     }
 }

@@ -89,7 +89,6 @@ export class Terrain {
     }
 
     createChunk(chunkGeometry, chunkMaterial, x, z) {
-        console.debug(this.chunkMap);
         const points = new THREE.Points(chunkGeometry, chunkMaterial);
         points.position.set(x * this.chunkSize.w, 0, z * this.chunkSize.d);
         points.rotation.set(

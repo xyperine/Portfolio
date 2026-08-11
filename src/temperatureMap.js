@@ -1,27 +1,22 @@
+import * as utils from '#src/utils.js';
 import { SimplexNoise } from 'three/addons/math/SimplexNoise.js';
 import { MathUtils } from 'three/src/Three.Core.js';
-import * as utils from '#src/utils.js';
+import { Temperature } from '#src/temperature.js';
 
 export class TemperatureMap {
     constructor() {
         this.simplex = new SimplexNoise();
 
-        this.scale = MathUtils.randFloat(8e-5, 1.2e-4);
-        this.base = utils.randGaussianConstrained(-273.15, 300, 0, 250);
-        this.variation = MathUtils.randFloat(1, 10);
+        this.scale = MathUtils.randFloat(1e-4, 3e-4);
+        this.base = utils.randGaussianConstrained(-270, 1000, 0, 100);
+        this.variationStrength = MathUtils.randFloat(10, 20);
     }
 
     temperatureAt(x, y, z) {
-        const celsius = this.base + this.simplex.noise3d(
-            x * this.scale, y * this.scale, z * this.scale
-        ) * this.variation;
-        const fahrenheit = utils.celsiusToFahrenheit(celsius);
-        const kelvin = utils.celsiusToKelvin(celsius);
-        const t = {
-            celsius, 
-            fahrenheit,
-            kelvin
-        };
+        const localVariation = this.simplex.noise(x * this.scale, z * this.scale) * this.variationStrength;
+        const altitudeEffect = -Math.abs(y) * 0.01;
+        const celsius = Math.max(this.base + localVariation + altitudeEffect, -272);
+        const t = new Temperature(celsius);
         return t;
     }
 }
