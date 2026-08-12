@@ -1,3 +1,4 @@
+import * as utils from "#src/utils.js";
 import { Glider } from "#src/glider.js";
 
 export class Hud {
@@ -24,7 +25,8 @@ export class Hud {
         this.coordElement.textContent = `X: ${position.x.toFixed(1)} Z: ${position.z.toFixed(1)}`;
 
         const altitude = this.glider.altitude;
-        this.altitudeElement.textContent = `${altitude.toFixed(1)}m`;
+        const altitudeFt = utils.metresToFeet(altitude);
+        this.altitudeElement.textContent = `${altitude.toFixed(1)}m / ${altitudeFt.toFixed(1)}ft`;
 
         const temperature = this.glider.getTemperatureReading();
         this.temperatureElement.textContent = 

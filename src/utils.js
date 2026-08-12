@@ -83,3 +83,7 @@ export function randomElement(array) {
 export function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
+
+export function metresToFeet(m) {
+    return m * 3.28084;
+}
