@@ -1,6 +1,5 @@
 export class PlanetName {
-    constructor(index, name, designation) {
-        this.index = index;
+    constructor(name, designation) {
         this.name = name;
         this.designation = designation;
     }

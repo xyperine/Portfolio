@@ -8,7 +8,7 @@ import { FPSCounter } from '#src/fpsCounter.js';
 import { Hud } from '#src/hud.js';
 import { Terrain } from '#src/terrain.js';
 import { TemperatureMap } from '#src/temperatureMap.js';
-import { PlanetNameGenerator } from '#src/planetNameGenerator.js';
+import { PlanetGenerator } from '#src/planetGenerator.js';
 
 export class InteractiveWorld extends World {
     #terrainVertexShader;
@@ -28,8 +28,8 @@ export class InteractiveWorld extends World {
         this.physicsDebug = false;
         this.renderingDistance = 180;
 
-        this.planetNameGenerator = new PlanetNameGenerator();
-        this.planetName = this.planetNameGenerator.generate();
+        this.planetGenerator = new PlanetGenerator();
+        this.planetInfo = this.planetGenerator.generate();
 
         this.gravity = utils.randGaussianConstrained(0.2, 4, 1, 1);
         
@@ -87,7 +87,7 @@ export class InteractiveWorld extends World {
 
         this.glider = new Glider(this.camera, this.input, this.scene, this.physicsWorld, this.temperatureMap);
 
-        this.hud = new Hud(this.glider, this.planetName, this.gravity);
+        this.hud = new Hud(this.glider, this.planetInfo.name, this.gravity);
 
         // Diagnostics
         if (this.physicsDebug) {

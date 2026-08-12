@@ -5,17 +5,11 @@ export class PlanetNameGenerator {
     constructor() {
     }
 
-    generate() {
-        const index = this.generateIndex();
+    generate(index) {
         const name = this.generateName(index);
         const designation = this.generateDesignation(index);
 
-        return new PlanetName(index, name, designation);
-    }
-
-    generateIndex() {
-        const index = Math.round(utils.randGaussianConstrained(1, 12, 4, 3));
-        return index;
+        return new PlanetName(name, designation);
     }
 
     generateName(index) {
