@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 import * as RAPIER from '@dimforge/rapier3d-compat';
+import * as utils from '#src/utils.js';
 import { VertexShaderAlgorithmCopy } from '#src/vertexShaderAlgorithmCopy.js';
 import { TerrainChunk } from '#src/terrainChunk.js';
-import { getCssColorAsThreeColor } from '#src/utils.js';
 
 export class Terrain {
     #vertexShader;
@@ -33,7 +33,7 @@ export class Terrain {
                 {
                     time: {value: 0},
                     pointSize: {value: 0.2},
-                    terrainColor: {value: getCssColorAsThreeColor("--terrain-color")}
+                    terrainColor: {value: utils.getCssColorAsThreeColor("--terrain-color")}
                 }
             ]),
             
@@ -153,5 +153,9 @@ export class Terrain {
     
     render(elapsedTime) {
         this.chunkMaterial.uniforms.time.value = elapsedTime;
+    }
+
+    updateColors() {
+        this.chunkMaterial.uniforms.terrainColor.value.set(utils.getCssColorAsThreeColor("--terrain-color"));
     }
 }

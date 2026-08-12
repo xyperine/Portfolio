@@ -166,9 +166,9 @@ export class InteractiveWorld extends World {
         const backgroundColor = utils.getCssColorAsThreeColor("--background-color");
         this.scene.background = backgroundColor;
         const fog = new THREE.Fog(backgroundColor, 30, 180);
-        this.scene.fog = fog;
+        this.scene.fog = fog;   
         
-        this.chunkMaterial.uniforms.terrainColor.value.set(utils.getCssColorAsThreeColor("--terrain-color"));
+        this.terrain.updateColors();
     }
 
     dispose() {
