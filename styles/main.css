@@ -14,6 +14,7 @@
 	--background-color: hsl(0, 0%, 97%);
 	--heading-text-color: hsl(0, 0%, 10%);
 	--normal-text-color: hsl(0, 0%, 10%);
+	--hud-text-color: grey;
 	--accent-color:  hsl(340, 100%, 50%);
 	--button-normal-color: grey;
 	--terrain-color: hsl(0, 0%, 40%);
@@ -272,14 +273,29 @@ html:not(.interactive) #game-ui{
 	gap: 0.2rem;
 }
 
+#game-ui .hud #hud-title {
+	margin-top: 0;
+	margin-bottom: 0;
+
+	color: var(--hud-text-color);
+	font-family: var(--game-ui-font-family);
+	font-size: 0.8rem;
+	letter-spacing: 0.08rem;
+}
+
+#game-ui .hud hr {
+	border: none;
+	border-top: 0.1rem dashed var(--hud-text-color);
+}
+
 #game-ui .hud .hud-entry {
 	display: grid;
-	grid-template-columns: 10rem auto;
+	grid-template-columns: 7rem auto;
 
 	margin-top: 0;
 	margin-bottom: 0;
 
-	color: gray;
+	color: var(--hud-text-color);
 	font-family: var(--game-ui-font-family);
 	font-size: 0.8rem;
 	letter-spacing: 0.08rem;
