@@ -1,10 +1,10 @@
 import * as THREE from 'three';
 import * as RAPIER from '@dimforge/rapier3d-compat';
+import * as utils from '#src/utils.js';
 import { Input } from '#src/input.js';
 import { World } from '#src/world.js';
 import { Glider } from '#src/glider.js';
 import { FPSCounter } from '#src/fpsCounter.js';
-import { getCssColorAsThreeColor } from '#src/utils.js';
 import { Hud } from '#src/hud.js';
 import { Terrain } from '#src/terrain.js';
 import { TemperatureMap } from '#src/temperatureMap.js';
@@ -30,9 +30,11 @@ export class InteractiveWorld extends World {
 
         this.planetNameGenerator = new PlanetNameGenerator();
         this.planetName = this.planetNameGenerator.generate();
+
+        this.gravity = utils.randGaussianConstrained(0.2, 4, 1, 1);
         
         // Scene
-        const backgroundColor = getCssColorAsThreeColor("--background-color");
+        const backgroundColor = utils.getCssColorAsThreeColor("--background-color");
         this.scene = new THREE.Scene();
         this.scene.background = backgroundColor;
         const fog = new THREE.Fog(backgroundColor, 40, this.renderingDistance);
@@ -76,7 +78,7 @@ export class InteractiveWorld extends World {
         
         this.physicsWorld = new RAPIER.World({
             x: 0,
-            y: -9.81,
+            y: -9.81 * this.gravity,
             z: 0
         });
         
@@ -85,7 +87,7 @@ export class InteractiveWorld extends World {
 
         this.glider = new Glider(this.camera, this.input, this.scene, this.physicsWorld, this.temperatureMap);
 
-        this.hud = new Hud(this.glider, this.planetName);
+        this.hud = new Hud(this.glider, this.planetName, this.gravity);
 
         // Diagnostics
         if (this.physicsDebug) {
@@ -161,12 +163,12 @@ export class InteractiveWorld extends World {
     }
 
     updateColors() {
-        const backgroundColor = getCssColorAsThreeColor("--background-color");
+        const backgroundColor = utils.getCssColorAsThreeColor("--background-color");
         this.scene.background = backgroundColor;
         const fog = new THREE.Fog(backgroundColor, 30, 180);
         this.scene.fog = fog;
         
-        this.chunkMaterial.uniforms.terrainColor.value.set(getCssColorAsThreeColor("--terrain-color"));
+        this.chunkMaterial.uniforms.terrainColor.value.set(utils.getCssColorAsThreeColor("--terrain-color"));
     }
 
     dispose() {

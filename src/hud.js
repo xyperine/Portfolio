@@ -5,14 +5,16 @@ export class Hud {
      * 
      * @param {Glider} glider 
      */
-    constructor(glider, planetName) {
+    constructor(glider, planetName, gravity) {
         this.glider = glider;
         this.planetName = planetName;
+        this.gravity = gravity;
 
         this.planetNameElement = document.querySelector("#planet-name span:last-child");
         this.coordElement = document.querySelector("#coord span:last-child");
         this.altitudeElement = document.querySelector("#altitude span:last-child");
         this.temperatureElement = document.querySelector("#temperature span:last-child");
+        this.gravityElement = document.querySelector("#gravity span:last-child");
     }
 
     update() {
@@ -29,5 +31,8 @@ export class Hud {
             `${temperature.celsius.toFixed(1)}°C / \
             ${temperature.fahrenheit.toFixed(1)}°F / \
             ${temperature.kelvin.toFixed(1)}K`;
+        
+        const gravity = this.gravity;
+        this.gravityElement.textContent = `${gravity.toFixed(1)}g`;
     }
 }

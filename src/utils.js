@@ -29,13 +29,13 @@ export function nextGaussian() {
 }
 
 export function randGaussian(mean = 0, stdDev = 1) {
-    return mean + this.nextGaussian() * stdDev;
+    return mean + nextGaussian() * stdDev;
 }
 
 export function randGaussianConstrained(min, max, mean = 0, stdDev = 1) {
     let x = 0;
     do {
-        x = this.randGaussian(mean, stdDev);
+        x = randGaussian(mean, stdDev);
     } while (x < min || x > max);
 
     return x;
