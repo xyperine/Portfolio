@@ -14,7 +14,7 @@ export class PlanetNameGenerator {
     }
 
     generateIndex() {
-        const index = Math.floor(Math.random() * 12) + 1;
+        const index = Math.round(utils.randGaussianConstrained(1, 12, 4, 3));
         return index;
     }
 
