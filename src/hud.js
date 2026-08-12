@@ -5,15 +5,19 @@ export class Hud {
      * 
      * @param {Glider} glider 
      */
-    constructor(glider) {
+    constructor(glider, planetName) {
         this.glider = glider;
+        this.planetName = planetName;
 
+        this.planetNameElement = document.querySelector("#planet-name span:last-child");
         this.coordElement = document.querySelector("#coord span:last-child");
         this.altitudeElement = document.querySelector("#altitude span:last-child");
         this.temperatureElement = document.querySelector("#temperature span:last-child");
     }
 
     update() {
+        this.planetNameElement.textContent = `${this.planetName.name} / ${this.planetName.designation}`;
+
         const position = this.glider.body.translation();
         this.coordElement.textContent = `X: ${position.x.toFixed(1)} Z: ${position.z.toFixed(1)}`;
 
