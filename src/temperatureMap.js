@@ -6,15 +6,16 @@ import { Temperature } from '#src/temperature.js';
 export class TemperatureMap {
     constructor(planetInfo) {
         this.simplex = new SimplexNoise();
-
+        
         const equilibriumKelvin = this.calculateEquilibrium(planetInfo);
         this.equilibrium = utils.kelvinToCelsius(equilibriumKelvin);
-
-        this.greenHouseEffect = Math.random() * 0;
-        console.log(planetInfo);
+        
+        this.greenHouseEffect = utils.randGaussianConstrained(0, 200, 30, 25);
         
         this.scale = MathUtils.randFloat(1e-4, 3e-4);
         this.variationStrength = MathUtils.randFloat(10, 20);
+
+        console.log(planetInfo);
     }
 
     calculateEquilibrium(planetInfo) {
