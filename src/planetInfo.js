@@ -1,6 +1,8 @@
 export class PlanetInfo {
-    constructor(name, distance) {
+    constructor(name, distance, albedo, star) {
         this.name = name;
         this.distance = distance;
+        this.albedo = albedo;
+        this.star = star;
     }
 }

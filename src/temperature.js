@@ -6,4 +6,9 @@ export class Temperature {
         this.fahrenheit = utils.celsiusToFahrenheit(degreesCelsius);
         this.kelvin = utils.celsiusToKelvin(degreesCelsius);
     }
+
+    static fromKelvin(k) {
+        const celsius = utils.kelvinToCelsius(k);
+        return new Temperature(celsius);
+    }
 }

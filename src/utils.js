@@ -49,6 +49,10 @@ export function celsiusToKelvin(c) {
     return c + 273.15;
 }
 
+export function kelvinToCelsius(k) {
+    return k - 273.15;
+}
+
 export function toRoman(n) {
     var roman = {
         M: 1000,

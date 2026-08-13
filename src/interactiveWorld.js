@@ -83,7 +83,7 @@ export class InteractiveWorld extends World {
         });
         
         this.terrain = new Terrain(this.scene, this.physicsWorld, this.#terrainVertexShader, this.#terrainFragmentShader, this.renderingDistance);
-        this.temperatureMap = new TemperatureMap();
+        this.temperatureMap = new TemperatureMap(this.planetInfo);
 
         this.glider = new Glider(this.camera, this.input, this.scene, this.physicsWorld, this.temperatureMap);
 
