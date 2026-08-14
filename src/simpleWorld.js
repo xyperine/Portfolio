@@ -34,9 +34,9 @@ export class SimpleWorld extends World {
             0 * THREE.MathUtils.DEG2RAD, 
             0 * THREE.MathUtils.DEG2RAD
         );
-        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const heightLimit = utils.seededFloat(this.random, 20, 40);
-        this.camera.position.set(0, heightLimit + 20, 6);
+        this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 180);
+        const heightLimit = utils.seededFloat(this.random, 10, 25);
+        this.camera.position.set(0, heightLimit + 15, 0);
         this.camera.rotateOnWorldAxis(this.VECTOR3_RIGHT, cameraRotation.x);
         this.camera.rotateOnWorldAxis(this.VECTOR3_UP, cameraRotation.y);
         this.camera.rotateOnWorldAxis(this.VECTOR3_FORWARD, cameraRotation.z);
@@ -122,7 +122,7 @@ export class SimpleWorld extends World {
     updateColors() {
         const backgroundColor = utils.getCssColorAsThreeColor("--background-color");
         this.scene.background = backgroundColor;
-        const fog = new THREE.Fog(backgroundColor, 30, 180);
+        const fog = new THREE.Fog(backgroundColor, 40, 180);
         this.scene.fog = fog;
         
         this.pointsMaterial.uniforms.terrainColor.value.set(utils.getCssColorAsThreeColor("--terrain-color"));
