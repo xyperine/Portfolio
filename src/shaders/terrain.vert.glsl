@@ -85,21 +85,26 @@ float random(vec2 st)
 #include <fog_pars_vertex>
 
 uniform float time;
+uniform float heightLimit;
+uniform float freq;
+uniform float lacunarity;
+uniform float persistence;
+uniform int octaves;
 uniform float pointSize;
 
 float getHeight(vec2 p)
 {
     float h = 0.0;
 
-    float frequency = 0.01;
-    float amplitude = 15.0;
+    float frequency = freq;
+    float amplitude = heightLimit;
 
-    for(int i=0;i<8;i++)
+    for(int i=0;i<octaves;i++)
     {
         h += snoise(p * frequency) * amplitude;
 
-        frequency *= 2.0;
-        amplitude *= 0.4;
+        frequency *= lacunarity;
+        amplitude *= persistence;
     }
 
     return h;

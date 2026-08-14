@@ -3,17 +3,25 @@
  * to be able to produce the same outputs.
 */
 export class VertexShaderAlgorithmCopy {
+    constructor(heightLimit, freq, octaves, lacunarity, persistence) {
+        this.heightLimit = heightLimit;
+        this.freq = freq;
+        this.octaves = octaves;
+        this.lacunarity = lacunarity;
+        this.persistence = persistence;
+    }
+
     getHeight(x, z) {
         let h = 0.0;
     
-        let frequency = 0.01;
-        let amplitude = 15.0;
+        let frequency = this.freq;
+        let amplitude = this.heightLimit;
     
-        for (let i = 0; i < 8; i++) {
+        for (let i = 0; i < this.octaves; i++) {
             h += this.#snoise(x * frequency, z * frequency) * amplitude;
     
-            frequency *= 2.0;
-            amplitude *= 0.4;
+            frequency *= this.lacunarity;
+            amplitude *= this.persistence;
         }
     
         return h;

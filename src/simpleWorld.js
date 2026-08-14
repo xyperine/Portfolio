@@ -22,7 +22,7 @@ export class SimpleWorld extends World {
         const backgroundColor = getCssColorAsThreeColor("--background-color");
         this.scene = new THREE.Scene();
         this.scene.background = backgroundColor;
-        const fog = new THREE.Fog(backgroundColor, 30, 180);
+        const fog = new THREE.Fog(backgroundColor, 40, 180);
         this.scene.fog = fog;
         
         // Camera
@@ -32,7 +32,8 @@ export class SimpleWorld extends World {
             0 * THREE.MathUtils.DEG2RAD
         );
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        this.camera.position.set(0, 30, 6);
+        const heightLimit = THREE.MathUtils.randFloat(20, 40);
+        this.camera.position.set(0, heightLimit + 20, 6);
         this.camera.rotateOnWorldAxis(this.VECTOR3_RIGHT, cameraRotation.x);
         this.camera.rotateOnWorldAxis(this.VECTOR3_UP, cameraRotation.y);
         this.camera.rotateOnWorldAxis(this.VECTOR3_FORWARD, cameraRotation.z);
@@ -56,11 +57,20 @@ export class SimpleWorld extends World {
         );
             
         // Points
+        const freq = THREE.MathUtils.randFloat(0.003, 0.01);
+        const octaves = THREE.MathUtils.randInt(6, 8);
+        const lacunarity = THREE.MathUtils.randFloat(1.9, 2.1);
+        const persistence = THREE.MathUtils.randFloat(0.4, 0.5);
         this.pointsMaterial = new THREE.ShaderMaterial({
                 uniforms: THREE.UniformsUtils.merge([
                     THREE.UniformsLib.fog,
                 {
                     time: {value: 0},
+                    heightLimit: {value: heightLimit},
+                    freq: {value: freq},
+                    octaves: {value: octaves},
+                    lacunarity: {value: lacunarity},
+                    persistence: {value: persistence},
                     pointSize: {value: 0.2},
                     terrainColor: {value: getCssColorAsThreeColor("--terrain-color")}
                 }

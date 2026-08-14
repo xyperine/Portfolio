@@ -14,7 +14,6 @@ export class Terrain {
         this.#vertexShader = vertexShader;
         this.#fragmentShader = fragmentShader;
         
-        this.shaderVertexAlgorithm = new VertexShaderAlgorithmCopy();
         this.chunkMap = new Map();
         const renderDistanceMultiplier = 1;
         this.chunkSize = {
@@ -27,13 +26,24 @@ export class Terrain {
             this.chunkSize.w, 
             this.chunkSize.d
         );
+        const heightLimit = THREE.MathUtils.randFloat(15, 40);
+        const freq = THREE.MathUtils.randFloat(0.001, 0.01);
+        const octaves = THREE.MathUtils.randInt(6, 8);
+        const lacunarity = THREE.MathUtils.randFloat(1.9, 2.1);
+        const persistence = THREE.MathUtils.randFloat(0.4, 0.5);
+        this.shaderVertexAlgorithm = new VertexShaderAlgorithmCopy(heightLimit, freq, octaves, lacunarity, persistence);
         this.chunkMaterial = new THREE.ShaderMaterial({
         uniforms: THREE.UniformsUtils.merge([
                 THREE.UniformsLib.fog,
                 {
                     time: {value: 0},
+                    heightLimit: {value: heightLimit},
+                    freq: {value: freq},
+                    octaves: {value: octaves},
+                    lacunarity: {value: lacunarity},
+                    persistence: {value: persistence},
+                    terrainColor: {value: utils.getCssColorAsThreeColor("--terrain-color")},
                     pointSize: {value: 0.2},
-                    terrainColor: {value: utils.getCssColorAsThreeColor("--terrain-color")}
                 }
             ]),
             

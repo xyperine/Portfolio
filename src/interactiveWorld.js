@@ -85,6 +85,9 @@ export class InteractiveWorld extends World {
         this.terrain = new Terrain(this.scene, this.physicsWorld, this.#terrainVertexShader, this.#terrainFragmentShader, this.renderingDistance);
         this.temperatureMap = new TemperatureMap(this.planetInfo);
 
+        // Make sure the terrain collider is registered.
+        this.physicsWorld.step();
+
         this.glider = new Glider(this.camera, this.input, this.scene, this.physicsWorld, this.temperatureMap);
 
         this.hud = new Hud(this.glider, this.planetInfo.name, this.gravity);
@@ -133,7 +136,7 @@ export class InteractiveWorld extends World {
         this.glider.processPhysics();
 
         this.physicsWorld.step();
-        
+
         if (this.physicsDebug) {
             if (this.input.isKeyDown("KeyQ")) {
                 this.debugPhysics();
