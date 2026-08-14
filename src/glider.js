@@ -29,16 +29,18 @@ export class Glider {
     init() {
         this.root = new THREE.Object3D();
         this.scene.add(this.root);
-        this.root.position.set(0, 30, 6);
-
+        this.root.position.set(0, 100, 0);
+        
         this.cameraSocket = new THREE.Object3D();
         this.root.add(this.cameraSocket);
         this.cameraSocket.position.set(0, 0, 0);
         this.cameraSocket.rotation.set(0, 0, 0);
-
+        
         this.cameraSocket.add(this.camera);
         this.camera.position.set(0, 0, 0);
         this.camera.rotation.set(0, 0, 0);
+        
+        this.findInitialAltitude();
 
         const rootPosition = this.root.getWorldPosition(new THREE.Vector3());
         const bodyDescription = RAPIER.RigidBodyDesc.kinematicPositionBased().setTranslation(
@@ -50,17 +52,17 @@ export class Glider {
         const colliderDescription = RAPIER.ColliderDesc.ball(1);
         this.collider = this.physicsWorld.createCollider(colliderDescription, this.body);
         this.controller = this.physicsWorld.createCharacterController(0.01);
-
+        
         this.smoothedMovement = new THREE.Vector3();
         this.smoothedPitchRotation = 0;
         this.smoothedYawRotation = 0;
-
+        
         this.pitchLookRotation = 0;
         this.yawLookRotation = 0;
-
+        
         this.aboveSolidSurface = false;
         this.altitude = 0;
-
+        
         this.yVelocity = 0;
 
         this.shoot = () => {
@@ -97,6 +99,30 @@ export class Glider {
         }
         this.mainElement = document.querySelector("main");
         this.mainElement.addEventListener("mousedown", this.shoot);
+    }
+
+    findInitialAltitude() {
+        const worldPosition = this.root.getWorldPosition(new THREE.Vector3());
+        
+        const ray = new RAPIER.Ray(
+            {x: worldPosition.x, y: worldPosition.y - 1.1, z: worldPosition.z},
+            {x: 0, y: -1, z: 0}
+        )
+        const maxToi = 999.0;
+        const solid = false;
+        const hit = this.physicsWorld.castRay(ray, maxToi, solid);
+        if (hit != null) {
+            this.aboveSolidSurface = true;
+            this.groundPoint = ray.pointAt(hit.timeOfImpact);
+
+            const initialAltitude = 30;
+            this.root.position.set(0, this.groundPoint.y + initialAltitude, 0);
+        } else {
+            this.aboveSolidSurface = false;
+            this.groundPoint = null;
+
+            this.root.position.set(0, 30, 0);
+        }
     }
 
     processInputs() {
