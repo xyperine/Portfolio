@@ -1,8 +1,10 @@
 import * as utils from "#src/utils.js";
+import * as SEEDRANDOM from 'seedrandom';
 import { PlanetName } from "#src/planetName.js";
 
 export class PlanetNameGenerator {
-    constructor() {
+    constructor(seed) {
+        this.random = new Math.seedrandom(seed);
     }
 
     generate(index) {
@@ -39,10 +41,10 @@ export class PlanetNameGenerator {
             "xae", "xan", "xel",
             "zae", "zar", "zel", "zer"
         ];
-        const fragmentsCount = Math.floor(Math.random() * 2) + 1;
+        const fragmentsCount = Math.floor(this.random() * 2) + 1;
         let name = "";
         for (let i = 0; i < fragmentsCount; i++) {
-            const fr = utils.randomElement(fragments);
+            const fr = utils.seededRandomElement(this.random, fragments);
             name += fr;
 
             fragments.splice(fragments.indexOf(fr), 1);
@@ -50,11 +52,11 @@ export class PlanetNameGenerator {
 
         if (fragmentsCount == 1) {
             const endings = ["ar", "ides", "ion", "lia", "us", "ix", "ius"];
-            name += utils.randomElement(endings);
+            name += utils.seededRandomElement(this.random, endings);
         } else if (fragmentsCount < 3) {
-            if (Math.random() < 0.35) {
+            if (this.random() < 0.35) {
                 const endings = ["ar", "ides", "ion", "lia", "us", "ix", "ius"];
-                name += utils.randomElement(endings);
+                name += utils.seededRandomElement(this.random, endings);
             }
         }
         name = name.toLowerCase();
@@ -71,7 +73,7 @@ export class PlanetNameGenerator {
         }
 
         const availableIndexSchemes = [SCHEME.Letter, SCHEME.Numeral, SCHEME.RomanNumeral, SCHEME.Word];
-        let indexScheme = utils.randomElement(availableIndexSchemes);
+        let indexScheme = utils.seededRandomElement(this.random, availableIndexSchemes);
         let suffix = "";
         switch (indexScheme) {
             case SCHEME.Letter: {
@@ -89,7 +91,7 @@ export class PlanetNameGenerator {
             }
             case SCHEME.Word: {
                 const words = ["Prime", "Majoris", "Minoris", "Secondus", "Tertius", "Alpha", "Beta", "Gamma", "Nova"];
-                suffix = utils.randomElement(words);
+                suffix = utils.seededRandomElement(this.random, words);
                 break;
             }
             default:
@@ -109,8 +111,8 @@ export class PlanetNameGenerator {
 
     generateParentDesignation() {
         const catalogs = ["KL", "FS", "ZO", "RX", "VX"];
-        const index = String(Math.round(Math.random() * 10_000)).padStart(4, "0");
-        const name = `${utils.randomElement(catalogs)}-${index}`;
+        const index = String(Math.round(this.random() * 10_000)).padStart(4, "0");
+        const name = `${utils.seededRandomElement(this.random, catalogs)}-${index}`;
         return name;
     }
 
@@ -122,7 +124,7 @@ export class PlanetNameGenerator {
         }
 
         const availableIndexSchemes = [SCHEME.Letter, SCHEME.Numeral, SCHEME.RomanNumeral];
-        const indexScheme = utils.randomElement(availableIndexSchemes);
+        const indexScheme = utils.seededRandomElement(this.random, availableIndexSchemes);
 
         let suffix = "";
         switch (indexScheme) {

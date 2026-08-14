@@ -1,3 +1,4 @@
+
 //
 // Description : Array and textureless GLSL 2D simplex noise function.
 //      Author : Ian McEwan, Ashima Arts.
@@ -21,7 +22,7 @@ vec3 permute(vec3 x) {
     return mod289(((x*34.0)+10.0)*x);
 }
 
-float snoise(vec2 v)
+float snoise(vec2 v, float seed)
 {
     const vec4 C = vec4(0.211324865405187,  // (3.0-sqrt(3.0))/6.0
     0.366025403784439,  // 0.5*(sqrt(3.0)-1.0)
@@ -45,7 +46,8 @@ float snoise(vec2 v)
     // Permutations
     i = mod289(i); // Avoid truncation effects in permutation
     vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0 ))
-    + i.x + vec3(0.0, i1.x, 1.0 ));
+            + i.x + vec3(0.0, i1.x, 1.0 ));
+    p = permute(mod289(p + vec3(floor(seed * 213898.0))));
     
     vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);
     m = m*m ;
@@ -72,19 +74,19 @@ float snoise(vec2 v)
 
 
 // ---
+uniform float seed;
 
 // Returns values within [-1, 1] range.
 float random(vec2 st)
 {
     return fract(sin(dot(st.xy,
-        vec2(12.9898,78.233))) * 43758.5453123)
+        vec2(12.9898 + seed, 78.233 + seed))) * 43758.5453123)
         * 2.0 - 1.0;
 }
 
 
 #include <fog_pars_vertex>
 
-uniform float time;
 uniform float heightLimit;
 uniform float freq;
 uniform float lacunarity;
@@ -101,7 +103,7 @@ float getHeight(vec2 p)
 
     for(int i=0;i<octaves;i++)
     {
-        h += snoise(p * frequency) * amplitude;
+        h += snoise(p * frequency, seed) * amplitude;
 
         frequency *= lacunarity;
         amplitude *= persistence;

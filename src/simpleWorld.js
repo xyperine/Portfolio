@@ -1,7 +1,8 @@
 import * as THREE from 'three';
+import * as utils from '#src/utils.js';
+import * as SEEDRANDOM from 'seedrandom';
 import { World } from '#src/world.js';
 import { FPSCounter } from '#src/fpsCounter.js';
-import { getCssColorAsThreeColor } from '#src/utils.js';
 
 export class SimpleWorld extends World {
     #terrainVertexShader;
@@ -19,7 +20,9 @@ export class SimpleWorld extends World {
     async init() {
         this.terrainSize = new THREE.Vector2(600, 400);
 
-        const backgroundColor = getCssColorAsThreeColor("--background-color");
+        this.random = new Math.seedrandom();
+
+        const backgroundColor = utils.getCssColorAsThreeColor("--background-color");
         this.scene = new THREE.Scene();
         this.scene.background = backgroundColor;
         const fog = new THREE.Fog(backgroundColor, 40, 180);
@@ -32,7 +35,7 @@ export class SimpleWorld extends World {
             0 * THREE.MathUtils.DEG2RAD
         );
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const heightLimit = THREE.MathUtils.randFloat(20, 40);
+        const heightLimit = utils.seededFloat(this.random, 20, 40);
         this.camera.position.set(0, heightLimit + 20, 6);
         this.camera.rotateOnWorldAxis(this.VECTOR3_RIGHT, cameraRotation.x);
         this.camera.rotateOnWorldAxis(this.VECTOR3_UP, cameraRotation.y);
@@ -57,22 +60,22 @@ export class SimpleWorld extends World {
         );
             
         // Points
-        const freq = THREE.MathUtils.randFloat(0.003, 0.01);
-        const octaves = THREE.MathUtils.randInt(6, 8);
-        const lacunarity = THREE.MathUtils.randFloat(1.9, 2.1);
-        const persistence = THREE.MathUtils.randFloat(0.4, 0.5);
+        const freq = utils.seededFloat(this.random, 0.003, 0.01);
+        const octaves = utils.seededInt(this.random, 6, 8);
+        const lacunarity = utils.seededFloat(this.random, 1.9, 2.1);
+        const persistence = utils.seededFloat(this.random, 0.4, 0.5);
         this.pointsMaterial = new THREE.ShaderMaterial({
                 uniforms: THREE.UniformsUtils.merge([
                     THREE.UniformsLib.fog,
                 {
-                    time: {value: 0},
+                    seed: {value: this.random()},
                     heightLimit: {value: heightLimit},
                     freq: {value: freq},
                     octaves: {value: octaves},
                     lacunarity: {value: lacunarity},
                     persistence: {value: persistence},
                     pointSize: {value: 0.2},
-                    terrainColor: {value: getCssColorAsThreeColor("--terrain-color")}
+                    terrainColor: {value: utils.getCssColorAsThreeColor("--terrain-color")}
                 }
             ]),
                 
@@ -110,22 +113,19 @@ export class SimpleWorld extends World {
         if (this.points.position.z - this.camera.position.z > threshold) {
             this.points.position.z -= threshold * 2;
         }
-        
-        // Update the shader
-        this.pointsMaterial.uniforms.time.value = elapsedTime;
-        
+                
         this.fpsCounter.update();
 
         this.renderer.render(this.scene, this.camera);
     }
 
     updateColors() {
-        const backgroundColor = getCssColorAsThreeColor("--background-color");
+        const backgroundColor = utils.getCssColorAsThreeColor("--background-color");
         this.scene.background = backgroundColor;
         const fog = new THREE.Fog(backgroundColor, 30, 180);
         this.scene.fog = fog;
         
-        this.pointsMaterial.uniforms.terrainColor.value.set(getCssColorAsThreeColor("--terrain-color"));
+        this.pointsMaterial.uniforms.terrainColor.value.set(utils.getCssColorAsThreeColor("--terrain-color"));
     }
 
     dispose() {

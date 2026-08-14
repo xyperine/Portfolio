@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import * as SEEDRANDOM from 'seedrandom';
 
 export async function loadAsText(url) {
     const response = await fetch(url);
@@ -90,4 +91,50 @@ export function capitalize(str) {
 
 export function metresToFeet(m) {
     return m * 3.28084;
+}
+
+export function createSeededRandom(seed) {
+    return new Math.seedrandom(seed);
+}
+
+export function seededRandomElement(random, array) {
+    return array[Math.floor(random() * array.length)];
+}
+
+export function nextSeededGaussian(random) {
+    let u = 0;
+    let v = 0;
+    let s = 0;
+
+    do {
+        u = 2 * random() - 1;
+        v = 2 * random() - 1;
+        s = u * u + v * v;
+    } while (s >= 1 || s === 0);
+
+    s = Math.sqrt((-2 * Math.log(s)) / s);
+    return u * s;
+}
+
+export function seededGaussian(random, mean, stdDev) {
+    return mean + nextSeededGaussian(random) * stdDev;
+}
+
+export function seededGaussianConstrained(random, min, max, mean, stdDev) {
+    let x = 0;
+    do {
+        x = seededGaussian(random, mean, stdDev);
+    } while (x < min || x > max);
+
+    return x;
+}
+
+export function seededFloat(random, min, max) {
+    const spread = max - min;
+    return random() * spread + min;
+}
+
+export function seededInt(random, min, max) {
+    const spread = max - min + 1;
+    return Math.floor(random() * spread) + min;
 }

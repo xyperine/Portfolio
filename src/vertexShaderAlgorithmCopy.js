@@ -3,7 +3,8 @@
  * to be able to produce the same outputs.
 */
 export class VertexShaderAlgorithmCopy {
-    constructor(heightLimit, freq, octaves, lacunarity, persistence) {
+    constructor(seed, heightLimit, freq, octaves, lacunarity, persistence) {
+        this.seed = seed;
         this.heightLimit = heightLimit;
         this.freq = freq;
         this.octaves = octaves;
@@ -54,9 +55,15 @@ export class VertexShaderAlgorithmCopy {
         ix = this.#mod289(ix);
         iy = this.#mod289(iy);
 
-        const p0 = this.#permute(this.#permute(iy + 0.0) + ix + 0.0);
-        const p1 = this.#permute(this.#permute(iy + i1y) + ix + i1x);
-        const p2 = this.#permute(this.#permute(iy + 1.0) + ix + 1.0);
+        let p0 = this.#permute(this.#permute(iy + 0.0) + ix + 0.0);
+        let p1 = this.#permute(this.#permute(iy + i1y) + ix + i1x);
+        let p2 = this.#permute(this.#permute(iy + 1.0) + ix + 1.0);
+        
+        const flooredSeed = Math.floor(this.seed * 213898.0);
+        p0 = this.#permute(this.#mod289(p0 + flooredSeed));
+        p1 = this.#permute(this.#mod289(p1 + flooredSeed));
+        p2 = this.#permute(this.#mod289(p2 + flooredSeed));
+        //p = permute(mod289(p + vec3(floor(seed * 2138988197.0))));
 
         let grad = (p, x, y) => {
             const gx = 2.0 * this.#fract(p * Cw) - 1.0;

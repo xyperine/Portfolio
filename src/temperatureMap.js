@@ -1,19 +1,20 @@
 import * as utils from '#src/utils.js';
+import * as SEEDRANDOM from 'seedrandom';
 import { SimplexNoise } from 'three/addons/math/SimplexNoise.js';
-import { MathUtils } from 'three/src/Three.Core.js';
 import { Temperature } from '#src/temperature.js';
 
 export class TemperatureMap {
-    constructor(planetInfo) {
-        this.simplex = new SimplexNoise();
+    constructor(planetInfo, seed) {
+        this.random = new Math.seedrandom(seed);
+        this.simplex = new SimplexNoise(new R(seed));
         
         const equilibriumKelvin = this.calculateEquilibrium(planetInfo);
         this.equilibrium = utils.kelvinToCelsius(equilibriumKelvin);
         
-        this.greenHouseEffect = utils.randGaussianConstrained(0, 200, 30, 25);
+        this.greenHouseEffect = utils.seededGaussianConstrained(this.random, 0, 200, 30, 25);
         
-        this.scale = MathUtils.randFloat(1e-4, 3e-4);
-        this.variationStrength = MathUtils.randFloat(10, 20);
+        this.scale = utils.seededFloat(this.random, 1e-4, 3e-4);
+        this.variationStrength = utils.seededFloat(this.random, 10, 20);
 
         console.log(planetInfo);
     }
@@ -36,5 +37,11 @@ export class TemperatureMap {
         const celsius = Math.max(this.equilibrium + this.greenHouseEffect + localVariation + altitudeEffect, -272);
         const t = new Temperature(celsius);
         return t;
+    }
+}
+
+class R {
+    constructor(seed) {
+        this.random = new Math.seedrandom(seed);
     }
 }

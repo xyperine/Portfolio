@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import * as RAPIER from '@dimforge/rapier3d-compat';
+import * as SEEDRANDOM from 'seedrandom';
 import * as utils from '#src/utils.js';
 import { VertexShaderAlgorithmCopy } from '#src/vertexShaderAlgorithmCopy.js';
 import { TerrainChunk } from '#src/terrainChunk.js';
@@ -8,11 +9,12 @@ export class Terrain {
     #vertexShader;
     #fragmentShader;
 
-    constructor(scene, physicsWorld, vertexShader, fragmentShader, renderingDistance) {
+    constructor(scene, physicsWorld, vertexShader, fragmentShader, renderingDistance, seed) {
         this.scene = scene;
         this.physicsWorld = physicsWorld;
         this.#vertexShader = vertexShader;
         this.#fragmentShader = fragmentShader;
+        this.random = new Math.seedrandom(seed);
         
         this.chunkMap = new Map();
         const renderDistanceMultiplier = 1;
@@ -26,17 +28,18 @@ export class Terrain {
             this.chunkSize.w, 
             this.chunkSize.d
         );
-        const heightLimit = THREE.MathUtils.randFloat(15, 40);
-        const freq = THREE.MathUtils.randFloat(0.001, 0.01);
-        const octaves = THREE.MathUtils.randInt(6, 8);
-        const lacunarity = THREE.MathUtils.randFloat(1.9, 2.1);
-        const persistence = THREE.MathUtils.randFloat(0.4, 0.5);
-        this.shaderVertexAlgorithm = new VertexShaderAlgorithmCopy(heightLimit, freq, octaves, lacunarity, persistence);
+        const heightLimit = utils.seededFloat(this.random, 15, 40);
+        const freq = utils.seededFloat(this.random, 0.001, 0.01);
+        const octaves = utils.seededInt(this.random, 6, 8);
+        const lacunarity = utils.seededFloat(this.random, 1.9, 2.1);
+        const persistence = utils.seededFloat(this.random, 0.4, 0.5);
+        const vertexSeed = this.random();
+        this.shaderVertexAlgorithm = new VertexShaderAlgorithmCopy(vertexSeed, heightLimit, freq, octaves, lacunarity, persistence);
         this.chunkMaterial = new THREE.ShaderMaterial({
         uniforms: THREE.UniformsUtils.merge([
                 THREE.UniformsLib.fog,
                 {
-                    time: {value: 0},
+                    seed: {value: vertexSeed},
                     heightLimit: {value: heightLimit},
                     freq: {value: freq},
                     octaves: {value: octaves},
@@ -162,7 +165,6 @@ export class Terrain {
     }
     
     render(elapsedTime) {
-        this.chunkMaterial.uniforms.time.value = elapsedTime;
     }
 
     updateColors() {

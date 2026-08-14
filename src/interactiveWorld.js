@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import * as RAPIER from '@dimforge/rapier3d-compat';
+import * as SEEDRANDOM from 'seedrandom';
 import * as utils from '#src/utils.js';
 import { Input } from '#src/input.js';
 import { World } from '#src/world.js';
@@ -25,13 +26,15 @@ export class InteractiveWorld extends World {
 
     async init() {
         this.input = new Input();
-        this.physicsDebug = false;
+        this.physicsDebug = true;
         this.renderingDistance = 180;
 
-        this.planetGenerator = new PlanetGenerator();
+        this.random = new Math.seedrandom();
+
+        this.planetGenerator = new PlanetGenerator(this.random());
         this.planetInfo = this.planetGenerator.generate();
 
-        this.gravity = utils.randGaussianConstrained(0.2, 4, 1, 1);
+        this.gravity = utils.seededGaussianConstrained(this.random, 0.2, 4, 1, 1);
         
         // Scene
         const backgroundColor = utils.getCssColorAsThreeColor("--background-color");
@@ -82,8 +85,15 @@ export class InteractiveWorld extends World {
             z: 0
         });
         
-        this.terrain = new Terrain(this.scene, this.physicsWorld, this.#terrainVertexShader, this.#terrainFragmentShader, this.renderingDistance);
-        this.temperatureMap = new TemperatureMap(this.planetInfo);
+        this.terrain = new Terrain(
+            this.scene, 
+            this.physicsWorld, 
+            this.#terrainVertexShader, 
+            this.#terrainFragmentShader, 
+            this.renderingDistance, 
+            this.random().toString()
+        );
+        this.temperatureMap = new TemperatureMap(this.planetInfo, this.random().toString());
 
         // Make sure the terrain collider is registered.
         this.physicsWorld.step();
