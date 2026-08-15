@@ -12,6 +12,8 @@ export class TerrainChunk {
         this.renderObject = renderObject;
         this.physicsObject = physicsObject;
         this.physicsGeometry = physicsGeometry;
+
+        this.objects = [];
     }
 
     getXZPosition() {
@@ -26,5 +28,20 @@ export class TerrainChunk {
         const p = this.physicsObject.translation();
         this.renderObject.position.set(p.x, p.y, p.z);
         this.renderObject.updateMatrixWorld(true);
+    }
+
+    /**
+     * 
+     * @param {any} object Must implement dispose() function
+     */
+    addObject(object) {
+        this.objects.push(object);
+    }
+
+    clearObjects() {
+        for (let object of this.objects) {
+            object.dispose();
+        }
+        this.objects = [];
     }
 }

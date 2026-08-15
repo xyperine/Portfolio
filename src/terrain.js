@@ -4,11 +4,21 @@ import * as SEEDRANDOM from 'seedrandom';
 import * as utils from '#src/utils.js';
 import { VertexShaderAlgorithmCopy } from '#src/vertexShaderAlgorithmCopy.js';
 import { TerrainChunk } from '#src/terrainChunk.js';
+import { BeaconSite } from '#src/beaconSite.js';
 
 export class Terrain {
     #vertexShader;
     #fragmentShader;
 
+    /**
+     * 
+     * @param {THREE.Scene} scene 
+     * @param {RAPIER.World} physicsWorld 
+     * @param {string} vertexShader 
+     * @param {string} fragmentShader 
+     * @param {number} renderingDistance 
+     * @param {string} seed 
+     */
     constructor(scene, physicsWorld, vertexShader, fragmentShader, renderingDistance, seed) {
         this.scene = scene;
         this.physicsWorld = physicsWorld;
@@ -54,6 +64,16 @@ export class Terrain {
             fragmentShader: this.#fragmentShader,
             fog: true
         });
+        
+        this.beaconPositions = [];
+        for (let i = 0; i < 5; i++) {
+            const p = {
+                x: utils.seededFloat(this.random, -1000, 1000), 
+                z: utils.seededFloat(this.random, -1000, 1000)
+            };
+            this.beaconPositions.push(p);
+        }
+
         this.loadChunk(0, 0);
     }
 
@@ -66,14 +86,36 @@ export class Terrain {
                 if (chunkKey !== key) { 
                     chunk.relocateTo(x * this.chunkSize.w, z * this.chunkSize.d);
                     this.applyDisplacement(chunk.physicsGeometry, chunk.renderObject.matrixWorld, chunk.physicsObject);
+
+                    this.destroyBeacons(chunk);
+
                     this.chunkMap.set(key, chunk);
                     const deletedSuccessfully = this.chunkMap.delete(chunkKey);
+
+                    this.createBeacons(chunk, x, z);
                 }
             } else {
                 chunk = this.createChunk(this.chunkGeometry, this.chunkMaterial, x, z);
                 this.chunkMap.set(key, chunk);
+
+                this.createBeacons(chunk, x, z);
             }
         }
+    }
+
+    createBeacons(chunk, x, z) {
+        for (let i = 0; i < this.beaconPositions.length; i++) {
+            const p = this.beaconPositions[i];
+            const cp = this.toChunkCoordinates(p);
+            if (x === cp.x && z === cp.z) {
+                const beaconSite = new BeaconSite(p.x, p.z, this.scene, this.physicsWorld, this.shaderVertexAlgorithm);
+                chunk.addObject(beaconSite);
+            }
+        }
+    }
+
+    destroyBeacons(chunk) {
+        chunk.clearObjects();
     }
 
     getFarChunk(x, z) {
@@ -163,7 +205,14 @@ export class Terrain {
             }
         }
     }
-    
+
+    toChunkCoordinates(position) {
+        const x = Math.round(position.x / this.chunkSize.w);
+        const z = Math.round(position.z / this.chunkSize.d);
+
+        return {x, z};
+    }
+
     render(elapsedTime) {
     }
 

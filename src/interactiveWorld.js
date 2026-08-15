@@ -26,7 +26,7 @@ export class InteractiveWorld extends World {
 
     async init() {
         this.input = new Input();
-        this.physicsDebug = true;
+        this.physicsDebug = false;
         this.renderingDistance = 180;
 
         this.random = new Math.seedrandom();
@@ -179,7 +179,7 @@ export class InteractiveWorld extends World {
         const backgroundColor = utils.getCssColorAsThreeColor("--background-color");
         this.scene.background = backgroundColor;
         const fog = new THREE.Fog(backgroundColor, 30, 180);
-        this.scene.fog = fog;   
+        this.scene.fog = fog;
         
         this.terrain.updateColors();
     }
