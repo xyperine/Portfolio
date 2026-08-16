@@ -162,7 +162,7 @@ export class InteractiveWorld extends World {
         this.glider.render(elapsedTime);
         
         this.terrain.update(this.glider.getRenderPosition());
-        this.terrain.render(elapsedTime);
+        this.terrain.render({elapsedTime, camera: this.camera});
 
         this.hud.update();
 

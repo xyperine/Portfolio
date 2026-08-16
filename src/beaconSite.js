@@ -87,17 +87,28 @@ export class BeaconSite {
         this.orbSocketY = yPos + piedestalSize.h - 1;
     }
 
-    createOrb() {
+    async createOrb() {
+        const vertShader = await utils.loadAsText("src/shaders/beacon_orb.vert.glsl");
+        const fragShader = await utils.loadAsText("src/shaders/beacon_orb.frag.glsl");
+
         const orbRadius = 4;
         const sg = new THREE.SphereGeometry(orbRadius, orbRadius * 4, orbRadius * 4);
-        const sm = new THREE.MeshBasicMaterial({
-            color: 0x000000,//utils.getCssColorAsThreeColor("--column-color"),
-            fog: true,
+        this.sm = new THREE.ShaderMaterial({
+            //color: 0x000000,//utils.getCssColorAsThreeColor("--column-color"),
+            //fog: true,
+            uniforms: {
+                uTimeSeconds: {value: 0},
+                uCameraWorldPosition: {value: new THREE.Vector3()}
+            },
+            vertexShader: vertShader,
+            fragmentShader: fragShader,
+            transparent: true,
+            side: THREE.DoubleSide,
         });
         let syPos = this.orbSocketY + orbRadius * 0.5;
         let sxPos = this.x;
         let szPos = this.z;
-        const sp = new THREE.Mesh(sg, sm);
+        const sp = new THREE.Mesh(sg, this.sm);
         sp.position.set(sxPos, syPos, szPos);
         this.siteObject.add(sp);
 
@@ -110,6 +121,13 @@ export class BeaconSite {
 
         this.scene.add(this.siteObject);
         this.renderObjects.push(this.siteObject);
+    }
+
+    update(gameState) {
+        if (this.sm != undefined) {
+            this.sm.uniforms.uCameraWorldPosition.value = gameState.camera.getWorldPosition(new THREE.Vector3());
+            this.sm.uniforms.uTimeSeconds.value = gameState.elapsedTime * 0.001;
+        }
     }
 
     dispose() {

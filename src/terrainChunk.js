@@ -44,4 +44,10 @@ export class TerrainChunk {
         }
         this.objects = [];
     }
+
+    render(gameState) {
+        this.objects.forEach(o => {
+            o.update(gameState);
+        })
+    }
 }

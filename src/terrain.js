@@ -68,8 +68,8 @@ export class Terrain {
         this.beaconPositions = [];
         for (let i = 0; i < 5; i++) {
             const p = {
-                x: utils.seededFloat(this.random, -1000, 1000), 
-                z: utils.seededFloat(this.random, -1000, 1000)
+                x: utils.seededFloat(this.random, -100, 100), 
+                z: utils.seededFloat(this.random, -100, 100)
             };
             this.beaconPositions.push(p);
         }
@@ -213,7 +213,10 @@ export class Terrain {
         return {x, z};
     }
 
-    render(elapsedTime) {
+    render(gameState) {
+        for (let c of [...this.chunkMap.values()]) {
+            c.render(gameState);
+        }
     }
 
     updateColors() {
