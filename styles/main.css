@@ -342,7 +342,7 @@ html:not(.interactive) #game-ui{
 	flex-direction: column;
 	align-items: center;
 
-	font-family: monospace;
+	font-family: var(--game-ui-font-family);
 }
 
 .compass-tick {

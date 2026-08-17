@@ -13,10 +13,10 @@ export class Compass {
         }
 
         this.lookDirection = new THREE.Vector3();
-        this.degreesInView = 180;
-        this.pixelsPerDegree = this.compassElement.clientWidth / this.degreesInView;
+        this.horizontalFov = 180;
+        this.pixelsPerDegree = this.compassElement.clientWidth / this.horizontalFov;
 
-        //this.markers = [];
+        this.markers = [];
 
         const interval = 15;
         for (let degree = -360; degree < 720; degree += interval) {
@@ -48,7 +48,7 @@ export class Compass {
                 marker.appendChild(labelElement);
             }
 
-            //this.markers.push(marker);
+            this.markers.push({marker, degree});
 
             this.stripElement.appendChild(marker);
         }
@@ -76,9 +76,9 @@ export class Compass {
     }
     
     resize() {
-        this.pixelsPerDegree = this.compassElement.clientWidth / this.degreesInView;
-        this.markers.forEach((m, i) => {
-            m.style.left = `${i * 15 * this.pixelsPerDegree}px`;
+        this.pixelsPerDegree = this.compassElement.clientWidth / this.horizontalFov;
+        this.markers.forEach((e, i) => {
+            e.marker.style.left = `${e.degree * this.pixelsPerDegree}px`;
         });
     }    
 }

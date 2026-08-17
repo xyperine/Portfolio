@@ -192,6 +192,14 @@ export class InteractiveWorld extends World {
         this.terrain.updateColors();
     }
 
+    resize(width, height) {
+        super.resize(width, height);
+
+        if (this.compass !== undefined) {
+            this.compass.resize();
+        }
+    }
+
     dispose() {
         this.input.unlockPointer();
         
