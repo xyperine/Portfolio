@@ -244,7 +244,7 @@ html.interactive .projects-container {
 }
 
 /* Debug */
-#game * .sdadsasda {
+#game * .sadsd {
 	border: 0.1rem solid blue;
 }
 
@@ -271,8 +271,9 @@ html:not(.interactive) #game-ui{
 
 #game-ui .hud{
 	position: absolute;
+	top: 15%;
 
-	gap: 0.2rem;
+	gap: 0.2cqi;
 }
 
 #game-ui .hud #hud-title {
@@ -281,26 +282,106 @@ html:not(.interactive) #game-ui{
 
 	color: var(--hud-text-color);
 	font-family: var(--game-ui-font-family);
-	font-size: 0.8rem;
-	letter-spacing: 0.08rem;
+	font-size: 0.8cqi;
+	letter-spacing: 0.08cqi;
 }
 
 #game-ui .hud hr {
 	border: none;
-	border-top: 0.1rem dashed var(--hud-text-color);
+	border-top: 0.1cqi dashed var(--hud-text-color);
 }
 
 #game-ui .hud .hud-entry {
 	display: grid;
-	grid-template-columns: 5rem auto;
+	grid-template-columns: 5cqi auto;
 
 	margin-top: 0;
 	margin-bottom: 0;
 
 	color: var(--hud-text-color);
 	font-family: var(--game-ui-font-family);
-	font-size: 0.8rem;
-	letter-spacing: 0.08rem;
+	font-size: 0.8cqi;
+	letter-spacing: 0.08cqi;
+}
+
+#game-ui #compass {
+	position: absolute;
+	top: 8%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 60%;
+	height: 8%;
+
+	overflow: hidden;
+	pointer-events: none;
+
+	mask-image: linear-gradient(
+		to right,
+		transparent,
+		black 10%,
+		black 90%,
+		transparent
+	);
+}
+
+#game-ui #compass-strip {
+	position: absolute;
+	top: 0;
+	left: 50%;
+	height: 75%;
+}
+
+.compass-marker {
+	position: absolute;
+
+	top: 0;
+
+	height: 100%;
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
+	font-family: monospace;
+}
+
+.compass-tick {
+	width: 0.1cqi;
+	height: 0.4cqi;
+
+	background: gray;
+}
+
+.compass-tick-label {
+	margin-top: 3px;
+
+	font-weight: normal;
+	font-size: 0.6cqi;
+	color: gray;
+}
+
+.compass-label {
+	margin-top: 3px;
+	height: 100%;
+
+	font-size: 0.8cqi;
+	font-weight: bold;
+	color: gray;
+}
+
+#compass-center {
+	position: absolute;
+
+	left: 50%;
+	top: 75%;
+
+	width: 0.1cqi;
+	height: 0.4cqi;
+
+	color: gray;
+	background-color: var(--accent-color);
+
+	transform: translateX(-50%);
 }
 
 #crosshair {

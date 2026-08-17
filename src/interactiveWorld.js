@@ -10,6 +10,7 @@ import { Hud } from '#src/hud.js';
 import { Terrain } from '#src/terrain.js';
 import { TemperatureMap } from '#src/temperatureMap.js';
 import { PlanetGenerator } from '#src/planetGenerator.js';
+import { Compass } from '#src/compass.js';
 
 export class InteractiveWorld extends World {
     #terrainVertexShader;
@@ -101,6 +102,7 @@ export class InteractiveWorld extends World {
         this.glider = new Glider(this.camera, this.input, this.scene, this.physicsWorld, this.temperatureMap);
 
         this.hud = new Hud(this.glider, this.planetInfo.name, this.gravity);
+        this.compass = new Compass();
 
         // Diagnostics
         if (this.physicsDebug) {
@@ -159,12 +161,18 @@ export class InteractiveWorld extends World {
     }
 
     render(elapsedTime) {
+        const gameState = {
+            elapsedTime, 
+            camera: this.camera
+        };
+
         this.glider.render(elapsedTime);
         
         this.terrain.update(this.glider.getRenderPosition());
-        this.terrain.render({elapsedTime, camera: this.camera});
+        this.terrain.render(gameState);
 
         this.hud.update();
+        this.compass.update(gameState)
 
         this.fpsCounter.update();
 
