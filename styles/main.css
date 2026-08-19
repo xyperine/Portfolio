@@ -309,7 +309,7 @@ html:not(.interactive) #game-ui{
 	top: 8%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	width: 60%;
+	width: 30%;
 	height: 8%;
 
 	overflow: hidden;
@@ -367,6 +367,49 @@ html:not(.interactive) #game-ui{
 	font-size: 0.8cqi;
 	font-weight: bold;
 	color: gray;
+}
+
+.compass-pointer {
+	position: absolute;
+	top: 0;
+	width: 1.5cqi;
+	height: 1.5cqi;
+	
+	clip-path: polygon(
+		50% 0%,
+		100% 50%,
+		50% 100%,
+		0% 50%
+	);
+
+	font-size: 1cqi;
+}
+
+.compass-pointer-inner {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 70%;
+	height: 70%;
+	transform: translate(-50%, -50%);
+
+	clip-path: polygon(
+		50% 0%,
+		100% 50%,
+		50% 100%,
+		0% 50%
+	);
+}
+
+.compass-pointer-label {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	
+	color: hsl(0, 0%, 97%);
+	font-family: var(--game-ui-font-family);
+	font-size: 50%;
 }
 
 #compass-center {

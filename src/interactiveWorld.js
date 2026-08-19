@@ -104,6 +104,10 @@ export class InteractiveWorld extends World {
         this.hud = new Hud(this.glider, this.planetInfo.name, this.gravity);
         this.compass = new Compass();
 
+        for (let p of this.terrain.beaconPositions) {
+            this.compass.trackPosition(new THREE.Vector3(p.x, 0, p.z));
+        }
+
         // Diagnostics
         if (this.physicsDebug) {
             this.debugPhysics();
