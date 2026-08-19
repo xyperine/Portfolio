@@ -305,12 +305,14 @@ html:not(.interactive) #game-ui{
 }
 
 #game-ui #compass {
+	container-type: inline-size;
+
 	position: absolute;
-	top: 8%;
+	top: 3cqi;
 	left: 50%;
 	transform: translate(-50%, -50%);
 	width: 30%;
-	height: 8%;
+	height: 4cqi;
 
 	overflow: hidden;
 	pointer-events: none;
@@ -328,13 +330,13 @@ html:not(.interactive) #game-ui{
 	position: absolute;
 	top: 0;
 	left: 50%;
-	height: 75%;
+	height: 90%;
 }
 
 .compass-marker {
 	position: absolute;
 
-	top: 0;
+	top: 50%;
 
 	height: 100%;
 
@@ -346,34 +348,34 @@ html:not(.interactive) #game-ui{
 }
 
 .compass-tick {
-	width: 0.1cqi;
-	height: 0.4cqi;
+	width: 0.2cqi;
+	height: 2.4cqi;
 
 	background: gray;
 }
 
 .compass-tick-label {
-	margin-top: 3px;
+	margin-top: 1cqi;
 
 	font-weight: normal;
-	font-size: 0.6cqi;
+	font-size: 1.6cqi;
 	color: gray;
 }
 
 .compass-label {
-	margin-top: 3px;
+	margin-top: 1cqi;
 	height: 100%;
 
-	font-size: 0.8cqi;
+	font-size: 2.4cqi;
 	font-weight: bold;
 	color: gray;
 }
 
 .compass-pointer {
 	position: absolute;
-	top: 0;
-	width: 1.5cqi;
-	height: 1.5cqi;
+	top: 0%;
+	width: 4cqi;
+	height: 4cqi;
 	
 	clip-path: polygon(
 		50% 0%,
@@ -382,7 +384,7 @@ html:not(.interactive) #game-ui{
 		0% 50%
 	);
 
-	font-size: 1cqi;
+	font-size: 2.5cqi;
 }
 
 .compass-pointer-inner {
@@ -416,15 +418,15 @@ html:not(.interactive) #game-ui{
 	position: absolute;
 
 	left: 50%;
-	top: 75%;
+	top: 100%;
 
-	width: 0.1cqi;
-	height: 0.4cqi;
+	width: 0.3cqi;
+	height: 1.5cqi;
 
 	color: gray;
 	background-color: var(--accent-color);
 
-	transform: translateX(-50%);
+	transform: translate(-50%, -100%);
 }
 
 #crosshair {
