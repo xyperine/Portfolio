@@ -1,9 +1,15 @@
 import * as THREE from 'three';
 import * as SEEDRANDOM from 'seedrandom';
+import * as yaml from 'yaml';
 
 export async function loadAsText(url) {
     const response = await fetch(url);
     return await response.text();
+}
+
+export async function loadYaml(url) {
+    const yamlText = await loadAsText(url);
+    return yaml.parse(yamlText);
 }
 
 export function getCssColorAsThreeColor(name) {

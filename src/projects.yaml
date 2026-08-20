@@ -1,0 +1,50 @@
+projects:
+  conifer_init:
+    name: "Conifer Init"
+    description: "Unity plugin for automating project setup."
+    coverImage: "img/Conifer Init cover.png"
+    link: "#"
+
+    interactive:
+      number: 1
+      color: "hsl(102, 61%, 29%)"
+  
+  icons_creator:
+    name: "Icons Creator"
+    description: "Tool for creating icons of 3D objects in Unity."
+    coverImage: "img/Icons Creator cover.png"
+    link: "#"
+
+    interactive:
+      number: 2
+      color: "hsl(0, 0%, 95%)"
+  
+  reality_grid:
+    name: "Reality Grid"
+    description: "Incremental game about climbing up layers of simulations."
+    coverImage: "img/Realit Grid cover.png"
+    link: "#"
+
+    interactive:
+      number: 3
+      color: "hsl(20, 92%, 54%)"
+  
+  dots_killer:
+    name: "Dots Killer"
+    description: "PC/Web/Android incremental game."
+    coverImage: "img/Dots Killer cover.png"
+    link: "#"
+
+    interactive:
+      number: 4
+      color: "hsl(351, 52%, 51%)"
+
+  genesis_constructa:
+    name: "Genesis Constructa"
+    description: "Mobile idle arcade game set on a distant planet."
+    coverImage: "img/Genesis Constructa cover.png"
+    link: "#"
+
+    interactive:
+      number: 5
+      color: "hsl(255, 43%, 84%)"

@@ -63,20 +63,16 @@ export class Compass {
         const project = Projects.get(beacon.projectId);
         const pointer = this.createPointer(project.interactive.number, project.interactive.color, beacon.position);
         this.points.push(pointer);
-
-        console.log(this.points);
-        console.log(document.querySelectorAll(".compass-pointer"));
     }
 
     createPointer(number, color, position) {
         const element = document.createElement("div");
         element.classList.add("compass-pointer");
-        element.style.backgroundColor = `${color}`;
+        element.style.setProperty("--color", color);
         this.stripElement.appendChild(element);
 
         const inner = document.createElement("div");
         inner.classList.add("compass-pointer-inner");
-        inner.style.backgroundColor = `${color.replace("50%", "30%")}`;
         element.appendChild(inner);
 
         const label = document.createElement("div");

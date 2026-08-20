@@ -11,7 +11,6 @@ import { Terrain } from '#src/terrain.js';
 import { TemperatureMap } from '#src/temperatureMap.js';
 import { PlanetGenerator } from '#src/planetGenerator.js';
 import { Compass } from '#src/compass.js';
-import { ProjectData } from '#src/projectData.js';
 import { Projects } from '#src/projects.js';
 
 export class InteractiveWorld extends World {
@@ -26,12 +25,14 @@ export class InteractiveWorld extends World {
 
         this.init();
     }
-
+    
     async init() {
+        await Projects.init();
+
         this.input = new Input();
         this.physicsDebug = false;
         this.renderingDistance = 180;
-
+        
         this.random = new Math.seedrandom();
 
         this.planetGenerator = new PlanetGenerator(this.random());
@@ -88,8 +89,6 @@ export class InteractiveWorld extends World {
             z: 0
         });
 
-        Projects.init();
-        
         this.terrain = new Terrain(
             this.scene, 
             this.physicsWorld, 
