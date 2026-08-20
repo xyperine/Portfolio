@@ -11,6 +11,8 @@ import { Terrain } from '#src/terrain.js';
 import { TemperatureMap } from '#src/temperatureMap.js';
 import { PlanetGenerator } from '#src/planetGenerator.js';
 import { Compass } from '#src/compass.js';
+import { ProjectData } from '#src/projectData.js';
+import { Projects } from '#src/projects.js';
 
 export class InteractiveWorld extends World {
     #terrainVertexShader;
@@ -85,6 +87,8 @@ export class InteractiveWorld extends World {
             y: -9.81 * this.gravity,
             z: 0
         });
+
+        Projects.init();
         
         this.terrain = new Terrain(
             this.scene, 
@@ -104,8 +108,8 @@ export class InteractiveWorld extends World {
         this.hud = new Hud(this.glider, this.planetInfo.name, this.gravity);
         this.compass = new Compass();
 
-        for (let p of this.terrain.beaconPositions) {
-            this.compass.trackPosition(new THREE.Vector3(p.x, 0, p.z));
+        for (let beacon of this.terrain.beaconPlacements) {
+            this.compass.trackBeacon(beacon);
         }
 
         // Diagnostics
@@ -218,6 +222,8 @@ export class InteractiveWorld extends World {
         this.glider = null;
         this.input.dispose();
         this.input = null;
+        this.compass.dispose();
+        this.compass = null;
         
         // Dispose rendering
         this.scene.traverse(object => {

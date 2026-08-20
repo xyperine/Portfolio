@@ -5,6 +5,7 @@ import * as utils from '#src/utils.js';
 import { VertexShaderAlgorithmCopy } from '#src/vertexShaderAlgorithmCopy.js';
 import { TerrainChunk } from '#src/terrainChunk.js';
 import { BeaconSite } from '#src/beaconSite.js';
+import { Projects } from '#src/projects.js';
 
 export class Terrain {
     #vertexShader;
@@ -65,16 +66,20 @@ export class Terrain {
             fog: true
         });
         
-        this.beaconPositions = [];
-        for (let i = 0; i < 5; i++) {
+        this.createBeaconPlacements(Projects.getAllIDs());
+
+        this.loadChunk(0, 0);
+    }
+
+    createBeaconPlacements(projectIds) {
+        this.beaconPlacements = [];
+        for (let i = 0; i < projectIds.length; i++) {
             const p = {
                 x: utils.seededFloat(this.random, -100, 100), 
                 z: utils.seededFloat(this.random, -100, 100)
             };
-            this.beaconPositions.push(p);
+            this.beaconPlacements.push({projectId: projectIds[i], position: new THREE.Vector3(p.x, 0, p.z)});
         }
-
-        this.loadChunk(0, 0);
     }
 
     loadChunk(x, z) {
@@ -104,11 +109,18 @@ export class Terrain {
     }
 
     createBeacons(chunk, x, z) {
-        for (let i = 0; i < this.beaconPositions.length; i++) {
-            const p = this.beaconPositions[i];
+        for (let i = 0; i < this.beaconPlacements.length; i++) {
+            const p = this.beaconPlacements[i].position;
             const cp = this.toChunkCoordinates(p);
             if (x === cp.x && z === cp.z) {
-                const beaconSite = new BeaconSite(p.x, p.z, this.scene, this.physicsWorld, this.shaderVertexAlgorithm);
+                const beaconSite = new BeaconSite(
+                    p.x, 
+                    p.z, 
+                    this.scene, 
+                    this.physicsWorld, 
+                    this.shaderVertexAlgorithm, 
+                    this.beaconPlacements[i].projectId
+                );
                 chunk.addObject(beaconSite);
             }
         }

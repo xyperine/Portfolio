@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { Projects } from '#src/projects.js';
 
 export class Compass {
     constructor() {
@@ -57,34 +58,33 @@ export class Compass {
         this.points = [];
     }
     
-    trackPosition(position) {
-        // temp stuff
-        const colors = [
-            "hsl(30, 80%, 50%)",
-            "hsl(105, 80%, 50%)",
-            "hsl(180, 80%, 50%)",
-            "hsl(255, 80%, 50%)",
-            "hsl(330, 80%, 50%)",
-        ]
 
-        const beaconNumber = this.points.length;
+    trackBeacon(beacon) {
+        const project = Projects.get(beacon.projectId);
+        const pointer = this.createPointer(project.interactive.number, project.interactive.color, beacon.position);
+        this.points.push(pointer);
 
+        console.log(this.points);
+        console.log(document.querySelectorAll(".compass-pointer"));
+    }
+
+    createPointer(number, color, position) {
         const element = document.createElement("div");
         element.classList.add("compass-pointer");
-        element.style.backgroundColor = `${colors[beaconNumber]}`;
+        element.style.backgroundColor = `${color}`;
         this.stripElement.appendChild(element);
 
         const inner = document.createElement("div");
         inner.classList.add("compass-pointer-inner");
-        inner.style.backgroundColor = `${colors[beaconNumber].replace("50%", "30%")}`;
+        inner.style.backgroundColor = `${color.replace("50%", "30%")}`;
         element.appendChild(inner);
 
         const label = document.createElement("div");
         label.classList.add("compass-pointer-label");
-        label.textContent = (beaconNumber + 1).toString();
+        label.textContent = number.toString();
         element.appendChild(label);
 
-        this.points.push({element, position});
+        return {element, position};
     }
 
     update(gameState) {
@@ -122,5 +122,9 @@ export class Compass {
         this.markers.forEach(marker => {
             marker.element.style.left = `${marker.degree * this.pixelsPerDegree}px`;
         });
-    }    
+    }
+
+    dispose() {
+        this.stripElement.replaceChildren();
+    }
 }

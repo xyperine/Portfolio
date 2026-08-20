@@ -12,12 +12,13 @@ export class BeaconSite {
      * @param {RAPIER.World} physicsWorld 
      * @param {VertexShaderAlgorithmCopy} vac 
      */
-    constructor(x, z, scene, physicsWorld, vac) {
+    constructor(x, z, scene, physicsWorld, vac, projectId) {
         this.x = x;
         this.z = z;
         this.scene = scene;
         this.physicsWorld = physicsWorld;
         this.vac = vac;
+        this.projectId = projectId;
 
         this.renderObjects = [];
         this.physicsObjects = [];
@@ -121,6 +122,8 @@ export class BeaconSite {
 
         this.scene.add(this.siteObject);
         this.renderObjects.push(this.siteObject);
+
+        this.worldPosition = sp.getWorldPosition(new THREE.Vector3());
     }
 
     update(gameState) {
