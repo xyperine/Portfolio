@@ -1,11 +1,12 @@
 uniform float uTimeSeconds;
 uniform vec3 uPrimaryColor;
+uniform int uShapeID;
 
 varying vec3 vCameraLocalPos;
 varying vec3 vLocalPosition;
 
 struct MarchData {
-    int i;
+    int iterations;
     float cd;
     float d;
     float trap;
@@ -35,6 +36,29 @@ float trapDistance(vec3 z, int trapMode) {
     else if (trapMode == 2) trap = length(z.xy);         // Axis trap (distance to Z axis)
     else if (trapMode == 3) trap = max(max(abs(z.x), abs(z.y)), abs(z.z)); // Cube trap
     return trap;
+}
+
+mat4 rotation4D(int i, int j, float angle)
+{
+    mat4 m = mat4(1.0);
+
+    float c = cos(angle);
+    float s = sin(angle);
+
+    m[i][i] = c;
+    m[j][j] = c;
+
+    m[i][j] = -s;
+    m[j][i] =  s;
+
+    return m;
+}
+
+SDOutput sdCube4D(vec4 p, float s)
+{
+    vec4 d = abs(p) - s;
+    float dist = length(max(d, 0.0)) + min(max(max(d.x, d.y), max(d.z, d.w)), 0.0);
+    return SDOutput(dist, 0.0);
 }
 
 SDOutput sdMandelbulb(vec3 p, float power, float rotSpeed) {
@@ -79,6 +103,35 @@ SDOutput sdMandelbulb(vec3 p, float power, float rotSpeed) {
     return SDOutput(0.5 * log(r) * r / dr, trap);
 }
 
+SDOutput mandelbulbScene(vec3 p) {
+    float scale = 3.0;
+    SDOutput res = sdMandelbulb(p / scale, 6.0, 1.0);
+    return SDOutput(res.dist * scale, res.trap);
+}
+
+SDOutput hypercubeScene(vec3 p) {
+    float angle = uTimeSeconds * 1.0;
+    mat4 rotation = rotation4D(0, 3, angle * 1.1);
+    rotation *= rotation4D(2, 1, angle * 0.8);
+    rotation *= rotation4D(1, 0, angle * 0.7);
+    rotation *= rotation4D(3, 1, angle * 1.1);
+    rotation *= rotation4D(2, 3, angle);
+    vec4 p4 = vec4(p, 0.0);
+    SDOutput hypercube = sdCube4D(rotation * p4, 1.0);
+    return hypercube;
+}
+
+SDOutput mapScene(vec3 p) {
+    switch (uShapeID) {
+        case 0:
+            return mandelbulbScene(p);
+        case 1:
+            return hypercubeScene(p);
+        default:
+            return SDOutput(0.0, 0.0);
+    }
+}
+
 MarchData march(vec3 ro, vec3 rd) {
     float d = 0.0;
     float cd;
@@ -91,8 +144,8 @@ MarchData march(vec3 ro, vec3 rd) {
     int i;
     for (i = 0; i < maxSteps; i++) {
         p = ro + d * rd;
-        SDOutput res = sdMandelbulb(p / scale, 6.0, 1.0);
-        cd = res.dist * scale;
+        SDOutput res = mapScene(p);
+        cd = res.dist;
 
         if (cd < 0.0001 || d >= maxDistance) {
             trap = res.trap;
@@ -115,6 +168,23 @@ vec3 palette( float t ) {
     return a + b * cos(6.283185 * (c * t + d));
 }
 
+vec3 colorScene(MarchData data) {
+    switch (uShapeID) {
+        case 0: {
+            float trap = smoothstep(0.0, 1.0, data.trap * 1.0);
+            vec3 col = palette(trap);
+            return col;
+        }
+        case 1: {
+            vec3 col = palette(float(data.iterations) * 1e-3);
+            return col;
+        }
+        default: {
+            return vec3(1.0, 0.0, 1.0);
+        }
+    }
+}
+
 void main() {
     vec3 ro = vLocalPosition;
     vec3 rd = normalize(vLocalPosition - vCameraLocalPos);
@@ -125,7 +195,6 @@ void main() {
        discard;
     }
 
-    float trap = smoothstep(0.0, 1.0, marchData.trap * 1.0);
-    vec3 col = palette(trap);
+    vec3 col = colorScene(marchData);
     gl_FragColor = vec4(col, 1.0);
 }
