@@ -103,10 +103,64 @@ SDOutput sdMandelbulb(vec3 p, float power, float rotSpeed) {
     return SDOutput(0.5 * log(r) * r / dr, trap);
 }
 
+SDOutput sd16Cell(vec4 p, float s)
+{
+    p = abs(p);
+    SDOutput sdOut = SDOutput((p.x + p.y + p.z + p.w - s)* 0.57735027, 0.0);
+    return sdOut;
+}
+
+SDOutput sd5Cell(vec4 p, vec4 a)
+{
+    float dist = (max(max(max( abs(p.x+p.y+(p.w/a.w))-p.z,abs(p.x-p.y+(p.w/a.w))+p.z), abs(p.x - p.y - (p.w/a.w))+p.z),abs(p.x+p.y-(p.w/a.w))-p.z)-a.x)/sqrt(3.0);
+    return SDOutput(dist, 0.0);
+}
+
+SDOutput mandelboxDE(vec3 p)
+{
+    vec3 z = p;
+    float dr = 1.0;
+    const float scale = 2.0;
+
+    float trap = 1e6;
+
+    for (int i = 0; i < 15; i++)
+    {
+        // Box fold
+        z = clamp(z, -1.0, 1.0) * 2.0 - z;
+
+        // Sphere fold
+        float r2 = dot(z, z);
+
+        if (r2 < 0.25)
+        {
+            z *= 4.0;
+            dr *= 4.0;
+        }
+        else if (r2 < 1.0)
+        {
+            float k = 1.0 / r2;
+            z *= k;
+            dr *= k;
+        }
+
+        trap = min(trap, trapDistance(z, 3));
+        // Scale + translate
+        z = scale * z + p;
+
+        dr = abs(scale) * dr + 1.0;
+    }
+
+    float r = length(z);
+    float dist = r / abs(dr);
+    SDOutput sdOut = SDOutput(dist, trap);
+    return sdOut;
+}
+
 SDOutput mandelbulbScene(vec3 p) {
     float scale = 3.0;
-    SDOutput res = sdMandelbulb(p / scale, 6.0, 1.0);
-    return SDOutput(res.dist * scale, res.trap);
+    SDOutput sdOut = sdMandelbulb(p / scale, 6.0, 1.0);
+    return SDOutput(sdOut.dist * scale, sdOut.trap);
 }
 
 SDOutput hypercubeScene(vec3 p) {
@@ -121,12 +175,59 @@ SDOutput hypercubeScene(vec3 p) {
     return hypercube;
 }
 
+SDOutput thirdScene(vec3 p) {
+    float angle = uTimeSeconds * 1.0;
+    mat4 rotation = rotation4D(0, 3, angle * 1.1);
+    rotation *= rotation4D(2, 1, angle * 0.8);
+    rotation *= rotation4D(1, 0, angle * 0.7);
+    rotation *= rotation4D(3, 1, angle * 1.1);
+    rotation *= rotation4D(2, 3, angle);
+    vec4 p4 = vec4(p, 0.0);
+    SDOutput sixteenCell = sd16Cell(rotation * p4, 1.0);
+    return sixteenCell;
+}
+
+SDOutput fourthScene(vec3 p) {
+    float angle = uTimeSeconds * 1.0;
+    mat4 rotation = rotation4D(0, 3, angle * 1.1);
+    rotation *= rotation4D(2, 1, angle * 0.8);
+    rotation *= rotation4D(1, 0, angle * 0.7);
+    rotation *= rotation4D(3, 1, angle * 1.1);
+    rotation *= rotation4D(2, 3, angle);
+    vec4 p4 = vec4(p, 0.0);
+    SDOutput fiveCell = sd5Cell(rotation * p4, vec4(1.0));
+    return fiveCell;
+}
+
+SDOutput fifthScene(vec3 p) {
+    float angle = uTimeSeconds;
+
+    mat3 rotation = mat3(
+        cos(angle), 0.0, sin(angle),
+        0.0, 1.0, 0.0,
+       -sin(angle), 0.0, cos(angle)
+    );
+
+    p = rotation * p;
+
+    const float scale = 0.25;
+    SDOutput mandelbox = mandelboxDE(p / scale);
+    mandelbox.dist *= scale;
+    return mandelbox;
+}
+
 SDOutput mapScene(vec3 p) {
     switch (uShapeID) {
         case 0:
             return mandelbulbScene(p);
         case 1:
             return hypercubeScene(p);
+        case 2:
+            return thirdScene(p);
+        case 3:
+            return fourthScene(p);
+        case 4:
+            return fifthScene(p);
         default:
             return SDOutput(0.0, 0.0);
     }
@@ -140,19 +241,24 @@ MarchData march(vec3 ro, vec3 rd) {
     float scale = 3.0;
     float trap = 0.0;
     int maxSteps = 800;
-    float maxDistance = 100.0;
+    float maxDistance = 1000.0;
     int i;
     for (i = 0; i < maxSteps; i++) {
         p = ro + d * rd;
         SDOutput res = mapScene(p);
         cd = res.dist;
 
-        if (cd < 0.0001 || d >= maxDistance) {
+        if (cd < 0.0001) {
             trap = res.trap;
             break;
         }
 
         d += cd;
+
+        if (d >= maxDistance) {
+            trap = res.trap;
+            break;
+        }
     }
 
     MarchData marchData = MarchData(i, cd, d, trap);
@@ -179,6 +285,19 @@ vec3 colorScene(MarchData data) {
             vec3 col = palette(float(data.iterations) * 1e-3);
             return col;
         }
+        case 2: {
+            vec3 col = palette(float(data.iterations) * 1e-3);
+            return col;
+        }
+        case 3: {
+            vec3 col = palette(float(data.iterations) * 1e-3);
+            return col;
+        }
+        case 4: {
+            float trap = smoothstep(0.0, 1.0, data.trap * 0.5);
+            vec3 col = palette(trap);
+            return col;
+        }
         default: {
             return vec3(1.0, 0.0, 1.0);
         }
@@ -191,7 +310,7 @@ void main() {
 
     MarchData marchData = march(ro, rd);
     float dist = marchData.d;
-    if (dist > 100.0) {
+    if (dist > 1000.0) {
        discard;
     }
 

@@ -102,7 +102,7 @@ export class BeaconSite {
                 uTimeSeconds: {value: 0},
                 uCameraWorldPosition: {value: new THREE.Vector3()},
                 uPrimaryColor: {value: new THREE.Color(this.projectData.interactive.color)},
-                uShapeID: {value: 1}
+                uShapeID: {value: 0}
             },
             vertexShader: vertShader,
             fragmentShader: fragShader,
