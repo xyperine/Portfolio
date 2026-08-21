@@ -1,4 +1,5 @@
 uniform float uTimeSeconds;
+uniform vec3 uPrimaryColor;
 
 varying vec3 vCameraLocalPos;
 varying vec3 vLocalPosition;
@@ -54,7 +55,7 @@ SDOutput sdMandelbulb(vec3 p, float power, float rotSpeed) {
     z = rotation * z;
 
     float trap = 1e6;
-    for (int i = 0; i < 15; i++) {
+    for (int i = 0; i < 6; i++) {
         r = length(z);
 
         trap = min(trap, trapDistance(z, 2));
@@ -83,9 +84,9 @@ MarchData march(vec3 ro, vec3 rd) {
     float cd;
     vec3 p;
 
-    float scale = 2.0;
+    float scale = 3.0;
     float trap = 0.0;
-    int maxSteps = 120;
+    int maxSteps = 800;
     float maxDistance = 100.0;
     int i;
     for (i = 0; i < maxSteps; i++) {
@@ -107,10 +108,10 @@ MarchData march(vec3 ro, vec3 rd) {
 }
 
 vec3 palette( float t ) {
-    vec3 a = vec3(1.0, 0.2, 0.5);
-    vec3 b = vec3(0.5, 0.2, 1.0);
-    vec3 c = vec3(1.0, 0.2, 1.0);
-    vec3 d = vec3(1.0, 0.2, 0.67);
+    vec3 a = uPrimaryColor; // baseline
+    vec3 b = vec3(0.5); // amplitude
+    vec3 c = vec3(1.5); // frequency
+    vec3 d = vec3(0.0, 0.1, 0.2); // phase
     return a + b * cos(6.283185 * (c * t + d));
 }
 
@@ -124,6 +125,7 @@ void main() {
        discard;
     }
 
-    vec3 col = palette(marchData.trap * 1.0);
+    float trap = smoothstep(0.0, 1.0, marchData.trap * 1.0);
+    vec3 col = palette(trap);
     gl_FragColor = vec4(col, 1.0);
 }

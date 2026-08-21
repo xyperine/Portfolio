@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import * as RAPIER from '@dimforge/rapier3d-compat';
 import * as utils from '#src/utils.js';
 import { VertexShaderAlgorithmCopy } from '#src/vertexShaderAlgorithmCopy.js';
+import { Projects } from '#src/projects.js';
 
 export class BeaconSite {
     /**
@@ -18,7 +19,7 @@ export class BeaconSite {
         this.scene = scene;
         this.physicsWorld = physicsWorld;
         this.vac = vac;
-        this.projectId = projectId;
+        this.projectData = Projects.get(projectId);
 
         this.renderObjects = [];
         this.physicsObjects = [];
@@ -99,13 +100,15 @@ export class BeaconSite {
             //fog: true,
             uniforms: {
                 uTimeSeconds: {value: 0},
-                uCameraWorldPosition: {value: new THREE.Vector3()}
+                uCameraWorldPosition: {value: new THREE.Vector3()},
+                uPrimaryColor: {value: new THREE.Color(this.projectData.interactive.color)},
             },
             vertexShader: vertShader,
             fragmentShader: fragShader,
             transparent: true,
             side: THREE.DoubleSide,
         });
+
         let syPos = this.orbSocketY + orbRadius * 0.5;
         let sxPos = this.x;
         let szPos = this.z;
