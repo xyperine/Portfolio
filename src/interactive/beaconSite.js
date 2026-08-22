@@ -3,8 +3,10 @@ import * as RAPIER from '@dimforge/rapier3d-compat';
 import * as utils from '#src/utils.js';
 import { VertexShaderAlgorithmCopy } from '#src/interactive/vertexShaderAlgorithmCopy.js';
 import { Projects } from '#src/interactive/projects.js';
+import { Interactable } from '#src/interactive/interactable.js';
+import { Interactables } from '#src/interactive/interactables.js';
 
-export class BeaconSite {
+export class BeaconSite extends Interactable{
     /**
      * 
      * @param {number} x world space coordinate x
@@ -14,6 +16,8 @@ export class BeaconSite {
      * @param {VertexShaderAlgorithmCopy} vac 
      */
     constructor(x, z, scene, physicsWorld, vac, projectId) {
+        super();
+
         this.x = x;
         this.z = z;
         this.scene = scene;
@@ -114,6 +118,8 @@ export class BeaconSite {
         let sxPos = this.x;
         let szPos = this.z;
         const sp = new THREE.Mesh(sg, this.sm);
+        sp.userData.interactable = this;
+        Interactables.register(sp);
         sp.position.set(sxPos, syPos, szPos);
         this.siteObject.add(sp);
 
@@ -135,6 +141,16 @@ export class BeaconSite {
             this.sm.uniforms.uCameraWorldPosition.value = gameState.camera.getWorldPosition(new THREE.Vector3());
             this.sm.uniforms.uTimeSeconds.value = gameState.elapsedTime * 0.001;
         }
+    }
+
+    interact() {
+        if (this.isInteractable()) {       
+            console.log("Interacting!");
+        }
+    }
+
+    isInteractable() {
+        return true;
     }
 
     dispose() {

@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import * as RAPIER from '@dimforge/rapier3d-compat';
 import { Input } from '#src/interactive/input.js';
 import { TemperatureMap } from '#src/interactive/worldGeneration/temperatureMap.js';
+import { Interactor } from '#src/interactive/interactor.js';
 
 /**
  * Player controller.
@@ -43,6 +44,8 @@ export class Glider {
         this.camera.position.set(0, 0, 0);
         this.camera.rotation.set(0, 0, 0);
         
+        this.interactor = new Interactor(10, this.camera);
+
         this.findInitialAltitude();
 
         const rootPosition = this.root.getWorldPosition(new THREE.Vector3());
@@ -130,6 +133,8 @@ export class Glider {
 
     processInputs() {
         this.calculateLookRotation();
+
+        this.interactor.update();
         
         this.movementInput = new THREE.Vector3();
         if (this.input.isKeyDown("KeyW")) {
@@ -152,6 +157,10 @@ export class Glider {
         }
         if (this.input.isKeyDown("ShiftLeft")) {
             this.movementInput.y += -1;
+        }
+
+        if (this.input.isKeyPressed("KeyE")) {
+            this.interactor.interact();
         }
     }
 
@@ -246,7 +255,6 @@ export class Glider {
             y: this.controller.computedMovement().y,
             z: this.controller.computedMovement().z,
         };
-        
 
         // Apply movement
         this.body.setNextKinematicTranslation({

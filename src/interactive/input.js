@@ -2,7 +2,8 @@
  * Provides raw user inputs and handles input-related behavior.
  */
 export class Input {
-    #keys;
+    #keysDown;
+    #keysPressed;
     #mouseDelta;
     #horizontalMouseSensitivity;
     #verticalMouseSensitivity;
@@ -12,15 +13,19 @@ export class Input {
     #onMouseMoved;
 
     constructor() {
-        this.#keys = {};
-        this.keysToIgnore = ["KeyW", "KeyA", "KeyS", "KeyD", "Space", "ShiftLeft", "Tab"];
+        this.#keysDown = new Set();
+        this.#keysPressed = new Set();
+        this.keysToIgnore = ["KeyW", "KeyA", "KeyS", "KeyD", "KeyE", "Space", "ShiftLeft", "Tab"];
 
         this.#onKeyDown = event => {
             if (this.keysToIgnore.includes(event.code)) {
                 event.preventDefault();
             }
-
-            this.#keys[event.code] = true;
+            
+            if (!this.#keysDown.has(event.code)) {
+                this.#keysPressed.add(event.code);
+            }
+            this.#keysDown.add(event.code);
         }
         window.addEventListener("keydown", this.#onKeyDown);
 
@@ -29,7 +34,7 @@ export class Input {
                 event.preventDefault();
             }
 
-            this.#keys[event.code] = false;
+            this.#keysDown.delete(event.code);
         }
         window.addEventListener("keyup", this.#onKeyUp);
 
@@ -48,6 +53,8 @@ export class Input {
     update() {
         this.#mouseDelta.x = 0;
         this.#mouseDelta.y = 0;
+
+        this.#keysPressed.clear();
     }
 
     async requestPointerLock(element) {
@@ -70,7 +77,11 @@ export class Input {
     }
     
     isKeyDown(key) {
-        return this.#keys[key] === true;
+        return this.#keysDown.has(key);
+    }
+
+    isKeyPressed(key) {
+        return this.#keysPressed.has(key);
     }
 
     dispose() {

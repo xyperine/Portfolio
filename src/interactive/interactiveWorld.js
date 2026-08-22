@@ -12,6 +12,7 @@ import { TemperatureMap } from '#src/interactive/worldGeneration/temperatureMap.
 import { PlanetGenerator } from '#src/interactive/worldGeneration/planetGenerator.js';
 import { Compass } from '#src/interactive/ui/compass.js';
 import { Projects } from '#src/interactive/projects.js';
+import { Interactables } from '#src/interactive/interactables.js';
 
 export class InteractiveWorld extends World {
     #terrainVertexShader;
@@ -28,6 +29,7 @@ export class InteractiveWorld extends World {
     
     async init() {
         await Projects.init();
+        Interactables.init();
 
         this.input = new Input();
         this.physicsDebug = false;
@@ -208,6 +210,8 @@ export class InteractiveWorld extends World {
     }
 
     dispose() {
+        Interactables.dispose();
+
         this.input.unlockPointer();
         
         // Unsubscribe
