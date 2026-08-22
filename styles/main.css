@@ -1,5 +1,6 @@
 @import url("./variables.css");
 @import url("./game-ui.css");
+@import url("./projects.css");
 
 *, *::before, *::after {
 	box-sizing: border-box;
@@ -100,57 +101,6 @@ p {
 
 html.pointer-locked .switch:hover {
 	color: var(--button-normal-color);
-}
-
-.projects-container {
-	/*
-	border: 0.1rem solid Sblue;
-	*/
-	
-	max-height: 100%;
-	max-width: 90%;
-	
-    display: grid;
-	grid-template-columns: 30% 30% 30%;
-	grid-template-rows: 50% 50%;
-    gap: 10px;
-	
-	justify-content: center;
-	justify-self: center;
-	justify-items: center;
-	align-content: center;
-	
-	min-height: 0;
-	flex: 1;
-}
-
-html.interactive .projects-container {
-	display: none;
-}
-
-.project-entry {
-	/*
-	border: 0.1rem solid green;
-	*/
-	
-	padding: 1rem;
-	margin: 0.2rem;
-	width: 60%;
-	
-	text-align: left;
-	font-size: 0.75cqi;
-
-	max-height: 60%;
-}
-
-.project-entry .cover-image {
-	display: block;
-	width: 100%;
-	border-radius: 1rem;
-}
-
-.project-entry .description {
-	margin-top: 0.1rem;
 }
 
 .footer-navigation {
