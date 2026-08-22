@@ -1,5 +1,8 @@
 import * as utils from "#src/utils.js";
 
+/**
+ * Provides data for all projects I decided to include here.
+ */
 export class Projects {
     static async init() {
         const projectsFilePath = "src/interactive/projects.yaml";

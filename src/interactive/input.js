@@ -1,3 +1,6 @@
+/**
+ * Provides raw user inputs and handles input-related behavior.
+ */
 export class Input {
     #keys;
     #mouseDelta;

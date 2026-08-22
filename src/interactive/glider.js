@@ -3,6 +3,9 @@ import * as RAPIER from '@dimforge/rapier3d-compat';
 import { Input } from '#src/interactive/input.js';
 import { TemperatureMap } from '#src/interactive/worldGeneration/temperatureMap.js';
 
+/**
+ * Player controller.
+ */
 export class Glider {
     /**
      * 
