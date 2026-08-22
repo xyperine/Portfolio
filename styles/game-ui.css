@@ -1,0 +1,190 @@
+#game-ui {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	padding: 1rem;
+}
+
+html:not(.interactive) #game-ui{
+	display: none;
+}
+
+#game-ui .hud{
+	position: absolute;
+	top: 15%;
+
+	gap: 0.2cqi;
+}
+
+#game-ui .hud #hud-title {
+	margin-top: 0;
+	margin-bottom: 0;
+
+	color: var(--hud-text-color);
+	font-family: var(--game-ui-font-family);
+	font-size: 0.8cqi;
+	letter-spacing: 0.08cqi;
+}
+
+#game-ui .hud hr {
+	border: none;
+	border-top: 0.1cqi dashed var(--hud-text-color);
+}
+
+#game-ui .hud .hud-entry {
+	display: grid;
+	grid-template-columns: 5cqi auto;
+
+	margin-top: 0;
+	margin-bottom: 0;
+
+	color: var(--hud-text-color);
+	font-family: var(--game-ui-font-family);
+	font-size: 0.8cqi;
+	letter-spacing: 0.08cqi;
+}
+
+#game-ui #compass {
+	container-type: inline-size;
+
+	position: absolute;
+	top: 3cqi;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 30%;
+	height: 4cqi;
+
+	overflow: hidden;
+	pointer-events: none;
+
+	mask-image: linear-gradient(
+		to right,
+		transparent,
+		black 10%,
+		black 90%,
+		transparent
+	);
+}
+
+#game-ui #compass-strip {
+	position: absolute;
+	top: 0;
+	left: 50%;
+	height: 90%;
+}
+
+.compass-marker {
+	position: absolute;
+
+	top: 50%;
+
+	height: 100%;
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
+	font-family: var(--game-ui-font-family);
+}
+
+.compass-tick {
+	width: 0.2cqi;
+	height: 2.4cqi;
+
+	background: gray;
+}
+
+.compass-tick-label {
+	margin-top: 1cqi;
+
+	font-weight: normal;
+	font-size: 1.6cqi;
+	color: gray;
+}
+
+.compass-label {
+	margin-top: 1cqi;
+	height: 100%;
+
+	font-size: 2.4cqi;
+	font-weight: bold;
+	color: gray;
+}
+
+.compass-pointer {
+	position: absolute;
+	top: 0%;
+	width: 4cqi;
+	height: 4cqi;
+	
+	clip-path: polygon(
+		50% 0%,
+		100% 50%,
+		50% 100%,
+		0% 50%
+	);
+
+	font-size: 2.5cqi;
+
+	/* --color is added through code. */
+	background-color: var(--color);
+}
+
+.compass-pointer-inner {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 70%;
+	height: 70%;
+	transform: translate(-50%, -50%);
+
+	clip-path: polygon(
+		50% 0%,
+		100% 50%,
+		50% 100%,
+		0% 50%
+	);
+
+	/* --color is added through code. */
+	background-color: color-mix(
+		in hsl, 
+		var(--color), 
+		black 30%
+	);
+}
+
+.compass-pointer-label {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	
+	color: hsl(0, 0%, 97%);
+	font-family: var(--game-ui-font-family);
+	font-size: 50%;
+}
+
+#compass-center {
+	position: absolute;
+
+	left: 50%;
+	top: 100%;
+
+	width: 0.3cqi;
+	height: 1.5cqi;
+
+	color: gray;
+	background-color: var(--accent-color);
+
+	transform: translate(-50%, -100%);
+}
+
+#crosshair {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 0.3rem;
+	height: 0.3rem;
+	background-color: var(--accent-color);
+}
