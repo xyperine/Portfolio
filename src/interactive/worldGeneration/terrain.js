@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import * as RAPIER from '@dimforge/rapier3d-compat';
 import * as SEEDRANDOM from 'seedrandom';
 import * as utils from '#src/utils.js';
-import { VertexShaderAlgorithmCopy } from '#src/interactive/vertexShaderAlgorithmCopy.js';
+import { VertexShaderAlgorithmCopy } from '#src/interactive/worldGeneration/vertexShaderAlgorithmCopy.js';
 import { TerrainChunk } from '#src/interactive/worldGeneration/terrainChunk.js';
 import { BeaconSite } from '#src/interactive/beaconSite.js';
 import { Projects } from '#src/interactive/projects.js';

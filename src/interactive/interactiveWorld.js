@@ -12,7 +12,7 @@ import { TemperatureMap } from '#src/interactive/worldGeneration/temperatureMap.
 import { PlanetGenerator } from '#src/interactive/worldGeneration/planetGenerator.js';
 import { Compass } from '#src/interactive/ui/compass.js';
 import { Projects } from '#src/interactive/projects.js';
-import { Interactables } from '#src/interactive/interactables.js';
+import { Interactables } from '#src/interactive/interactions/interactables.js';
 
 export class InteractiveWorld extends World {
     #terrainVertexShader;

@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import * as RAPIER from '@dimforge/rapier3d-compat';
 import { Input } from '#src/interactive/input.js';
 import { TemperatureMap } from '#src/interactive/worldGeneration/temperatureMap.js';
-import { Interactor } from '#src/interactive/interactor.js';
+import { Interactor } from '#src/interactive/interactions/interactor.js';
 
 /**
  * Player controller.

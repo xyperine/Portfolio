@@ -1,10 +1,10 @@
 import * as THREE from 'three';
 import * as RAPIER from '@dimforge/rapier3d-compat';
 import * as utils from '#src/utils.js';
-import { VertexShaderAlgorithmCopy } from '#src/interactive/vertexShaderAlgorithmCopy.js';
+import { VertexShaderAlgorithmCopy } from '#src/interactive/worldGeneration/vertexShaderAlgorithmCopy.js';
 import { Projects } from '#src/interactive/projects.js';
-import { Interactable } from '#src/interactive/interactable.js';
-import { Interactables } from '#src/interactive/interactables.js';
+import { Interactable } from '#src/interactive/interactions/interactable.js';
+import { Interactables } from '#src/interactive/interactions/interactables.js';
 
 export class BeaconSite extends Interactable{
     /**
@@ -106,7 +106,7 @@ export class BeaconSite extends Interactable{
                 uTimeSeconds: {value: 0},
                 uCameraWorldPosition: {value: new THREE.Vector3()},
                 uPrimaryColor: {value: new THREE.Color(this.projectData.interactive.color)},
-                uShapeID: {value: 0}
+                uShapeID: {value: 4}
             },
             vertexShader: vertShader,
             fragmentShader: fragShader,

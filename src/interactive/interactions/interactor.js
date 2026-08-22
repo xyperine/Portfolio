@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { Interactables } from "#src/interactive/interactables.js";
+import { Interactables } from "#src/interactive/interactions/interactables.js";
 
 export class Interactor {
     constructor(distance, camera) {
