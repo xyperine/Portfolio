@@ -188,3 +188,36 @@ html:not(.interactive) #game-ui{
 	height: 0.3rem;
 	background-color: var(--accent-color);
 }
+
+#game {
+	position: absolute;
+	inset: 0;
+	overflow: hidden;
+}
+
+/* Debug */
+#game * .sadsd {
+	border: 0.1rem solid blue;
+}
+
+#terrain {
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+}
+
+#terrain:focus {
+	outline: none;
+}
+
+#fps-counter {
+	position: absolute;
+	justify-self: right;
+	top: 10px;
+	right: 10px;
+
+	color: gray;
+	font-family: var(--font-family);
+	font-size: 0.8rem;
+	z-index: 2;
+}
