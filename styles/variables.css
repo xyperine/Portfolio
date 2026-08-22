@@ -14,9 +14,9 @@
 	--background-color: hsl(0, 0%, 97%);
 	--heading-text-color: hsl(0, 0%, 10%);
 	--normal-text-color: hsl(0, 0%, 10%);
-	--hud-text-color: grey;
+	--hud-text-color: gray;
 	--accent-color:  hsl(340, 100%, 50%);
-	--button-normal-color: grey;
+	--button-normal-color: gray;
 
 	--terrain-color: hsl(0, 0%, 40%);
 	--column-color: hsl(280, 100%, 50%);
@@ -31,6 +31,6 @@ html.dark {
 	--heading-text-color: hsl(0, 0%, 90%);
 	--normal-text-color: hsl(0, 0%, 90%);
 	--accent-color:  hsl(340, 100%, 50%);
-	--button-normal-color: grey;
+	--button-normal-color: gray;
 	--terrain-color: hsl(0, 0%, 60%);
 }

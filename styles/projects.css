@@ -11,10 +11,9 @@
 	grid-template-rows: 50% 50%;
     gap: 10px;
 	
-	justify-content: center;
+    place-content: center;
 	justify-self: center;
 	justify-items: center;
-	align-content: center;
 	
 	min-height: 0;
 	flex: 1;

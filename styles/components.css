@@ -36,7 +36,7 @@ html.pointer-locked .switch:hover {
 }
 
 .footer-navigation p:last-of-type a {
-	padding-right: 0rem;
+	padding-right: 0;
 }
 
 .tagged-title > * {
@@ -53,7 +53,7 @@ html.pointer-locked .switch:hover {
 
 .meta-tag::before {
 	content: "//";
-	margin-left: 0rem;
+	margin-left: 0;
 }
 
 #subtitle {
