@@ -1,0 +1,32 @@
+*, *::before, *::after {
+	box-sizing: border-box;
+}
+
+*:focus-visible	 {
+	outline: 0.15rem solid var(--accent-color);
+}
+
+html {
+	padding: 2rem;
+	height: 100%;
+	box-sizing: border-box;
+	background-color: var(--background-color);
+}
+
+h1 {
+	font-family: var(--font-family);
+	
+	color: var(--heading-text-color);
+}
+
+h3 {
+	font-family: var(--font-family);
+	
+	color: var(--heading-text-color);
+}
+
+p {
+	font-family: var(--font-family);
+	font-weight: 300;
+	color: var(--normal-text-color);
+}
