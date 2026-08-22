@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 import * as RAPIER from '@dimforge/rapier3d-compat';
 import * as utils from '#src/utils.js';
-import { VertexShaderAlgorithmCopy } from '#src/vertexShaderAlgorithmCopy.js';
-import { Projects } from '#src/projects.js';
+import { VertexShaderAlgorithmCopy } from '#src/interactive/vertexShaderAlgorithmCopy.js';
+import { Projects } from '#src/interactive/projects.js';
 
 export class BeaconSite {
     /**

@@ -2,16 +2,16 @@ import * as THREE from 'three';
 import * as RAPIER from '@dimforge/rapier3d-compat';
 import * as SEEDRANDOM from 'seedrandom';
 import * as utils from '#src/utils.js';
-import { Input } from '#src/input.js';
+import { Input } from '#src/interactive/input.js';
 import { World } from '#src/world.js';
-import { Glider } from '#src/glider.js';
+import { Glider } from '#src/interactive/glider.js';
 import { FPSCounter } from '#src/fpsCounter.js';
-import { Hud } from '#src/ui/hud.js';
-import { Terrain } from '#src/worldGeneration/terrain.js';
-import { TemperatureMap } from '#src/worldGeneration/temperatureMap.js';
-import { PlanetGenerator } from '#src/worldGeneration/planetGenerator.js';
-import { Compass } from '#src/ui/compass.js';
-import { Projects } from '#src/projects.js';
+import { Hud } from '#src/interactive/ui/hud.js';
+import { Terrain } from '#src/interactive/worldGeneration/terrain.js';
+import { TemperatureMap } from '#src/interactive/worldGeneration/temperatureMap.js';
+import { PlanetGenerator } from '#src/interactive/worldGeneration/planetGenerator.js';
+import { Compass } from '#src/interactive/ui/compass.js';
+import { Projects } from '#src/interactive/projects.js';
 
 export class InteractiveWorld extends World {
     #terrainVertexShader;

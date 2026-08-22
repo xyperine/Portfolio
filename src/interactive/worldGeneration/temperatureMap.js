@@ -1,7 +1,7 @@
 import * as utils from '#src/utils.js';
 import * as SEEDRANDOM from 'seedrandom';
 import { SimplexNoise } from 'three/addons/math/SimplexNoise.js';
-import { Temperature } from '#src/worldGeneration/temperature.js';
+import { Temperature } from '#src/interactive/worldGeneration/temperature.js';
 
 export class TemperatureMap {
     constructor(planetInfo, seed) {

@@ -1,5 +1,5 @@
 import * as utils from "#src/utils.js";
-import { Glider } from "#src/glider.js";
+import { Glider } from "#src/interactive/glider.js";
 
 export class Hud {
     /**

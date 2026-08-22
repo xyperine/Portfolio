@@ -1,8 +1,11 @@
 import RAPIER from "@dimforge/rapier3d-compat";
-import { InteractiveWorld } from "#src/interactiveWorld.js";
-import { SimpleWorld } from "#src/simpleWorld.js";
+import { InteractiveWorld } from "#src/interactive/interactiveWorld.js";
+import { SimpleWorld } from "#src/simple/simpleWorld.js";
 import { loadAsText } from '#src/utils.js';
 
+/**
+ * Controlls site behavior.
+ */
 export class App {
     #settings;
     #canvasElement;

@@ -1,6 +1,6 @@
 import * as utils from '#src/utils.js';
 import * as SEEDRANDOM from 'seedrandom';
-import { Star } from '#src/worldGeneration/star.js';
+import { Star } from '#src/interactive/worldGeneration/star.js';
 
 export class StarGenerator {
     constructor(seed) {

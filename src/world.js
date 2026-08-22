@@ -1,5 +1,8 @@
 import * as THREE from 'three';
 
+/**
+ * Represents a high-level coordination of the simulation.
+ */
 export class World {
     constructor() {
         this.VECTOR3_RIGHT = new THREE.Vector3(1, 0, 0);
