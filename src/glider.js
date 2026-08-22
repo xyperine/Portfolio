@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import * as RAPIER from '@dimforge/rapier3d-compat';
 import { Input } from '#src/input.js';
-import { TemperatureMap } from '#src/temperatureMap.js';
+import { TemperatureMap } from '#src/worldGeneration/temperatureMap.js';
 
 export class Glider {
     /**

@@ -1,7 +1,7 @@
 import * as utils from "#src/utils.js"
-import { PlanetNameGenerator } from "#src/planetNameGenerator.js";
-import { PlanetInfo } from "#src/planetInfo.js";
-import { StarGenerator } from "#src/starGenerator.js";
+import { PlanetNameGenerator } from "#src/worldGeneration/planetNameGenerator.js";
+import { PlanetInfo } from "#src/worldGeneration/planetInfo.js";
+import { StarGenerator } from "#src/worldGeneration/starGenerator.js";
 
 export class PlanetGenerator {
     constructor(seed) {

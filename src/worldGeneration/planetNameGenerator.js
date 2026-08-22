@@ -1,6 +1,6 @@
 import * as utils from "#src/utils.js";
 import * as SEEDRANDOM from 'seedrandom';
-import { PlanetName } from "#src/planetName.js";
+import { PlanetName } from "#src/worldGeneration/planetName.js";
 
 export class PlanetNameGenerator {
     constructor(seed) {

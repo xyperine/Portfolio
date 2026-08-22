@@ -7,9 +7,9 @@ import { World } from '#src/world.js';
 import { Glider } from '#src/glider.js';
 import { FPSCounter } from '#src/fpsCounter.js';
 import { Hud } from '#src/ui/hud.js';
-import { Terrain } from '#src/terrain.js';
-import { TemperatureMap } from '#src/temperatureMap.js';
-import { PlanetGenerator } from '#src/planetGenerator.js';
+import { Terrain } from '#src/worldGeneration/terrain.js';
+import { TemperatureMap } from '#src/worldGeneration/temperatureMap.js';
+import { PlanetGenerator } from '#src/worldGeneration/planetGenerator.js';
 import { Compass } from '#src/ui/compass.js';
 import { Projects } from '#src/projects.js';
 
