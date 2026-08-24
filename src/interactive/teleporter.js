@@ -1,4 +1,18 @@
+import { Glider } from "#src/interactive/glider.js";
+import { Input } from "#src/interactive/input.js";
+import { VertexShaderAlgorithmCopy } from "#src/interactive/worldGeneration/vertexShaderAlgorithmCopy.js";
+
+/**
+ * Teleports player to beacons.
+ */
 export class Teleporter {
+    /**
+     * 
+     * @param {Input} input 
+     * @param {Array} positions 
+     * @param {Glider} glider 
+     * @param {VertexShaderAlgorithmCopy} vac 
+     */
     constructor(input, positions, glider, vac) {
         this.input = input;
         this.positions = positions;
