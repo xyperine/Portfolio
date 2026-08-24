@@ -261,7 +261,7 @@ export class Glider {
             x: currentTranslation.x + actualMovement.x,
             y: currentTranslation.y + actualMovement.y,
             z: currentTranslation.z + actualMovement.z,
-        })
+        });
 
         // Apply rotation
         const q = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, this.smoothedYawRotation, 0));
@@ -313,6 +313,22 @@ export class Glider {
     getTemperatureReading() {
         const p = this.getRenderPosition();
         return this.temperatureMap.temperatureAt(p.x, p.y, p.z);
+    }
+
+    setPosition(position) {
+        this.body.setNextKinematicTranslation({x: position.x, y: position.y, z: position.z});
+        this.smoothedMovement.set(0, 0, 0);
+        this.yVelocity = 0;
+        
+        this.root.position.set(position.x, position.y, position.z);
+    }
+
+    lookAt(position) {
+        const direction = new THREE.Vector3().subVectors(position, this.getRenderPosition()).normalize();
+        this.yawLookRotation = -Math.atan2(-direction.x, -direction.z);
+        this.pitchLookRotation = Math.asin(direction.y);
+        this.smoothedYawRotation = this.yawLookRotation;
+        this.smoothedPitchRotation = this.pitchLookRotation;
     }
 
     dispose() {

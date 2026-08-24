@@ -13,6 +13,7 @@ import { PlanetGenerator } from '#src/interactive/worldGeneration/planetGenerato
 import { Compass } from '#src/interactive/ui/compass.js';
 import { Projects } from '#src/interactive/projects.js';
 import { Interactables } from '#src/interactive/interactions/interactables.js';
+import { Teleporter } from '#src/interactive/teleporter.js';
 
 export class InteractiveWorld extends World {
     #terrainVertexShader;
@@ -105,6 +106,7 @@ export class InteractiveWorld extends World {
         this.physicsWorld.step();
 
         this.glider = new Glider(this.camera, this.input, this.scene, this.physicsWorld, this.temperatureMap);
+        this.teleporter = new Teleporter(this.input, this.terrain.beaconPlacements.map(p => p.position), this.glider, this.terrain.shaderVertexAlgorithm);
 
         this.hud = new Hud(this.glider, this.planetInfo.name, this.gravity);
         this.compass = new Compass();
@@ -155,6 +157,7 @@ export class InteractiveWorld extends World {
     processPhysics() {
         // Move the glider
         this.glider.processPhysics();
+        this.teleporter.update();
 
         this.physicsWorld.step();
 
