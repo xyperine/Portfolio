@@ -107,7 +107,7 @@ export class BeaconSite extends Interactable{
                 uTimeSeconds: {value: 0},
                 uCameraWorldPosition: {value: new THREE.Vector3()},
                 uPrimaryColor: {value: new THREE.Color(this.projectData.interactive.color)},
-                uShapeID: {value: shapeID}
+                uProjectNumber: {value: shapeID}
             },
             vertexShader: vertShader,
             fragmentShader: fragShader,
