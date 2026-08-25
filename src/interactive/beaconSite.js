@@ -99,6 +99,7 @@ export class BeaconSite extends Interactable{
 
         const orbRadius = 4;
         const sg = new THREE.SphereGeometry(orbRadius, orbRadius * 4, orbRadius * 4);
+        const shapeID = this.projectData.interactive.number - 1;
         this.sm = new THREE.ShaderMaterial({
             //color: 0x000000,//utils.getCssColorAsThreeColor("--column-color"),
             //fog: true,
@@ -106,7 +107,7 @@ export class BeaconSite extends Interactable{
                 uTimeSeconds: {value: 0},
                 uCameraWorldPosition: {value: new THREE.Vector3()},
                 uPrimaryColor: {value: new THREE.Color(this.projectData.interactive.color)},
-                uShapeID: {value: 4}
+                uShapeID: {value: shapeID}
             },
             vertexShader: vertShader,
             fragmentShader: fragShader,
