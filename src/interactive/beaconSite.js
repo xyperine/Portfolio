@@ -5,6 +5,7 @@ import { VertexShaderAlgorithmCopy } from '#src/interactive/worldGeneration/vert
 import { Projects } from '#src/interactive/projects.js';
 import { Interactable } from '#src/interactive/interactions/interactable.js';
 import { Interactables } from '#src/interactive/interactions/interactables.js';
+import { Shaders } from '#src/shaders.js';
 
 export class BeaconSite extends Interactable{
     /**
@@ -94,8 +95,8 @@ export class BeaconSite extends Interactable{
     }
 
     async createOrb() {
-        const vertShader = await utils.loadAsText("src/shaders/beacon_orb.vert.glsl");
-        const fragShader = await utils.loadAsText("src/shaders/beacon_orb.frag.glsl");
+        const vertShader = Shaders.beaconOrbVert;
+        const fragShader = Shaders.beaconOrbFrag;
 
         const orbRadius = 4;
         const sg = new THREE.SphereGeometry(orbRadius, orbRadius * 4, orbRadius * 4);

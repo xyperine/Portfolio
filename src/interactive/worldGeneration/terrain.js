@@ -6,6 +6,7 @@ import { VertexShaderAlgorithmCopy } from '#src/interactive/worldGeneration/vert
 import { TerrainChunk } from '#src/interactive/worldGeneration/terrainChunk.js';
 import { BeaconSite } from '#src/interactive/beaconSite.js';
 import { Projects } from '#src/interactive/projects.js';
+import { Shaders } from '#src/shaders.js';
 
 export class Terrain {
     #vertexShader;
@@ -20,11 +21,11 @@ export class Terrain {
      * @param {number} renderingDistance 
      * @param {string} seed 
      */
-    constructor(scene, physicsWorld, vertexShader, fragmentShader, renderingDistance, seed) {
+    constructor(scene, physicsWorld, renderingDistance, seed) {
         this.scene = scene;
         this.physicsWorld = physicsWorld;
-        this.#vertexShader = vertexShader;
-        this.#fragmentShader = fragmentShader;
+        this.#vertexShader = Shaders.terrainVert;
+        this.#fragmentShader = Shaders.terrainFrag;
         this.random = new Math.seedrandom(seed);
         
         this.chunkMap = new Map();

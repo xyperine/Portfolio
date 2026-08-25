@@ -3,16 +3,17 @@ import * as utils from '#src/utils.js';
 import * as SEEDRANDOM from 'seedrandom';
 import { World } from '#src/world.js';
 import { FPSCounter } from '#src/fpsCounter.js';
+import { Shaders } from '#src/shaders.js';
 
 export class SimpleWorld extends World {
     #terrainVertexShader;
     #terrainFragmentShader;
 
-    constructor(terrainVertexShader, terrainFragmentShader) {
+    constructor() {
         super();
 
-        this.#terrainVertexShader = terrainVertexShader;
-        this.#terrainFragmentShader = terrainFragmentShader;
+        this.#terrainVertexShader = Shaders.terrainVert;
+        this.#terrainFragmentShader = Shaders.terrainFrag;
 
         this.init();
     }

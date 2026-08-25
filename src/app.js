@@ -1,7 +1,7 @@
 import RAPIER from "@dimforge/rapier3d-compat";
 import { InteractiveWorld } from "#src/interactive/interactiveWorld.js";
 import { SimpleWorld } from "#src/simple/simpleWorld.js";
-import { loadAsText } from '#src/utils.js';
+import { Shaders } from "#src/shaders.js";
 
 /**
  * Controlls site behavior.
@@ -11,8 +11,6 @@ export class App {
     #canvasElement;
     #darkModeSwitch;
     #modeSwitch;
-    #terrainVertexShader;
-    #terrainFragmentShader;
     #world;
 
     constructor() {
@@ -28,9 +26,6 @@ export class App {
         this.#canvasElement = document.querySelector("#terrain");
         this.#darkModeSwitch = document.querySelector("#dark-mode-switch");
         this.#modeSwitch = document.querySelector("#mode-switch");
-        
-        this.#terrainVertexShader = await loadAsText("src/shaders/terrain.vert.glsl");
-        this.#terrainFragmentShader = await loadAsText("src/shaders/terrain.frag.glsl");
 
         this.#world = null;
 
@@ -47,6 +42,8 @@ export class App {
 
             this.setMode(this.#settings.interactive);
         })
+
+        await Shaders.init();
 
         this.changeWorld();
     }
@@ -86,9 +83,9 @@ export class App {
     #createWorld(interactive) {
         let world;
         if (interactive) {
-            world = new InteractiveWorld(this.#terrainVertexShader, this.#terrainFragmentShader);
+            world = new InteractiveWorld();
         } else {
-            world = new SimpleWorld(this.#terrainVertexShader, this.#terrainFragmentShader);
+            world = new SimpleWorld();
         }
 
         return world;

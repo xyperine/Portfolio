@@ -16,14 +16,8 @@ import { Interactables } from '#src/interactive/interactions/interactables.js';
 import { Teleporter } from '#src/interactive/teleporter.js';
 
 export class InteractiveWorld extends World {
-    #terrainVertexShader;
-    #terrainFragmentShader;
-
-    constructor(terrainVertexShader, terrainFragmentShader) {
+    constructor() {
         super();
-
-        this.#terrainVertexShader = terrainVertexShader;
-        this.#terrainFragmentShader = terrainFragmentShader;
 
         this.init();
     }
@@ -94,9 +88,7 @@ export class InteractiveWorld extends World {
 
         this.terrain = new Terrain(
             this.scene, 
-            this.physicsWorld, 
-            this.#terrainVertexShader, 
-            this.#terrainFragmentShader, 
+            this.physicsWorld,  
             this.renderingDistance, 
             this.random().toString()
         );
