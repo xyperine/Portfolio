@@ -47,15 +47,24 @@ SDOutput hypercubeScene(vec3 p) {
     return final;
 }
 
-SDOutput thirdScene(vec3 p) {
+SDOutput juliaScene(vec3 p) {
     float angle = uTimeSeconds * 1.0;
     mat4 rotation = rotation4D(0, 3, angle * 1.1);
     rotation *= rotation4D(2, 1, angle * 0.8);
     rotation *= rotation4D(1, 0, angle * 0.7);
     rotation *= rotation4D(3, 1, angle * 1.1);
     rotation *= rotation4D(2, 3, angle);
-    vec4 p4 = vec4(p, 0.0);
-    SDOutput final = sd16Cell(rotation * p4, 1.0);
+    vec4 p4 = vec4(p, sin(uTimeSeconds * 0.15));
+    vec4 c = vec4(-0.4, 0.6 + 0.1 * -sin(uTimeSeconds * 0.6), 0.1 * cos(uTimeSeconds * 0.05), 0.2 * sin(uTimeSeconds * 0.03));
+    const float scale = 6.0;
+    SDOutput julia = sdQuaternionJulia((rotation * p4) / scale, c);
+    julia.dist *= scale;
+
+    mat3 rotation3 = rotation3D(2, 1, angle * 0.8);
+    rotation3 *= rotation3D(1, 0, angle * 0.7);
+    float cube = sdBox(inverse(rotation3) * p, vec3(2.0));
+
+    SDOutput final = SDOutput(opIntersection(cube, julia.dist), julia.trap);
     return final;
 }
 
@@ -98,7 +107,7 @@ SDOutput mapScene(vec3 p) {
         case EProjectID_ICONS_CREATOR:
             return hypercubeScene(p);
         case EProjectID_REALITY_GRID:
-            return thirdScene(p);
+            return juliaScene(p);
         case EProjectID_DOTS_KILLER:
             return mandelboxScene(p);
         case EProjectID_GENESIS_CONSTRUCTA:
@@ -161,7 +170,8 @@ vec3 colorScene(MarchData data) {
             return col;
         }
         case EProjectID_REALITY_GRID: {
-            vec3 col = palette(float(data.iterations) * 1e-3);
+            float trap = smoothstep(0.0, 1.0, data.trap * 1.0);
+            vec3 col = palette(trap);
             return col;
         }
         case EProjectID_DOTS_KILLER: {

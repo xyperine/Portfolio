@@ -205,3 +205,38 @@ SDOutput sd24Cell(vec4 p, float s) {
     float dist = (m - 1.0) * 0.70710678;
     return SDOutput(dist * s, 0.0);
 }
+
+SDOutput sdQuaternionJulia(vec4 p, vec4 c)
+{
+    vec4 z = p;
+
+    float dr = 1.0;
+    float r = 0.0;
+
+    float trap = 1e6;
+
+    for (int i = 0; i < 16; i++)
+    {
+        r = length(z);
+
+        trap = min(trap, trapDistance(z.wxz, 2));
+
+        if (r > 2.0)
+            break;
+
+        // derivative: dz' = 2 * z * dz
+        dr = 2.0 * r * dr;
+
+        // z²
+        z = vec4(
+            z.x * z.x - dot(z.yzw, z.yzw),
+            2.0 * z.x * z.y,
+            2.0 * z.x * z.z,
+            2.0 * z.x * z.w
+        );
+
+        z += c;
+    }
+
+    return SDOutput(0.5 * log(r) * r / dr, trap);
+}
