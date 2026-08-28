@@ -76,8 +76,8 @@ export class Terrain {
         this.beaconPlacements = [];
         for (let i = 0; i < projectIds.length; i++) {
             const p = {
-                x: utils.seededFloat(this.random, -100, 100), 
-                z: utils.seededFloat(this.random, -100, 100)
+                x: utils.seededFloat(this.random, -1000, 1000), 
+                z: utils.seededFloat(this.random, -1000, 1000)
             };
             this.beaconPlacements.push({projectId: projectIds[i], position: new THREE.Vector3(p.x, 0, p.z)});
         }

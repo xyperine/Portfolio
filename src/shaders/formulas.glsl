@@ -219,7 +219,7 @@ SDOutput sdQuaternionJulia(vec4 p, vec4 c)
     {
         r = length(z);
 
-        trap = min(trap, trapDistance(z.wxz, 2));
+        trap = min(trap, r*r);
 
         if (r > 2.0)
             break;
