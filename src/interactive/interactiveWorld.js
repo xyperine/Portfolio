@@ -14,6 +14,7 @@ import { Compass } from '#src/interactive/ui/compass.js';
 import { Projects } from '#src/interactive/projects.js';
 import { Interactables } from '#src/interactive/interactions/interactables.js';
 import { Teleporter } from '#src/interactive/teleporter.js';
+import { InputManager } from '#src/interactive/inputManager.js';
 
 export class InteractiveWorld extends World {
     constructor() {
@@ -27,6 +28,9 @@ export class InteractiveWorld extends World {
         Interactables.init();
 
         this.input = new Input();
+        this.renderingCanvas = document.querySelector("#terrain");
+        this.input.setPointerLockElement(this.renderingCanvas);
+        this.inputManager = new InputManager(this.input);
         this.physicsDebug = false;
         this.renderingDistance = 180;
         
@@ -45,7 +49,6 @@ export class InteractiveWorld extends World {
         this.scene.fog = fog;
         
         // Renderer
-        this.renderingCanvas = document.querySelector("#terrain");
         this.renderer = new THREE.WebGLRenderer({
             canvas: this.renderingCanvas,
             antialias: true,
@@ -69,10 +72,9 @@ export class InteractiveWorld extends World {
         
         this.mainElement = document.querySelector("main");
         this.onMouseClickCanvas = async () => {
-            await this.input.requestPointerLock(this.renderingCanvas);
+            await this.input.requestPointerLock();
         };
         this.mainElement.addEventListener("click", this.onMouseClickCanvas);
-        this.onMouseClickCanvas();
         
         this.onPointerLockChange = () => {
             const pointerLocked = document.pointerLockElement != null;
@@ -97,7 +99,7 @@ export class InteractiveWorld extends World {
         // Make sure the terrain collider is registered.
         this.physicsWorld.step();
 
-        this.glider = new Glider(this.camera, this.input, this.scene, this.physicsWorld, this.temperatureMap);
+        this.glider = new Glider(this.camera, this.inputManager, this.scene, this.physicsWorld, this.temperatureMap);
         this.teleporter = new Teleporter(this.input, this.terrain.beaconPlacements.map(p => p.position), this.glider, this.terrain.shaderVertexAlgorithm);
 
         this.hud = new Hud(this.glider, this.planetInfo.name, this.gravity);

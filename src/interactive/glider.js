@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import * as RAPIER from '@dimforge/rapier3d-compat';
 import { Input } from '#src/interactive/input.js';
 import { TemperatureMap } from '#src/interactive/worldGeneration/temperatureMap.js';
-import { Interactor } from '#src/interactive/interactions/interactor.js';
+import { InputManager } from '#src/interactive/inputManager.js';
 
 /**
  * Player controller.
@@ -11,17 +11,17 @@ export class Glider {
     /**
      * 
      * @param {THREE.Camera} camera 
-     * @param {Input} input 
+     * @param {InputManager} inputManager 
      * @param {THREE.Scene} scene 
      * @param {RAPIER.World} physicsWorld 
      * @param {TemperatureMap} temperatureMap
      */
-    constructor(camera, input, scene, physicsWorld, temperatureMap) {
+    constructor(camera, inputManager, scene, physicsWorld, temperatureMap) {
         this.VECTOR3_RIGHT = new THREE.Vector3(1, 0, 0);
         this.VECTOR3_UP = new THREE.Vector3(0, 1, 0);
         this.VECTOR3_FORWARD = new THREE.Vector3(0, 0, -1);
 
-        this.input = input;
+        this.inputManager = inputManager;
         this.physicsWorld = physicsWorld;
         this.camera = camera;
         this.scene = scene;
@@ -44,7 +44,6 @@ export class Glider {
         this.camera.position.set(0, 0, 0);
         this.camera.rotation.set(0, 0, 0);
         
-        this.interactor = new Interactor(10, this.camera);
 
         this.findInitialAltitude();
 
@@ -133,42 +132,15 @@ export class Glider {
 
     processInputs() {
         this.calculateLookRotation();
-
-        this.interactor.update();
         
-        this.movementInput = new THREE.Vector3();
-        if (this.input.isKeyDown("KeyW")) {
-            this.movementInput.z += 1;
-        }
-        if (this.input.isKeyDown("KeyS")) {
-            this.movementInput.z += -1;
-        }
-        if (this.input.isKeyDown("KeyD")) {
-            this.movementInput.x += 1;
-        }
-        if (this.input.isKeyDown("KeyA")) {
-            this.movementInput.x += -1;
-        }
-        
-        this.movementInput.normalize();
-        
-        if (this.input.isKeyDown("Space")) {
-            this.movementInput.y += 1;
-        }
-        if (this.input.isKeyDown("ShiftLeft")) {
-            this.movementInput.y += -1;
-        }
-
-        if (this.input.isKeyPressed("KeyE")) {
-            this.interactor.interact();
-        }
+        this.movementInput = this.inputManager.getMovementInput();
     }
 
     calculateLookRotation() {
         const pitchSpeed = 0.003;
         const yawSpeed = 0.0015;
 
-        const mouseDelta = this.input.getMouseDelta();
+        const mouseDelta = this.inputManager.getMouseDelta();
 
         this.pitchLookRotation += -mouseDelta.y * pitchSpeed;
         const pitchRange = {

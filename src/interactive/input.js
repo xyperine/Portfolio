@@ -4,9 +4,10 @@
 export class Input {
     #keysDown;
     #keysPressed;
+    #keysToTrack;
+    #keysToIgnore;
     #mouseDelta;
-    #horizontalMouseSensitivity;
-    #verticalMouseSensitivity;
+    #pointerLockElement;
     
     #onKeyUp;
     #onKeyDown;
@@ -15,11 +16,15 @@ export class Input {
     constructor() {
         this.#keysDown = new Set();
         this.#keysPressed = new Set();
-        this.keysToIgnore = ["KeyW", "KeyA", "KeyS", "KeyD", "KeyE", "Space", "ShiftLeft", "Tab"];
+        this.#keysToTrack = [];
+        this.#keysToIgnore = ["KeyW", "KeyA", "KeyS", "KeyD", "KeyE", "Tab"];
 
         this.#onKeyDown = event => {
-            if (this.keysToIgnore.includes(event.code)) {
+            if (this.#keysToIgnore.includes(event.code)) {
                 event.preventDefault();
+            }
+            if (!this.#keysToTrack.includes(event.code)) {
+                return;
             }
             
             if (!this.#keysDown.has(event.code)) {
@@ -30,7 +35,7 @@ export class Input {
         window.addEventListener("keydown", this.#onKeyDown);
 
         this.#onKeyUp = event => {
-            if (this.keysToIgnore.includes(event.code)) {
+            if (this.#keysToIgnore.includes(event.code)) {
                 event.preventDefault();
             }
 
@@ -38,16 +43,20 @@ export class Input {
         }
         window.addEventListener("keyup", this.#onKeyUp);
 
-        this.#horizontalMouseSensitivity = 1;
-        this.#verticalMouseSensitivity = 1;
         this.#mouseDelta = {x: 0, y: 0};
         this.#onMouseMoved = event => {
             if (document.pointerLockElement != null) {
-                this.#mouseDelta.x += event.movementX * this.#horizontalMouseSensitivity;
-                this.#mouseDelta.y += event.movementY * this.#verticalMouseSensitivity;
+                this.#mouseDelta.x += event.movementX;
+                this.#mouseDelta.y += event.movementY;
             }
         }
         document.addEventListener("mousemove", this.#onMouseMoved);
+
+        this.#pointerLockElement = null;
+    }
+
+    setPointerLockElement(element) {
+        this.#pointerLockElement = element;
     }
 
     update() {
@@ -57,7 +66,7 @@ export class Input {
         this.#keysPressed.clear();
     }
 
-    async requestPointerLock(element) {
+    async requestPointerLock(element = this.#pointerLockElement) {
         try {
             await element.requestPointerLock({
                 unadjustedMovement: true
@@ -82,6 +91,12 @@ export class Input {
 
     isKeyPressed(key) {
         return this.#keysPressed.has(key);
+    }
+
+    changeKeysToTrack(keys) {
+        this.#keysToTrack = keys;
+        this.#keysDown.clear();
+        this.#keysPressed.clear();
     }
 
     dispose() {
