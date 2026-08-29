@@ -20,6 +20,8 @@
 
 	--terrain-color: hsl(0, 0%, 40%);
 	--column-color: hsl(280, 100%, 50%);
+	--project-card-background-color: hsla(0, 0%, 97%, 90%);
+	--project-card-border-color: hsla(0, 0%, 3%, 90%);
 
 	--font-family: "Azeret Mono", monospace;
 	--meta-tag-font-family: "IBM Plex Mono", monospace;
@@ -32,5 +34,8 @@ html.dark {
 	--normal-text-color: hsl(0, 0%, 90%);
 	--accent-color:  hsl(340, 100%, 50%);
 	--button-normal-color: gray;
+
 	--terrain-color: hsl(0, 0%, 60%);
+	--project-card-background-color: hsla(0, 0%, 3%, 90%);
+	--project-card-border-color: hsla(0, 0%, 97%, 90%);
 }

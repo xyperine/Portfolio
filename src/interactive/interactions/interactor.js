@@ -20,8 +20,8 @@ export class Interactor {
         const hits = raycaster.intersectObjects(Interactables.items, true);
 
         for (let hit of hits) {
-            if (hit.object !== null) {
-                if (hit.object.userData.interactable !== undefined) {
+            if (hit.object != null) {
+                if (hit.object.userData.interactable != undefined) {
                     return hit.object.userData.interactable;
                 }
             }

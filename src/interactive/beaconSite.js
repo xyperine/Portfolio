@@ -6,6 +6,7 @@ import { Projects } from '#src/interactive/projects.js';
 import { Interactable } from '#src/interactive/interactions/interactable.js';
 import { Interactables } from '#src/interactive/interactions/interactables.js';
 import { Shaders } from '#src/shaders.js';
+import { ProjectCard } from '#src/interactive/ui/projectCard.js';
 
 export class BeaconSite extends Interactable{
     /**
@@ -31,6 +32,8 @@ export class BeaconSite extends Interactable{
 
         this.siteSize = 40;
         this.siteObject = new THREE.Object3D();
+
+        this.interactable = true;
 
         this.createColumns();
         this.createPiedestal();
@@ -148,11 +151,13 @@ export class BeaconSite extends Interactable{
     interact() {
         if (this.isInteractable()) {       
             console.log("Interacting!");
+
+            ProjectCard.show(this.projectData);            
         }
     }
 
     isInteractable() {
-        return true;
+        return this.interactable;
     }
 
     dispose() {

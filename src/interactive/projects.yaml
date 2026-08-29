@@ -1,6 +1,7 @@
 projects:
   conifer_init:
     name: "Conifer Init"
+    metaTag: "Tool"
     description: "Unity plugin for automating project setup."
     coverImage: "img/Conifer Init cover.png"
     link: "#"
@@ -11,6 +12,7 @@ projects:
   
   icons_creator:
     name: "Icons Creator"
+    metaTag: "Tool"
     description: "Tool for creating icons of 3D objects in Unity."
     coverImage: "img/Icons Creator cover.png"
     link: "#"
@@ -21,8 +23,9 @@ projects:
   
   reality_grid:
     name: "Reality Grid"
+    metaTag: "Game"
     description: "Incremental game about climbing up layers of simulations."
-    coverImage: "img/Realit Grid cover.png"
+    coverImage: "img/Reality Grid cover.jpg"
     link: "#"
 
     interactive:
@@ -31,6 +34,7 @@ projects:
   
   dots_killer:
     name: "Dots Killer"
+    metaTag: "Game"
     description: "PC/Web/Android incremental game."
     coverImage: "img/Dots Killer cover.png"
     link: "#"
@@ -41,6 +45,7 @@ projects:
 
   genesis_constructa:
     name: "Genesis Constructa"
+    metaTag: "Game"
     description: "Mobile idle arcade game set on a distant planet."
     coverImage: "img/Genesis Constructa cover.png"
     link: "#"

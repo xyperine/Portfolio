@@ -14,7 +14,9 @@ import { Compass } from '#src/interactive/ui/compass.js';
 import { Projects } from '#src/interactive/projects.js';
 import { Interactables } from '#src/interactive/interactions/interactables.js';
 import { Teleporter } from '#src/interactive/teleporter.js';
+import { ProjectCard } from '#src/interactive/ui/projectCard.js';
 import { InputManager } from '#src/interactive/inputManager.js';
+import { Interactor } from '#src/interactive/interactions/interactor.js';
 
 export class InteractiveWorld extends World {
     constructor() {
@@ -26,11 +28,14 @@ export class InteractiveWorld extends World {
     async init() {
         await Projects.init();
         Interactables.init();
-
+        
         this.input = new Input();
         this.renderingCanvas = document.querySelector("#terrain");
         this.input.setPointerLockElement(this.renderingCanvas);
         this.inputManager = new InputManager(this.input);
+
+        ProjectCard.init(this.inputManager);
+
         this.physicsDebug = false;
         this.renderingDistance = 180;
         
@@ -99,6 +104,7 @@ export class InteractiveWorld extends World {
         // Make sure the terrain collider is registered.
         this.physicsWorld.step();
 
+        this.interactor = new Interactor(10, this.camera);
         this.glider = new Glider(this.camera, this.inputManager, this.scene, this.physicsWorld, this.temperatureMap);
         this.teleporter = new Teleporter(this.input, this.terrain.beaconPlacements.map(p => p.position), this.glider, this.terrain.shaderVertexAlgorithm);
 
@@ -146,6 +152,14 @@ export class InteractiveWorld extends World {
 
     processInputs() {
         this.glider.processInputs();
+
+        this.interactor.update();
+        if (this.inputManager.isInteractionKeyPressed()) {
+            this.interactor.interact();
+        }
+        if (this.inputManager.isCloseUIKeyPressed()) {
+            ProjectCard.hide();
+        }
     }
 
     processPhysics() {
@@ -208,6 +222,7 @@ export class InteractiveWorld extends World {
 
     dispose() {
         Interactables.dispose();
+        ProjectCard.dispose();
 
         this.input.unlockPointer();
         

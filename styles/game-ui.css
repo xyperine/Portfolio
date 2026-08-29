@@ -1,4 +1,6 @@
 #game-ui {
+	container-type: size;
+
 	position: absolute;
 	inset: 0;
 	z-index: 1;
@@ -9,6 +11,16 @@ html:not(.interactive) #game-ui{
 	display: none;
 }
 
+#game-ui * {
+	-webkit-user-select: none;
+	user-select: none;
+}
+
+#game-ui *:focus {
+	
+}
+
+/* --- HUD --- */
 #game-ui .hud{
 	position: absolute;
 	top: 15%;
@@ -44,6 +56,7 @@ html:not(.interactive) #game-ui{
 	letter-spacing: 0.08cqi;
 }
 
+/* --- COMPASS --- */
 #game-ui #compass {
 	container-type: inline-size;
 
@@ -179,6 +192,7 @@ html:not(.interactive) #game-ui{
 	transform: translate(-50%, -100%);
 }
 
+/* --- CROSSHAIR --- */
 #crosshair {
 	position: absolute;
 	top: 50%;
@@ -187,6 +201,115 @@ html:not(.interactive) #game-ui{
 	width: 0.3rem;
 	height: 0.3rem;
 	background-color: var(--accent-color);
+}
+
+/* --- PROJECT CARD --- */
+#project-card {
+	container-type: inline-size;
+
+	position: absolute;
+	width: 25cqmax;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 3;
+
+	pointer-events: none;
+
+	opacity: 0;
+	background:
+        linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--color) 20%, transparent),
+            transparent 50%
+        ),
+        var(--background-color);
+	border: 0.1rem dashed var(--color);
+	font-family: var(--game-ui-font-family);
+	color: var(--normal-text-color);
+
+	transition: opacity 200ms ease;
+}
+
+#project-card.visible {
+	opacity: 1;
+	pointer-events: auto;
+}
+
+#project-card .content{
+	margin: 10cqi;
+
+	font-size: 4cqi;
+
+	display: flex;
+	flex-direction: column;
+	z-index: 1;
+}
+
+#project-card .close {
+	position: absolute;
+	width: 6cqi;
+	height: 6cqi;
+	top: 5cqi;
+	left: calc(100% - 5cqi);
+	transform: translate(-50%, -50%);
+	padding: 0;
+	margin: 0;
+
+	font-size: 8cqi;
+	text-align: center;
+	line-height: 0;
+	
+	border: none;
+	color: var(--button-normal-color);
+	background-color: transparent;
+
+	transition: color 0.3s;
+}
+
+#project-card .close:hover {
+	color: var(--color);
+}
+
+#project-card img {
+	width: 100%;
+	border: 0.1rem dashed var(--color);
+}
+
+#project-card .title {
+	margin-top: 10cqi;
+	font-weight: bold;
+	font-size: 6cqi;
+	font-family: var(--game-ui-font-family);
+}
+
+#project-card .meta-tag {
+	font-family: var(--game-ui-font-family);
+}
+
+#project-card .description {
+	font-family: var(--game-ui-font-family);
+}
+
+#project-card .learn {
+	font-family: var(--game-ui-font-family);
+
+	align-self: center;
+
+	margin-top: 10cqi;
+
+	color: var(--button-normal-color);
+	text-decoration: none;
+	font-size: 5cqi;
+	font-weight: 600;
+	text-transform: uppercase;
+	line-height: 0;
+
+	transition: color 0.3s;
+}
+
+#project-card .learn:hover {
+	color: var(--color);
 }
 
 #game {
