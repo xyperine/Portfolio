@@ -243,6 +243,7 @@ html:not(.interactive) #game-ui{
 
 	display: flex;
 	flex-direction: column;
+	gap: 2cqi;
 	z-index: 1;
 }
 
@@ -277,7 +278,7 @@ html:not(.interactive) #game-ui{
 }
 
 #project-card .title {
-	margin-top: 10cqi;
+	margin-top: 6cqi;
 	font-weight: bold;
 	font-size: 6cqi;
 	font-family: var(--game-ui-font-family);
@@ -296,7 +297,7 @@ html:not(.interactive) #game-ui{
 
 	align-self: center;
 
-	margin-top: 10cqi;
+	margin-top: 8cqi;
 
 	color: var(--button-normal-color);
 	text-decoration: none;
