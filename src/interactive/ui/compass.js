@@ -74,7 +74,7 @@ export class Compass {
         const inner = document.createElement("div");
         inner.classList.add("compass-pointer-inner");
         element.appendChild(inner);
-
+        
         const label = document.createElement("div");
         label.classList.add("compass-pointer-label");
         label.textContent = number.toString();
