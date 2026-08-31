@@ -34,6 +34,8 @@ export class InteractiveWorld extends World {
         this.input.setPointerLockElement(this.renderingCanvas);
         this.inputManager = new InputManager(this.input);
 
+        this.controlsElement = document.querySelector(".controls");
+
         ProjectCard.init(this.inputManager);
 
         this.physicsDebug = false;
@@ -162,7 +164,7 @@ export class InteractiveWorld extends World {
         }
 
         const holdingShowControlsKey = this.inputManager.isHoldingShowControlsKey();
-        document.querySelector(".controls").classList.toggle("visible", holdingShowControlsKey);
+        this.controlsElement.classList.toggle("visible", holdingShowControlsKey);
     }
 
     processPhysics() {
