@@ -16,10 +16,6 @@ html:not(.interactive) #game-ui{
 	user-select: none;
 }
 
-#game-ui *:focus {
-	
-}
-
 /* --- HUD --- */
 #game-ui .hud{
 	position: absolute;
@@ -28,7 +24,7 @@ html:not(.interactive) #game-ui{
 	gap: 0.2cqi;
 }
 
-#game-ui .hud #hud-title {
+.hud #hud-title {
 	margin-top: 0;
 	margin-bottom: 0;
 
@@ -38,12 +34,12 @@ html:not(.interactive) #game-ui{
 	letter-spacing: 0.08cqi;
 }
 
-#game-ui .hud hr {
+.hud hr {
 	border: none;
 	border-top: 0.1cqi dashed var(--hud-text-color);
 }
 
-#game-ui .hud .hud-entry {
+.hud .hud-entry {
 	display: grid;
 	grid-template-columns: 5cqi auto;
 
@@ -54,6 +50,87 @@ html:not(.interactive) #game-ui{
 	font-family: var(--game-ui-font-family);
 	font-size: 0.8cqi;
 	letter-spacing: 0.08cqi;
+}
+
+/* --- CONTROLS --- */
+#controls-hint {
+	position: absolute;
+	left: 1rem;
+	bottom: 1rem;
+
+	color: var(--hud-text-color);
+	font-family: var(--game-ui-font-family);
+	font-size: 0.8cqi;
+}
+
+#game-ui .controls {
+	container-type: inline-size;
+
+	position: absolute;
+	width: 25cqmax;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 3;
+
+	pointer-events: none;
+
+	opacity: 0;
+	background:
+        linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--accent-color) 20%, transparent),
+            transparent 50%
+        ),
+        var(--background-color);
+	border: 0.1rem dashed var(--accent-color);
+	font-family: var(--game-ui-font-family);
+	color: var(--normal-text-color);
+
+	transition: opacity 200ms ease;
+}
+
+#game-ui .controls.visible {
+	opacity: 1;
+}
+
+.controls .content {
+	margin: 5cqi;
+
+	font-size: 4cqi;
+
+	display: flex;
+	flex-direction: column;
+	gap: 2cqi;
+	z-index: 1;
+}
+
+.controls .title {
+	margin-top: 0;
+	margin-bottom: 0;
+
+	color: var(--normal-text-color);
+	font-family: var(--game-ui-font-family);
+	font-size: 6cqi;
+	letter-spacing: 0.6cqi;
+}
+
+.controls hr {
+	border: none;
+	border-top: 0.1rem dashed var(--accent-color);
+}
+
+.controls .content .entry {
+	display: flex;
+	justify-content: space-between;
+
+	margin-top: 0;
+	margin-bottom: 0;
+
+	color: var(--normal-text-color);
+	font-family: var(--game-ui-font-family);
+	font-size: 5cqi;
+	letter-spacing: 0.5cqi;
 }
 
 /* --- COMPASS --- */
@@ -320,7 +397,7 @@ html:not(.interactive) #game-ui{
 }
 
 /* Debug */
-#game * .sadsd {
+#game * .sads {
 	border: 0.1rem solid blue;
 }
 

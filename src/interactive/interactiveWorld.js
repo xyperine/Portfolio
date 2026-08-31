@@ -160,6 +160,9 @@ export class InteractiveWorld extends World {
         if (this.inputManager.isCloseUIKeyPressed()) {
             ProjectCard.hide();
         }
+
+        const holdingShowControlsKey = this.inputManager.isHoldingShowControlsKey();
+        document.querySelector(".controls").classList.toggle("visible", holdingShowControlsKey);
     }
 
     processPhysics() {

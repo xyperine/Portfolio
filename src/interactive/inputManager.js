@@ -26,11 +26,12 @@ export class InputManager {
         
         this.#horizontalMouseSensitivity = 1;
         this.#verticalMouseSensitivity = 1;
-        this.#uiModeKeys = ["KeyE"];
+        this.#uiModeKeys = ["KeyE", "Tab"];
         this.#gliderModeKeys = [
             "KeyW", "KeyA", "KeyS", "KeyD", 
             "KeyE",
-            "Digit1", "Digit2", "Digit3", "Digit4", "Digit5"
+            "Digit1", "Digit2", "Digit3", "Digit4", "Digit5",
+            "Tab"
         ];
 
         this.mode = null;
@@ -63,6 +64,12 @@ export class InputManager {
         const keyPressed = this.#input.isKeyPressed("KeyE");
 
         return correctMode && keyPressed;
+    }
+
+    isHoldingShowControlsKey() {
+        const keyDown = this.#input.isKeyDown("Tab");
+        
+        return keyDown;
     }
 
     getMovementInput() {
