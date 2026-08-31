@@ -272,9 +272,24 @@ html:not(.interactive) #game-ui{
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	width: 0.3rem;
-	height: 0.3rem;
+	width: 1cqmax;
+	height: 1cqmax;
 	background-color: var(--accent-color);
+
+	clip-path: polygon(
+		55% 0%,
+		55% 45%,
+		100% 45%,
+		100% 55%,
+		55% 55%,
+		55% 100%,
+		45% 100%,
+		45% 55%,
+		0% 55%,
+		0% 45%,
+		45% 45%,
+		45% 0%
+	);
 }
 
 /* --- PROJECT CARD --- */
