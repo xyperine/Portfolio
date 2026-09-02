@@ -1,4 +1,5 @@
 #include <formulas>
+#include <fog_pars_fragment>
 
 const int EProjectID_CONIFER_INIT = 0;
 const int EProjectID_ICONS_CREATOR = 1;
@@ -206,4 +207,6 @@ void main() {
 
     vec3 col = colorScene(marchData);
     gl_FragColor = vec4(col, 1.0);
+
+    #include <fog_fragment>
 }

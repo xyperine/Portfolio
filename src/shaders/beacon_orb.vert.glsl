@@ -1,3 +1,5 @@
+#include <fog_pars_vertex>
+
 varying vec3 vLocalPosition;
 varying vec3 vCameraLocalPos;
 
@@ -8,4 +10,7 @@ void main() {
     vCameraLocalPos = (inverse(modelViewMatrix) * vec4(uCameraWorldPos, 1.0)).xyz;
 
     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+
+    vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+    #include <fog_vertex>
 }

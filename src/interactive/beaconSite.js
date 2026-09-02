@@ -105,16 +105,18 @@ export class BeaconSite extends Interactable{
         const sg = new THREE.SphereGeometry(orbRadius, orbRadius * 4, orbRadius * 4);
         const shapeID = this.projectData.interactive.number - 1;
         this.sm = new THREE.ShaderMaterial({
-            //color: 0x000000,//utils.getCssColorAsThreeColor("--column-color"),
-            //fog: true,
-            uniforms: {
-                uTimeSeconds: {value: 0},
-                uCameraWorldPosition: {value: new THREE.Vector3()},
-                uPrimaryColor: {value: new THREE.Color(this.projectData.interactive.color)},
-                uProjectNumber: {value: shapeID}
-            },
+            uniforms: THREE.UniformsUtils.merge([
+                THREE.UniformsLib.fog, 
+                {
+                    uTimeSeconds: {value: 0},
+                    uCameraWorldPosition: {value: new THREE.Vector3()},
+                    uPrimaryColor: {value: new THREE.Color(this.projectData.interactive.color)},
+                    uProjectNumber: {value: shapeID}
+                }
+            ]),
             vertexShader: vertShader,
             fragmentShader: fragShader,
+            fog: true,
             transparent: true,
             side: THREE.DoubleSide,
         });
