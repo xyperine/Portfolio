@@ -71,14 +71,22 @@ export class Compass {
         element.style.setProperty("--color", color);
         this.stripElement.appendChild(element);
 
+        const outer = document.createElement("div");
+        outer.classList.add("compass-pointer-outer");
+        element.appendChild(outer);
+
         const inner = document.createElement("div");
         inner.classList.add("compass-pointer-inner");
-        element.appendChild(inner);
+        outer.appendChild(inner);
         
         const label = document.createElement("div");
         label.classList.add("compass-pointer-label");
         label.textContent = number.toString();
-        element.appendChild(label);
+        outer.appendChild(label);
+
+        const distanceLabel = document.createElement("div");
+        distanceLabel.classList.add("compass-pointer-distance");
+        element.appendChild(distanceLabel);
 
         return {element, position};
     }
@@ -97,6 +105,9 @@ export class Compass {
             let relativeHeadingToPointDegrees = THREE.MathUtils.radToDeg(relativeHeadingToPoint);
             const offset = -point.element.clientWidth * 0.5;
             point.element.style.transform = `translateX(${(cameraHeadingDegrees + relativeHeadingToPointDegrees) * this.pixelsPerDegree + offset}px)`;
+
+            const distance = point.position.clone().sub(camPos).length();
+            point.element.querySelector(".compass-pointer-distance").textContent = `${distance.toFixed(1)}m`;
         }
     }
     
