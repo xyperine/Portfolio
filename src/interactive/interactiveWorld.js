@@ -38,7 +38,7 @@ export class InteractiveWorld extends World {
 
         ProjectCard.init(this.inputManager);
 
-        this.physicsDebug = false;
+        this.physicsDebug = true;
         this.renderingDistance = 180;
         
         this.random = new Math.seedrandom();
@@ -175,7 +175,7 @@ export class InteractiveWorld extends World {
         this.physicsWorld.step();
 
         if (this.physicsDebug) {
-            if (this.input.isKeyDown("KeyQ")) {
+            if (this.input.isKeyPressed("KeyQ")) {
                 this.debugPhysics();
             }
         }

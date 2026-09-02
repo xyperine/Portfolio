@@ -35,7 +35,7 @@ export class BeaconSite extends Interactable{
 
         this.interactable = true;
 
-        this.createColumns();
+        //this.createColumns();
         this.createPiedestal();
         this.createOrb();
     }
@@ -70,11 +70,57 @@ export class BeaconSite extends Interactable{
     }
 
     createPiedestal() {
-        const piedestalSize = {w: 4, h: 10, d: 4};
+        const verticalSize = 10;
+        const horizontalSize = 4;
+        const piedestalSize = {w: horizontalSize, h: verticalSize, d: horizontalSize};
         const geometry = new THREE.BoxGeometry(
             piedestalSize.w, piedestalSize.h, piedestalSize.d, 
             piedestalSize.w * 1, piedestalSize.h * 1, piedestalSize.d * 1
         );
+
+        let vertices = geometry.attributes.position;
+        let vertex = new THREE.Vector3();
+        const halfVerticalSize = verticalSize * 0.5;
+        const halfHorizontalSize = horizontalSize * 0.5;
+        for (let i = 0; i < vertices.count; i++) {
+            vertex.fromBufferAttribute(vertices, i);
+            const height = vertex.y + halfVerticalSize;
+
+            const heightFactor = height / verticalSize;
+            const angle = Math.PI * 1/3 * heightFactor;
+            
+            const x = vertex.x * Math.cos(angle) - vertex.z * Math.sin(angle);
+            const z = vertex.x * Math.sin(angle) + vertex.z * Math.cos(angle);
+            const minY = calculateHeight(
+                new THREE.Vector3(0, -halfVerticalSize, 0), 
+                heightFactor
+            );
+            const maxY = calculateHeight(
+                new THREE.Vector3(halfHorizontalSize, halfVerticalSize, halfHorizontalSize), 
+                heightFactor
+            );
+            const y = THREE.MathUtils.mapLinear(
+                calculateHeight(vertex, heightFactor), 
+                minY, 
+                maxY, 
+                -halfVerticalSize, 
+                halfVerticalSize
+            );
+            const p = new THREE.Vector3(
+                x * (1 + heightFactor*heightFactor * 0.3 - 0.15), 
+                y, 
+                z * (1 + heightFactor*heightFactor * 0.3 - 0.15)
+            );
+
+            vertices.setXYZ(i, p.x, p.y, p.z);
+
+            function calculateHeight(v, hf) {
+                return v.y + 4 * hf * new THREE.Vector2(v.x, v.z).length();
+            }
+        }
+        
+        vertices.needsUpdate = true;
+
         const mat = new THREE.PointsMaterial({
             color: utils.getCssColorAsThreeColor("--column-color"),
             size: 0.2,
