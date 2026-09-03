@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import * as QUARKS from 'three.quarks';
 import * as RAPIER from '@dimforge/rapier3d-compat';
 import * as SEEDRANDOM from 'seedrandom';
 import * as utils from '#src/utils.js';
@@ -38,7 +39,7 @@ export class InteractiveWorld extends World {
 
         ProjectCard.init(this.inputManager);
 
-        this.physicsDebug = true;
+        this.physicsDebug = false;
         this.renderingDistance = 180;
         
         this.random = new Math.seedrandom();
@@ -64,6 +65,7 @@ export class InteractiveWorld extends World {
         this.renderer.setAnimationLoop(elapsedTime => {
             this.update(elapsedTime);
         });
+        this.timer = new THREE.Timer();
         
         // Camera
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.01, this.renderingDistance);
@@ -117,6 +119,59 @@ export class InteractiveWorld extends World {
             this.compass.trackBeacon(beacon);
         }
 
+        this.particlesRenderer = new QUARKS.BatchedParticleRenderer();
+        this.scene.add(this.particlesRenderer);
+        this.ambientParticles = new QUARKS.ParticleSystem({
+            duration: 10,
+            looping: true,
+            worldSpace: true,
+            prewarm: true,
+
+            startLife: new QUARKS.IntervalValue(3, 6),
+            startSpeed: new QUARKS.ConstantValue(0),
+            startSize: new QUARKS.IntervalValue(0.1, 0.3),
+            startRotation: new QUARKS.RandomQuatGenerator(),
+            startColor: new QUARKS.RandomColor(
+                new THREE.Vector4(0.35, 0.35, 0.35, 1),
+                new THREE.Vector4(0.65, 0.65, 0.65, 1),
+            ),
+
+            emissionOverTime: new QUARKS.IntervalValue(10, 20),
+            emissionOverDistance: new QUARKS.IntervalValue(2, 4),
+            shape: new QUARKS.SphereEmitter({
+                radius: this.renderingDistance,
+                thickness: 0.99
+            }),
+
+            material: new THREE.MeshBasicMaterial({
+                color: 0xffffff,
+                transparent: true,
+                fog: true
+            }),
+            renderMode: QUARKS.RenderMode.Mesh,
+
+            behaviors: [
+                new QUARKS.TurbulenceField(
+                    new THREE.Vector3(100, 100, 100), 
+                    3, 
+                    new THREE.Vector3(0.5, 0.5, 0.5), 
+                    new THREE.Vector3(0.1, 0.1, 0.1)
+                ),
+                new QUARKS.Noise(
+                    new QUARKS.ConstantValue(0.4),
+                    new QUARKS.ConstantValue(0.1),
+                    new QUARKS.ConstantValue(0),
+                    new QUARKS.ConstantValue(0.2)
+                ),
+
+                new QUARKS.SizeOverLife(
+                    new QUARKS.PiecewiseBezier([[new QUARKS.Bezier(0, 1, 1, 0), 0]])
+                )
+            ]
+        });
+        this.scene.add(this.ambientParticles.emitter);
+        this.particlesRenderer.addSystem(this.ambientParticles);
+
         // Diagnostics
         if (this.physicsDebug) {
             this.debugPhysics();
@@ -141,6 +196,8 @@ export class InteractiveWorld extends World {
     }
     
     update(elapsedTime) {
+        this.timer.update(elapsedTime);
+
         this.processInputs();
 
         this.processPhysics();
@@ -196,6 +253,9 @@ export class InteractiveWorld extends World {
         this.terrain.update(this.glider.getRenderPosition());
         this.terrain.render(gameState);
 
+        this.ambientParticles.emitter.position.copy(this.glider.getRenderPosition());
+        this.particlesRenderer.update(this.timer.getDelta());
+
         this.hud.update();
         this.compass.update(gameState)
 
@@ -244,6 +304,9 @@ export class InteractiveWorld extends World {
         this.input = null;
         this.compass.dispose();
         this.compass = null;
+        this.particlesRenderer.deleteSystem(this.ambientParticles);
+        this.ambientParticles.dispose();
+        this.ambientParticles = null;
         
         // Dispose rendering
         this.scene.traverse(object => {
