@@ -204,10 +204,11 @@ html:not(.interactive) #game-ui{
 .compass-pointer {
 	position: absolute;
 	top: 0%;
-	width: 5cqi;
 	
 	display: flex;
 	flex-direction: column;
+	align-items: center;
+	justify-content: center;
 	gap: 1cqi;
 
 	font-size: 4cqi;
@@ -269,6 +270,8 @@ html:not(.interactive) #game-ui{
 	color: var(--hud-text-color);
 	font-family: var(--game-ui-font-family);
 	font-size: 50%;
+	text-wrap-mode: nowrap;
+	text-align: center;
 }
 
 #compass-center {
@@ -429,7 +432,7 @@ html:not(.interactive) #game-ui{
 }
 
 /* Debug */
-#game * .jhjhg {
+#game * .dsad {
 	border: 0.1rem solid blue;
 }
 
