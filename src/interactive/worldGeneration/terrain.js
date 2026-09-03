@@ -74,13 +74,50 @@ export class Terrain {
 
     createBeaconPlacements(projectIds) {
         this.beaconPlacements = [];
-        for (let i = 0; i < projectIds.length; i++) {
-            const p = {
-                x: utils.seededFloat(this.random, -1000, 1000), 
-                z: utils.seededFloat(this.random, -1000, 1000)
-            };
-            this.beaconPlacements.push({projectId: projectIds[i], position: new THREE.Vector3(p.x, 0, p.z)});
+
+        const positions = this.generateBeaconPositions(
+            2000, 
+            2000, 
+            this.chunkSize.w, 
+            projectIds.length
+        );
+        for (let i = 0; i < positions.length; i++) {
+            const position = positions[i];
+            this.beaconPlacements.push({
+                projectId: projectIds[i], 
+                position
+            });
         }
+    }
+
+    generateBeaconPositions(width, height, minDistance, count) {
+        const positions = [];
+        
+        const minDistSq = minDistance * minDistance;
+        let attempts = 0;
+
+        while (positions.length < count && attempts++ < 10000) {
+            const x = utils.seededFloat(this.random, -width * 0.5, width * 0.5);
+            const z = utils.seededFloat(this.random, -height * 0.5, height * 0.5);
+
+            let valid = true;
+
+            activeLoop: for (const p of positions) {
+                const dx = x - p.x;
+                const dz = z - p.z;
+
+                if (dx*dx + dz*dz < minDistSq) {
+                    valid = false;
+                    break activeLoop;
+                }
+            }
+
+            if (valid) {
+                positions.push(new THREE.Vector3(x, 0, z));
+            }
+        }
+
+        return positions;
     }
 
     loadChunk(x, z) {
