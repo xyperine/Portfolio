@@ -106,7 +106,7 @@ export class Compass {
             const offset = -point.element.clientWidth * 0.5;
             point.element.style.transform = `translateX(${(cameraHeadingDegrees + relativeHeadingToPointDegrees) * this.pixelsPerDegree + offset}px)`;
 
-            const distance = point.position.clone().sub(camPos).length();
+            const distance = point.position.clone().sub(camPos).setY(0).length();
             point.element.querySelector(".compass-pointer-distance").textContent = `${distance.toFixed(1)}m`;
         }
     }
