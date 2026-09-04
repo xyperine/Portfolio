@@ -7,6 +7,7 @@ import { TerrainChunk } from '#src/interactive/worldGeneration/terrainChunk.js';
 import { BeaconSite } from '#src/interactive/beaconSite.js';
 import { Projects } from '#src/interactive/projects.js';
 import { Shaders } from '#src/shaders.js';
+import { BeaconFactory } from '#src/interactive/beaconFactory.js';
 
 export class Terrain {
     #vertexShader;
@@ -16,17 +17,18 @@ export class Terrain {
      * 
      * @param {THREE.Scene} scene 
      * @param {RAPIER.World} physicsWorld 
-     * @param {string} vertexShader 
-     * @param {string} fragmentShader 
      * @param {number} renderingDistance 
      * @param {string} seed 
+     * @param {BeaconFactory} beaconFactory 
      */
-    constructor(scene, physicsWorld, renderingDistance, seed) {
+    constructor(scene, physicsWorld, renderingDistance, seed, beaconFactory) {
         this.scene = scene;
         this.physicsWorld = physicsWorld;
+        this.beaconFactory = beaconFactory;
+        this.random = new Math.seedrandom(seed);
+
         this.#vertexShader = Shaders.terrainVert;
         this.#fragmentShader = Shaders.terrainFrag;
-        this.random = new Math.seedrandom(seed);
         
         this.chunkMap = new Map();
         const renderDistanceMultiplier = 1;
@@ -66,6 +68,8 @@ export class Terrain {
             fragmentShader: this.#fragmentShader,
             fog: true
         });
+
+        this.beaconFactory.vac = this.shaderVertexAlgorithm;
         
         this.createBeaconPlacements(Projects.getAllIDs());
 
@@ -148,17 +152,11 @@ export class Terrain {
 
     createBeacons(chunk, x, z) {
         for (let i = 0; i < this.beaconPlacements.length; i++) {
-            const p = this.beaconPlacements[i].position;
+            const placement = this.beaconPlacements[i];
+            const p = placement.position;
             const cp = this.toChunkCoordinates(p);
             if (x === cp.x && z === cp.z) {
-                const beaconSite = new BeaconSite(
-                    p.x, 
-                    p.z, 
-                    this.scene, 
-                    this.physicsWorld, 
-                    this.shaderVertexAlgorithm, 
-                    this.beaconPlacements[i].projectId
-                );
+                const beaconSite = this.beaconFactory.create(p.x, p.z, placement.projectId);
                 chunk.addObject(beaconSite);
             }
         }

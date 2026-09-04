@@ -3,12 +3,13 @@ import * as RAPIER from '@dimforge/rapier3d-compat';
 import * as utils from '#src/utils.js';
 import { VertexShaderAlgorithmCopy } from '#src/interactive/worldGeneration/vertexShaderAlgorithmCopy.js';
 import { Projects } from '#src/interactive/projects.js';
-import { Interactable } from '#src/interactive/interactions/interactable.js';
-import { Interactables } from '#src/interactive/interactions/interactables.js';
 import { Shaders } from '#src/shaders.js';
-import { ProjectCard } from '#src/interactive/ui/projectCard.js';
+import { Beacon } from '#src/interactive/beacon.js';
 
-export class BeaconSite extends Interactable{
+/**
+ * Constructs the beacon site location.
+ */
+export class BeaconSite{
     /**
      * 
      * @param {number} x world space coordinate x
@@ -18,8 +19,6 @@ export class BeaconSite extends Interactable{
      * @param {VertexShaderAlgorithmCopy} vac 
      */
     constructor(x, z, scene, physicsWorld, vac, projectId) {
-        super();
-
         this.x = x;
         this.z = z;
         this.scene = scene;
@@ -32,8 +31,6 @@ export class BeaconSite extends Interactable{
 
         this.siteSize = 40;
         this.siteObject = new THREE.Object3D();
-
-        this.interactable = true;
 
         //this.createColumns();
         this.createPiedestal();
@@ -143,7 +140,7 @@ export class BeaconSite extends Interactable{
         this.orbSocketY = yPos + piedestalSize.h - 1;
     }
 
-    async createOrb() {
+    createOrb() {
         const vertShader = Shaders.beaconOrbVert;
         const fragShader = Shaders.beaconOrbFrag;
 
@@ -171,10 +168,9 @@ export class BeaconSite extends Interactable{
         let sxPos = this.x;
         let szPos = this.z;
         const sp = new THREE.Mesh(sg, this.sm);
-        sp.userData.interactable = this;
-        Interactables.register(sp);
         sp.position.set(sxPos, syPos, szPos);
         this.siteObject.add(sp);
+        this.sp = sp;
 
         const srbd = RAPIER.RigidBodyDesc.fixed().setTranslation(sxPos, syPos, szPos);
         const srb = this.physicsWorld.createRigidBody(srbd);
@@ -190,25 +186,12 @@ export class BeaconSite extends Interactable{
     }
 
     update(gameState) {
-        if (this.sm != undefined) {
-            this.sm.uniforms.uCameraWorldPosition.value = gameState.camera.getWorldPosition(new THREE.Vector3());
-            this.sm.uniforms.uTimeSeconds.value = gameState.elapsedTime * 0.001;
-        }
-    }
-
-    interact() {
-        if (this.isInteractable()) {       
-            console.log("Interacting!");
-
-            ProjectCard.show(this.projectData);            
-        }
-    }
-
-    isInteractable() {
-        return this.interactable;
+        this.beacon.update(gameState);
     }
 
     dispose() {
+        this.beacon.dispose();
+
         for(let ro of this.renderObjects) {
             ro.traverse(o => {
                 if (o.geometry) {

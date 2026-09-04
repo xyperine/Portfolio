@@ -18,6 +18,7 @@ import { Teleporter } from '#src/interactive/teleporter.js';
 import { ProjectCard } from '#src/interactive/ui/projectCard.js';
 import { InputManager } from '#src/interactive/inputManager.js';
 import { Interactor } from '#src/interactive/interactions/interactor.js';
+import { BeaconFactory } from '#src/interactive/beaconFactory.js';
 
 export class InteractiveWorld extends World {
     constructor() {
@@ -46,7 +47,7 @@ export class InteractiveWorld extends World {
 
         this.planetGenerator = new PlanetGenerator(this.random());
         this.planetInfo = this.planetGenerator.generate();
-
+        
         this.gravity = utils.seededGaussianConstrained(this.random, 0.2, 4, 1, 1);
         
         // Scene
@@ -66,6 +67,9 @@ export class InteractiveWorld extends World {
             this.update(elapsedTime);
         });
         this.timer = new THREE.Timer();
+        
+        this.particlesRenderer = new QUARKS.BatchedParticleRenderer();
+        this.scene.add(this.particlesRenderer);
         
         // Camera
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.01, this.renderingDistance);
@@ -97,11 +101,19 @@ export class InteractiveWorld extends World {
             z: 0
         });
 
+        this.beaconFactory = new BeaconFactory(
+            this.scene, 
+            this.physicsWorld, 
+            null, 
+            this.camera, 
+            this.particlesRenderer
+        );
         this.terrain = new Terrain(
             this.scene, 
             this.physicsWorld,  
             this.renderingDistance, 
-            this.random().toString()
+            this.random().toString(),
+            this.beaconFactory
         );
         this.temperatureMap = new TemperatureMap(this.planetInfo, this.random().toString());
 
@@ -119,8 +131,6 @@ export class InteractiveWorld extends World {
             this.compass.trackBeacon(beacon);
         }
 
-        this.particlesRenderer = new QUARKS.BatchedParticleRenderer();
-        this.scene.add(this.particlesRenderer);
         this.ambientParticles = new QUARKS.ParticleSystem({
             duration: 10,
             looping: true,
@@ -307,6 +317,8 @@ export class InteractiveWorld extends World {
         this.particlesRenderer.deleteSystem(this.ambientParticles);
         this.ambientParticles.dispose();
         this.ambientParticles = null;
+        this.beaconFactory.dispose();
+        this.beaconFactory = null;
         
         // Dispose rendering
         this.scene.traverse(object => {
