@@ -9,6 +9,7 @@ import { ParticlesBurst as ParticlesBurst } from '#src/interactive/particlesBurs
 export class BeaconFactory {
     particleSystems = new Map();
     interactParticleSystems = new Map();
+    interactTrailParticleSystems = new Map();
 
     /**
      * 
@@ -116,13 +117,13 @@ export class BeaconFactory {
             worldSpace: true,
             prewarm: false,
             autoDestroy: true,
-
+            
             startLife: new QUARKS.IntervalValue(2, 4),
             startSpeed: new QUARKS.ConstantValue(10),
             startSize: new QUARKS.IntervalValue(0.1, 0.2),
             startRotation: new QUARKS.RandomQuatGenerator(),
             startColor: new QUARKS.ConstantColor(new THREE.Vector4(color.r, color.g, color.b, 1)),
-
+            
             emissionOverTime: new QUARKS.ConstantValue(0),
             emissionBursts: [
                 {
@@ -144,12 +145,12 @@ export class BeaconFactory {
                 fog: true
             }),
             renderMode: QUARKS.RenderMode.Mesh,
-
+            
             behaviors: [
                 new QUARKS.TurbulenceField(
                     new THREE.Vector3(5, 5, 5), 
                     1, 
-                    new THREE.Vector3(1, 1, 1), 
+                    new THREE.Vector3(100, 100, 100), 
                     new THREE.Vector3(0.2, 0.2, 0.2)
                 ),
                 new QUARKS.SizeOverLife(
@@ -160,6 +161,56 @@ export class BeaconFactory {
                 )
             ]
         });
+        
+        let trailPs;
+        if (this.interactTrailParticleSystems.has(projectData.interactive.number)) {
+            trailPs = this.interactTrailParticleSystems.get(projectData.interactive.number);
+        } else {
+            trailPs = new QUARKS.ParticleSystem({
+                duration: 0.1,
+                looping: false,
+                worldSpace: true,
+                prewarm: false,
+                autoDestroy: true,
+    
+                startLife: new QUARKS.IntervalValue(0.5, 0.8),
+                startSpeed: new QUARKS.IntervalValue(1, 3),
+                startSize: new QUARKS.IntervalValue(0.05, 0.15),
+                startColor: new QUARKS.ConstantColor(new THREE.Vector4(color.r, color.g, color.b, 1)),
+    
+                emissionOverTime: new QUARKS.ConstantValue(1),
+                shape: new QUARKS.PointEmitter(),
+    
+                renderMode: QUARKS.RenderMode.Mesh,
+                material: new THREE.MeshBasicMaterial({
+                    color: 0xffffff,
+                    transparent: true,
+                    fog: true
+                }),
+                behaviors: [
+                    new QUARKS.SizeOverLife(
+                        new QUARKS.PiecewiseBezier([[new QUARKS.Bezier(1, 0.5, 0.25, 0), 0]])
+                    ),
+                    new QUARKS.SpeedOverLife(
+                        new QUARKS.PiecewiseBezier([[new QUARKS.Bezier(1.0, 0.5, 0.25, 0), 0]])
+                    ),
+                ]
+            });
+
+            this.scene.add(trailPs.emitter)
+            this.particlesRenderer.addSystem(trailPs);
+
+            this.interactTrailParticleSystems.set(projectData.interactive.number, trailPs);
+        }
+        ps.addBehavior(
+            new QUARKS.EmitSubParticleSystem(
+                ps,
+                true,
+                trailPs.emitter,
+                QUARKS.SubParticleEmitMode.Frame,
+                0.5
+            )
+        );
 
         ps.stop();
         this.interactParticleSystems.set(projectData.interactive.number, ps);
@@ -179,5 +230,11 @@ export class BeaconFactory {
             ps.dispose();
         }
         this.interactParticleSystems.clear();
+
+        for (const ps of [...this.interactTrailParticleSystems.values()]) {
+            this.particlesRenderer.deleteSystem(ps);
+            ps.dispose();
+        }
+        this.interactTrailParticleSystems.clear();
     }
 }

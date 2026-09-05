@@ -44,7 +44,7 @@ export class Beacon extends Interactable {
         }
 
         const distance = this.camera.getWorldPosition(new THREE.Vector3()).distanceTo(this.orbMesh.getWorldPosition(new THREE.Vector3()));
-        const threshold = 80;
+        const threshold = 40;
         if (distance < threshold) {
             const t = 1 - distance / threshold;
             this.camera.fov = THREE.MathUtils.lerp(75, 120, t*t);
@@ -53,11 +53,11 @@ export class Beacon extends Interactable {
     }
 
     interact() {
-        if (this.isInteractable()) {       
+        if (this.isInteractable()) {
             console.log("Interacting!");
 
             this.interactionParticlesBurst.play(this.worldPosition);
-            ProjectCard.show(this.projectData);            
+            ProjectCard.show(this.projectData);
         }
     }
 
