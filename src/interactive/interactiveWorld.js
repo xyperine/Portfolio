@@ -19,6 +19,7 @@ import { ProjectCard } from '#src/interactive/ui/projectCard.js';
 import { InputManager } from '#src/interactive/inputManager.js';
 import { Interactor } from '#src/interactive/interactions/interactor.js';
 import { BeaconFactory } from '#src/interactive/beaconFactory.js';
+import { BoxEmitter } from '#src/interactive/boxEmitter.js';
 
 export class InteractiveWorld extends World {
     constructor() {
@@ -146,12 +147,13 @@ export class InteractiveWorld extends World {
                 new THREE.Vector4(0.65, 0.65, 0.65, 1),
             ),
 
-            emissionOverTime: new QUARKS.IntervalValue(10, 20),
-            emissionOverDistance: new QUARKS.IntervalValue(2, 4),
-            shape: new QUARKS.SphereEmitter({
-                radius: this.renderingDistance,
-                thickness: 0.99
-            }),
+            emissionOverTime: new QUARKS.ConstantValue(200),
+            //emissionOverDistance: new QUARKS.IntervalValue(2, 4),
+            shape: new BoxEmitter(new THREE.Vector3(
+                this.renderingDistance * 2,
+                this.renderingDistance,
+                this.renderingDistance * 2,
+            )),
 
             material: new THREE.MeshBasicMaterial({
                 color: 0xffffff,
