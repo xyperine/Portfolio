@@ -95,7 +95,6 @@ export class Input {
 
     changeKeysToTrack(keys) {
         this.#keysToTrack = keys;
-        this.#keysDown.clear();
         this.#keysPressed.clear();
     }
 
