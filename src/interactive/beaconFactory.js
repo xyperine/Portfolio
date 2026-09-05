@@ -57,7 +57,7 @@ export class BeaconFactory {
             duration: 10,
             looping: true,
             worldSpace: true,
-            prewarm: true,
+            prewarm: false,
 
             startLife: new QUARKS.IntervalValue(3, 6),
             startSpeed: new QUARKS.ConstantValue(0),
@@ -65,7 +65,7 @@ export class BeaconFactory {
             startRotation: new QUARKS.RandomQuatGenerator(),
             startColor: new QUARKS.ConstantColor(new THREE.Vector4(color.r, color.g, color.b, 1)),
 
-            emissionOverTime: new QUARKS.IntervalValue(200, 200),
+            emissionOverTime: new QUARKS.IntervalValue(100, 200),
             shape: new QUARKS.SphereEmitter({
                 radius: 40,
                 thickness: 0.9
