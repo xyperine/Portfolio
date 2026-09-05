@@ -335,7 +335,7 @@ html:not(.interactive) #game-ui{
             color-mix(in srgb, var(--color) 20%, transparent),
             transparent 50%
         ),
-        var(--background-color);
+        color-mix(in srgb, var(--background-color) 90%, transparent);
 	border: 0.1rem dashed var(--color);
 	font-family: var(--game-ui-font-family);
 	color: var(--normal-text-color);

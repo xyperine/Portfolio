@@ -148,7 +148,6 @@ export class InteractiveWorld extends World {
             ),
 
             emissionOverTime: new QUARKS.ConstantValue(200),
-            //emissionOverDistance: new QUARKS.IntervalValue(2, 4),
             shape: new BoxEmitter(new THREE.Vector3(
                 this.renderingDistance * 2,
                 this.renderingDistance,
