@@ -1,55 +1,55 @@
 projects:
-  conifer_init:
-    name: "Conifer Init"
-    metaTag: "Tool"
-    description: "Unity plugin for automating project setup."
-    coverImage: "img/Conifer Init cover.png"
-    link: "#"
+    conifer_init:
+        name: "Conifer Init"
+        metaTag: "Tool"
+        description: "Unity plugin for automating project setup."
+        coverImage: "img/Conifer Init cover.png"
+        link: "#"
 
-    interactive:
-      number: 1
-      color: "hsl(105, 70%, 50%)"
-  
-  icons_creator:
-    name: "Icons Creator"
-    metaTag: "Tool"
-    description: "Tool for creating icons of 3D objects in Unity."
-    coverImage: "img/Icons Creator cover.png"
-    link: "#"
+        interactive:
+            number: 1
+            color: "hsl(105, 70%, 50%)"
 
-    interactive:
-      number: 2
-      color: "hsl(180, 70%, 50%)"
-  
-  reality_grid:
-    name: "Reality Grid"
-    metaTag: "Game"
-    description: "Incremental game about climbing up layers of simulations."
-    coverImage: "img/Reality Grid cover.jpg"
-    link: "#"
+    icons_creator:
+        name: "Icons Creator"
+        metaTag: "Tool"
+        description: "Tool for creating icons of 3D objects in Unity."
+        coverImage: "img/Icons Creator cover.png"
+        link: "#"
 
-    interactive:
-      number: 3
-      color: "hsl(30, 70%, 50%)"
-  
-  dots_killer:
-    name: "Dots Killer"
-    metaTag: "Game"
-    description: "PC/Web/Android incremental game."
-    coverImage: "img/Dots Killer cover.png"
-    link: "#"
+        interactive:
+            number: 2
+            color: "hsl(180, 70%, 50%)"
 
-    interactive:
-      number: 4
-      color: "hsl(330, 70%, 50%)"
+    reality_grid:
+        name: "Reality Grid"
+        metaTag: "Game"
+        description: "Incremental game about climbing up layers of simulations."
+        coverImage: "img/Reality Grid cover.jpg"
+        link: "#"
 
-  debug:
-    name: "DEBUG"
-    metaTag: "Game"
-    description: "Defend yourself against swarms of bugs!"
-    coverImage: "img/Debug cover.jpg"
-    link: "#"
+        interactive:
+            number: 3
+            color: "hsl(30, 70%, 50%)"
 
-    interactive:
-      number: 5
-      color: "hsl(225, 70%, 50%)"
+    dots_killer:
+        name: "Dots Killer"
+        metaTag: "Game"
+        description: "PC/Web/Android incremental game."
+        coverImage: "img/Dots Killer cover.png"
+        link: "#"
+
+        interactive:
+            number: 4
+            color: "hsl(330, 70%, 50%)"
+
+    debug:
+        name: "DEBUG"
+        metaTag: "Game"
+        description: "Defend yourself against swarms of bugs!"
+        coverImage: "img/Debug cover.jpg"
+        link: "#"
+
+        interactive:
+            number: 5
+            color: "hsl(225, 70%, 50%)"

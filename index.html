@@ -1,160 +1,194 @@
 <!DOCTYPE hmtl>
 <html>
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Artur Mordvinov | Portfolio</title>
-	<link rel="stylesheet" type="text/css" href="styles/main.css">
-	<script type="importmap">
-		{
-			"imports": {
-				"#src/": "./src/",
-				"three": "https://cdn.jsdelivr.net/npm/three@v0.185.1/build/three.module.js",
-				"three/": "https://cdn.jsdelivr.net/npm/three@v0.185.1/",
-				"three/addons/": "https://cdn.jsdelivr.net/npm/three@v0.185.1/examples/jsm/",
-				"@dimforge/rapier3d-compat": "https://cdn.skypack.dev/@dimforge/rapier3d-compat",
-				"seedrandom": "https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js",
-				"yaml": "https://cdn.jsdelivr.net/npm/yaml@2.8.1/browser/index.js",
-				"three.quarks": "/node_modules/three.quarks/dist/three.quarks.esm.js",
-				"quarks.core": "/node_modules/quarks.core/dist/quarks.core.esm.js"
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Artur Mordvinov | Portfolio</title>
+		<link rel="stylesheet" type="text/css" href="styles/main.css" />
+		<script type="importmap">
+			{
+				"imports": {
+					"#src/": "./src/",
+					"three": "https://cdn.jsdelivr.net/npm/three@v0.185.1/build/three.module.js",
+					"three/": "https://cdn.jsdelivr.net/npm/three@v0.185.1/",
+					"three/addons/": "https://cdn.jsdelivr.net/npm/three@v0.185.1/examples/jsm/",
+					"@dimforge/rapier3d-compat": "https://cdn.skypack.dev/@dimforge/rapier3d-compat",
+					"seedrandom": "https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js",
+					"yaml": "https://cdn.jsdelivr.net/npm/yaml@2.8.1/browser/index.js",
+					"three.quarks": "/node_modules/three.quarks/dist/three.quarks.esm.js",
+					"quarks.core": "/node_modules/quarks.core/dist/quarks.core.esm.js"
+				}
 			}
-		}
-	</script>
-</head>
-<body>
-	<header>
-		<hgroup class="tagged-title">
-			<h1>Artur Mordvinov</h1>
-			<p id="subtitle" class="meta-tag">Unity Developer</p>
-		</hgroup>
-		<div id="switches">
-			<button id="dark-mode-switch" class="switch">Light</button>
-			<p>/</p>
-			<button id="mode-switch" class="switch">Simple</button>
-		</div>
-	</header>
-	<main>
-		<section id="game">
-			<canvas id="terrain" tabindex="-1"></canvas>
-			<div id="game-ui">
-				<div class="hud">
-					<p id="hud-title">PLANET SURVEY</p>
-					<hr/>
-					<div class="hud-entry" id="planet-name">
-						<span>PLN</span>
-						<span>FSX-086f</span>
-					</div>
-					<div class="hud-entry" id="coord">
-						<span>POS</span>
-						<span>X: 132.1 Z: 83.5</span>
-					</div>
-					<div class="hud-entry" id="altitude">
-						<span>ALT</span>
-						<span>012m</span>
-					</div>
-					<div class="hud-entry" id="temperature">
-						<span>TEM</span>
-						<span>-86.4 ℃</span>
-					</div>
-					<div class="hud-entry" id="gravity">
-						<span>GRV</span>
-						<span>0.5 G</span>
-					</div>
-				</div>
-				<div id="controls-hint">SHOW CONTROLS [TAB]</div>
-				<div class="controls">
-					<div class="content">
-						<div class="title">
-							CONTROLS
-							<hr/>
-						</div>
-						<div class="entry">
-							<span>NAVIGATE</span>
-							<span>[WASD]</span>
-						</div>
-						<div class="entry">
-							<span>ORIENT</span>
-							<span>[MOUSE]</span>
-						</div>
-						<div class="entry">
-							<span>INTERACT</span>
-							<span>[E]</span>
-						</div>
-					</div>
-				</div>
-				<div id="compass">
-					<div id="compass-strip"></div>
-					<div id="compass-center"></div>
-				</div>
-				<div id="project-card">
-					<button class="close">×</button>
-					<div class="content">
-						<a href="#"><img src="#" alt="Project Cover"></a>
-						<div class="title"></div>
-						<div class="meta-tag"></div>
-						<div class="description"></div>
-						<a class="learn">learn more >> </a>
-					</div>
-				</div>
-				<div id="crosshair"></div>
-			</div>
-			<div id="fps-counter">60 FPS</div>
-		</section>
-		<section class="projects-container">
-			<div class="project-entry">
-				<a href="https://github.com/xyperine/Icons-Creator"><img src="img/Icons Creator cover.png" alt="Icons Creator cover" class="cover-image"></a>
-				<div class="tagged-title">
-					<h3>Icons Creator</h3>
-					<p class="meta-tag">Tool</p>
-				</div>
-				<p class="description">Tool for creating icons of 3D objects in Unity.</p>
-			</div>
-			<div class="project-entry">
-				<a href="https://github.com/xyperine/Conifer-Init"><img src="img/Conifer Init cover.png" alt="Conifer Init cover" class="cover-image"></a>
-				<div class="tagged-title">
-					<h3>Conifer Init</h3>
-					<p class="meta-tag">Tool</p>
-				</div>
-				<p class="description">Unity plugin for automating project setup.</p>
-			</div>
-			<div class="project-entry">
-				<a href="https://xyperine.itch.io/reality-grid"><img src="img/Reality Grid cover.jpg" alt="Reality Grid cover" class="cover-image"></a>
-				<div class="tagged-title">
-					<h3>Reality Grid</h3>
-					<p class="meta-tag">Game</p>
-				</div>
-				<p class="description">Incremental game about climbing up layers of simulations.</p>
-			</div>
-			<div class="project-entry">
-				<a href="https://xyperine.itch.io/dots-killer"><img src="img/Dots Killer cover.png" alt="Dots Killer cover" class="cover-image"></a>
-				<div class="tagged-title">
-					<h3>Dots Killer</h3>
-					<p class="meta-tag">Game</p>
-				</div>
-				<p class="description">PC/Web/Android incremental game.</p>
-			</div>
-			<div class="project-entry">
-				<a href="#"><img src="img/Debug cover.jpg" alt="Debug cover" class="cover-image"></a>
-				<div class="tagged-title">
-					<h3>DEBUG</h3>
-					<p class="meta-tag">Game</p>
-				</div>
-				<p class="description">Defend yourself against swarms of bugs!</p>
-			</div>
-		</section>
-	</main>
-	<footer>
-		<p>© 2026 xyperine</p>
-		<nav>
-			<div class="footer-navigation">
-				<p><a href="#">GitHub</a></p>
+		</script>
+	</head>
+	<body>
+		<header>
+			<hgroup class="tagged-title">
+				<h1>Artur Mordvinov</h1>
+				<p id="subtitle" class="meta-tag">Unity Developer</p>
+			</hgroup>
+			<div id="switches">
+				<button id="dark-mode-switch" class="switch">Light</button>
 				<p>/</p>
-				<p><a href="#">itch.io</a></p>
-				<p>/</p>
-				<p><a href="#">Site Source</a></p>
+				<button id="mode-switch" class="switch">Simple</button>
 			</div>
-		</nav>
-	</footer>
-</body>
-<script type="module" src="./src/main.js"></script>
+		</header>
+		<main>
+			<section id="game">
+				<canvas id="terrain" tabindex="-1"></canvas>
+				<div id="game-ui">
+					<div class="hud">
+						<p id="hud-title">PLANET SURVEY</p>
+						<hr />
+						<div class="hud-entry" id="planet-name">
+							<span>PLN</span>
+							<span>FSX-086f</span>
+						</div>
+						<div class="hud-entry" id="coord">
+							<span>POS</span>
+							<span>X: 132.1 Z: 83.5</span>
+						</div>
+						<div class="hud-entry" id="altitude">
+							<span>ALT</span>
+							<span>012m</span>
+						</div>
+						<div class="hud-entry" id="temperature">
+							<span>TEM</span>
+							<span>-86.4 ℃</span>
+						</div>
+						<div class="hud-entry" id="gravity">
+							<span>GRV</span>
+							<span>0.5 G</span>
+						</div>
+					</div>
+					<div id="controls-hint">SHOW CONTROLS [TAB]</div>
+					<div class="controls">
+						<div class="content">
+							<div class="title">
+								CONTROLS
+								<hr />
+							</div>
+							<div class="entry">
+								<span>NAVIGATE</span>
+								<span>[WASD]</span>
+							</div>
+							<div class="entry">
+								<span>ORIENT</span>
+								<span>[MOUSE]</span>
+							</div>
+							<div class="entry">
+								<span>INTERACT</span>
+								<span>[E]</span>
+							</div>
+						</div>
+					</div>
+					<div id="compass">
+						<div id="compass-strip"></div>
+						<div id="compass-center"></div>
+					</div>
+					<div id="project-card">
+						<button class="close">×</button>
+						<div class="content">
+							<a href="#"><img src="#" alt="Project Cover" /></a>
+							<div class="title"></div>
+							<div class="meta-tag"></div>
+							<div class="description"></div>
+							<a class="learn">learn more >> </a>
+						</div>
+					</div>
+					<div id="crosshair"></div>
+				</div>
+				<div id="fps-counter">60 FPS</div>
+			</section>
+			<section class="projects-container">
+				<div class="project-entry">
+					<a href="https://github.com/xyperine/Icons-Creator"
+						><img
+							src="img/Icons Creator cover.png"
+							alt="Icons Creator cover"
+							class="cover-image"
+					/></a>
+					<div class="tagged-title">
+						<h3>Icons Creator</h3>
+						<p class="meta-tag">Tool</p>
+					</div>
+					<p class="description">
+						Tool for creating icons of 3D objects in Unity.
+					</p>
+				</div>
+				<div class="project-entry">
+					<a href="https://github.com/xyperine/Conifer-Init"
+						><img
+							src="img/Conifer Init cover.png"
+							alt="Conifer Init cover"
+							class="cover-image"
+					/></a>
+					<div class="tagged-title">
+						<h3>Conifer Init</h3>
+						<p class="meta-tag">Tool</p>
+					</div>
+					<p class="description">
+						Unity plugin for automating project setup.
+					</p>
+				</div>
+				<div class="project-entry">
+					<a href="https://xyperine.itch.io/reality-grid"
+						><img
+							src="img/Reality Grid cover.jpg"
+							alt="Reality Grid cover"
+							class="cover-image"
+					/></a>
+					<div class="tagged-title">
+						<h3>Reality Grid</h3>
+						<p class="meta-tag">Game</p>
+					</div>
+					<p class="description">
+						Incremental game about climbing up layers of
+						simulations.
+					</p>
+				</div>
+				<div class="project-entry">
+					<a href="https://xyperine.itch.io/dots-killer"
+						><img
+							src="img/Dots Killer cover.png"
+							alt="Dots Killer cover"
+							class="cover-image"
+					/></a>
+					<div class="tagged-title">
+						<h3>Dots Killer</h3>
+						<p class="meta-tag">Game</p>
+					</div>
+					<p class="description">PC/Web/Android incremental game.</p>
+				</div>
+				<div class="project-entry">
+					<a href="#"
+						><img
+							src="img/Debug cover.jpg"
+							alt="Debug cover"
+							class="cover-image"
+					/></a>
+					<div class="tagged-title">
+						<h3>DEBUG</h3>
+						<p class="meta-tag">Game</p>
+					</div>
+					<p class="description">
+						Defend yourself against swarms of bugs!
+					</p>
+				</div>
+			</section>
+		</main>
+		<footer>
+			<p>© 2026 xyperine</p>
+			<nav>
+				<div class="footer-navigation">
+					<p><a href="#">GitHub</a></p>
+					<p>/</p>
+					<p><a href="#">itch.io</a></p>
+					<p>/</p>
+					<p><a href="#">Site Source</a></p>
+				</div>
+			</nav>
+		</footer>
+	</body>
+	<script type="module" src="./src/main.js"></script>
 </html>

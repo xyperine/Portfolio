@@ -4,6 +4,22 @@ import markdown from "@eslint/markdown";
 import { defineConfig } from "eslint/config";
 
 export default defineConfig([
-  { files: ["**/*.{js,mjs,cjs}"], plugins: { js }, extends: ["js/recommended"], languageOptions: { globals: globals.browser } },
-  { files: ["**/*.md"], plugins: { markdown }, language: "markdown/gfm", extends: ["markdown/recommended"] },
+	{
+		files: ["**/*.{js,mjs,cjs}"],
+		plugins: { js },
+		extends: ["js/recommended"],
+		languageOptions: { globals: globals.browser },
+	},
+	{
+		files: ["**/*.md"],
+		plugins: { markdown },
+		language: "markdown/gfm",
+		extends: ["markdown/recommended"],
+	},
+
+	{
+		rules: {
+			complexity: ["warn", { max: 5 }],
+		},
+	},
 ]);

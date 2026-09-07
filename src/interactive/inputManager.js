@@ -5,100 +5,107 @@ import { Input } from "#src/interactive/input.js";
  * Provides higher-level input functionality, like tracking specific keys, setting key maps, etc.
  */
 export class InputManager {
-    #EModes = {
-        GLIDER: 0,
-        UI: 1,
-    };
+	#EModes = {
+		GLIDER: 0,
+		UI: 1,
+	};
 
-    #input;
+	#input;
 
-    #horizontalMouseSensitivity;
-    #verticalMouseSensitivity;
-    #uiModeKeys;
-    #gliderModeKeys;
+	#horizontalMouseSensitivity;
+	#verticalMouseSensitivity;
+	#uiModeKeys;
+	#gliderModeKeys;
 
-    /**
-     * 
-     * @param {Input} input 
-     */
-    constructor(input) {
-        this.#input = input;
-        
-        this.#horizontalMouseSensitivity = 1;
-        this.#verticalMouseSensitivity = 1;
-        this.#uiModeKeys = ["KeyE", "Tab", "KeyQ"];
-        this.#gliderModeKeys = [
-            "KeyW", "KeyA", "KeyS", "KeyD", 
-            "KeyE",
-            "Digit1", "Digit2", "Digit3", "Digit4", "Digit5",
-            "Tab",
-            "KeyQ"
-        ];
+	/**
+	 *
+	 * @param {Input} input
+	 */
+	constructor(input) {
+		this.#input = input;
 
-        this.mode = null;
-        this.toGliderMode();
-    }
+		this.#horizontalMouseSensitivity = 1;
+		this.#verticalMouseSensitivity = 1;
+		this.#uiModeKeys = ["KeyE", "Tab", "KeyQ"];
+		this.#gliderModeKeys = [
+			"KeyW",
+			"KeyA",
+			"KeyS",
+			"KeyD",
+			"KeyE",
+			"Digit1",
+			"Digit2",
+			"Digit3",
+			"Digit4",
+			"Digit5",
+			"Tab",
+			"KeyQ",
+		];
 
-    toUIMode() {
-        this.mode = this.#EModes.UI;
+		this.mode = null;
+		this.toGliderMode();
+	}
 
-        this.#input.unlockPointer();
-        this.#input.changeKeysToTrack(this.#uiModeKeys);
-    }
+	toUIMode() {
+		this.mode = this.#EModes.UI;
 
-    toGliderMode() {
-        this.mode = this.#EModes.GLIDER;
+		this.#input.unlockPointer();
+		this.#input.changeKeysToTrack(this.#uiModeKeys);
+	}
 
-        this.#input.requestPointerLock();
-        this.#input.changeKeysToTrack(this.#gliderModeKeys);
-    }
+	toGliderMode() {
+		this.mode = this.#EModes.GLIDER;
 
-    isInteractionKeyPressed() {
-        const correctMode = this.mode === this.#EModes.GLIDER;
-        const keyPressed = this.#input.isKeyPressed("KeyE");
+		this.#input.requestPointerLock();
+		this.#input.changeKeysToTrack(this.#gliderModeKeys);
+	}
 
-        return correctMode && keyPressed;
-    }
+	isInteractionKeyPressed() {
+		const correctMode = this.mode === this.#EModes.GLIDER;
+		const keyPressed = this.#input.isKeyPressed("KeyE");
 
-    isCloseUIKeyPressed() {
-        const correctMode = this.mode === this.#EModes.UI;
-        const keyPressed = this.#input.isKeyPressed("KeyE");
+		return correctMode && keyPressed;
+	}
 
-        return correctMode && keyPressed;
-    }
+	isCloseUIKeyPressed() {
+		const correctMode = this.mode === this.#EModes.UI;
+		const keyPressed = this.#input.isKeyPressed("KeyE");
 
-    isHoldingShowControlsKey() {
-        const keyDown = this.#input.isKeyDown("Tab");
-        
-        return keyDown;
-    }
+		return correctMode && keyPressed;
+	}
 
-    getMovementInput() {
-        const correctMode = this.mode === this.#EModes.GLIDER;
-        const input = new THREE.Vector3();
-        if (correctMode) {
-            if (this.#input.isKeyDown("KeyW")) {
-                input.z += 1;
-            }
-            if (this.#input.isKeyDown("KeyS")) {
-                input.z += -1;
-            }
-            if (this.#input.isKeyDown("KeyD")) {
-                input.x += 1;
-            }
-            if (this.#input.isKeyDown("KeyA")) {
-                input.x += -1;
-            }
-        }
+	isHoldingShowControlsKey() {
+		const keyDown = this.#input.isKeyDown("Tab");
 
-        return input.normalize();
-    }
+		return keyDown;
+	}
 
-    getMouseDelta() {
-        const mouseDelta = this.#input.getMouseDelta();
-        return {
-            x: mouseDelta.x * this.#horizontalMouseSensitivity, 
-            y: mouseDelta.y * this.#verticalMouseSensitivity
-        };
-    }
+	getMovementInput() {
+		const correctMode = this.mode === this.#EModes.GLIDER;
+		const input = new THREE.Vector3();
+		if (correctMode) {
+			if (this.#input.isKeyDown("KeyW")) {
+				input.z += 1;
+			}
+			if (this.#input.isKeyDown("KeyS")) {
+				input.z += -1;
+			}
+			if (this.#input.isKeyDown("KeyD")) {
+				input.x += 1;
+			}
+			if (this.#input.isKeyDown("KeyA")) {
+				input.x += -1;
+			}
+		}
+
+		return input.normalize();
+	}
+
+	getMouseDelta() {
+		const mouseDelta = this.#input.getMouseDelta();
+		return {
+			x: mouseDelta.x * this.#horizontalMouseSensitivity,
+			y: mouseDelta.y * this.#verticalMouseSensitivity,
+		};
+	}
 }

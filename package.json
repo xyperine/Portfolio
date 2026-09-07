@@ -1,36 +1,36 @@
 {
-  "name": "site-test",
-  "version": "1.0.0",
-  "main": "src/main.js",
-  "scripts": {
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/xyperine/site-test.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/xyperine/site-test/issues"
-  },
-  "homepage": "https://github.com/xyperine/site-test#readme",
-  "description": "",
-  "dependencies": {
-    "@dimforge/rapier3d-compat": "^0.19.3",
-    "seedrandom": "^3.0.5",
-    "three.quarks": "^0.17.1",
-    "yaml": "^2.9.0"
-  },
-  "devDependencies": {
-    "@eslint/css": "^1.4.0",
-    "@eslint/js": "^10.0.1",
-    "@eslint/markdown": "^8.0.3",
-    "eslint": "^10.8.0",
-    "globals": "^17.8.0",
-    "stylelint": "^17.14.1",
-    "stylelint-config-standard": "^40.0.0"
-  }
+	"name": "site-test",
+	"version": "1.0.0",
+	"main": "src/main.js",
+	"scripts": {
+		"lint": "eslint .",
+		"lint:fix": "eslint . --fix"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/xyperine/site-test.git"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/xyperine/site-test/issues"
+	},
+	"homepage": "https://github.com/xyperine/site-test#readme",
+	"description": "",
+	"dependencies": {
+		"@dimforge/rapier3d-compat": "^0.19.3",
+		"seedrandom": "^3.0.5",
+		"three.quarks": "^0.17.1",
+		"yaml": "^2.9.0"
+	},
+	"devDependencies": {
+		"@eslint/css": "^1.4.0",
+		"@eslint/js": "^10.0.1",
+		"@eslint/markdown": "^8.0.3",
+		"eslint": "^10.8.0",
+		"globals": "^17.8.0",
+		"stylelint": "^17.14.1",
+		"stylelint-config-standard": "^40.0.0"
+	}
 }

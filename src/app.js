@@ -7,87 +7,88 @@ import { Shaders } from "#src/shaders.js";
  * Controlls site behavior.
  */
 export class App {
-    #settings;
-    #canvasElement;
-    #darkModeSwitch;
-    #modeSwitch;
-    #world;
+	#settings;
+	#canvasElement;
+	#darkModeSwitch;
+	#modeSwitch;
+	#world;
 
-    constructor() {
-        this.#init();
-    }
+	constructor() {
+		this.#init();
+	}
 
-    async #init() {
-        this.#settings = {
-            darkMode: false,
-            interactive: false,
-        }
-        
-        this.#canvasElement = document.querySelector("#terrain");
-        this.#darkModeSwitch = document.querySelector("#dark-mode-switch");
-        this.#modeSwitch = document.querySelector("#mode-switch");
+	async #init() {
+		this.#settings = {
+			darkMode: false,
+			interactive: false,
+		};
 
-        this.#world = null;
+		this.#canvasElement = document.querySelector("#terrain");
+		this.#darkModeSwitch = document.querySelector("#dark-mode-switch");
+		this.#modeSwitch = document.querySelector("#mode-switch");
 
-        await RAPIER.init();
+		this.#world = null;
 
-        this.#darkModeSwitch.addEventListener("click", () => {
-            this.#settings.darkMode = !this.#settings.darkMode;
-                        
-            this.#onDarkModeChanged(this.#settings.darkMode);
-        })
+		await RAPIER.init();
 
-        this.#modeSwitch.addEventListener("click", () => {
-            this.#settings.interactive = !this.#settings.interactive;
+		this.#darkModeSwitch.addEventListener("click", () => {
+			this.#settings.darkMode = !this.#settings.darkMode;
 
-            this.setMode(this.#settings.interactive);
-        })
+			this.#onDarkModeChanged(this.#settings.darkMode);
+		});
 
-        await Shaders.init();
+		this.#modeSwitch.addEventListener("click", () => {
+			this.#settings.interactive = !this.#settings.interactive;
 
-        this.changeWorld();
-    }
+			this.setMode(this.#settings.interactive);
+		});
 
-    setMode(interactive) {
-        this.#modeSwitch.textContent = interactive
-        ? "Interactive"
-        : "Simple";
+		await Shaders.init();
 
-        document.documentElement.classList.toggle("interactive", interactive);
+		this.changeWorld();
+	}
 
-        if (interactive) {
-            this.#canvasElement.focus();
-        }
+	setMode(interactive) {
+		this.#modeSwitch.textContent = interactive ? "Interactive" : "Simple";
 
-        this.changeWorld();
-    }
+		document.documentElement.classList.toggle("interactive", interactive);
 
-    #onDarkModeChanged(newValue) {
-        this.#darkModeSwitch.textContent = this.#settings.darkMode 
-        ? "Dark"
-        : "Light";
+		if (interactive) {
+			this.#canvasElement.focus();
+		}
 
-        document.documentElement.classList.toggle("dark", this.#settings.darkMode);
+		this.changeWorld();
+	}
 
-        this.#world.updateColors();
-    }
+	#onDarkModeChanged(newValue) {
+		this.#darkModeSwitch.textContent = this.#settings.darkMode
+			? "Dark"
+			: "Light";
 
-    changeWorld() {
-        if (this.#world != null) {
-            this.#world.dispose();
-        }
+		document.documentElement.classList.toggle(
+			"dark",
+			this.#settings.darkMode,
+		);
 
-        this.#world = this.#createWorld(this.#settings.interactive);
-    }
+		this.#world.updateColors();
+	}
 
-    #createWorld(interactive) {
-        let world;
-        if (interactive) {
-            world = new InteractiveWorld();
-        } else {
-            world = new SimpleWorld();
-        }
+	changeWorld() {
+		if (this.#world != null) {
+			this.#world.dispose();
+		}
 
-        return world;
-    }
+		this.#world = this.#createWorld(this.#settings.interactive);
+	}
+
+	#createWorld(interactive) {
+		let world;
+		if (interactive) {
+			world = new InteractiveWorld();
+		} else {
+			world = new SimpleWorld();
+		}
+
+		return world;
+	}
 }

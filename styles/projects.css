@@ -2,19 +2,19 @@
 	/*
 	border: 0.1rem solid Sblue;
 	*/
-	
+
 	max-height: 100%;
 	max-width: 90%;
-	
-    display: grid;
+
+	display: grid;
 	grid-template-columns: 30% 30% 30%;
 	grid-template-rows: 50% 50%;
-    gap: 10px;
-	
-    place-content: center;
+	gap: 10px;
+
+	place-content: center;
 	justify-self: center;
 	justify-items: center;
-	
+
 	min-height: 0;
 	flex: 1;
 }
@@ -27,11 +27,11 @@ html.interactive .projects-container {
 	/*
 	border: 0.1rem solid green;
 	*/
-	
+
 	padding: 1rem;
 	margin: 0.2rem;
 	width: 60%;
-	
+
 	text-align: left;
 	font-size: 0.75cqi;
 

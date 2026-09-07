@@ -1,273 +1,318 @@
-import * as THREE from 'three';
-import * as RAPIER from '@dimforge/rapier3d-compat';
-import * as SEEDRANDOM from 'seedrandom';
-import * as utils from '#src/utils.js';
-import { VertexShaderAlgorithmCopy } from '#src/interactive/worldGeneration/vertexShaderAlgorithmCopy.js';
-import { TerrainChunk } from '#src/interactive/worldGeneration/terrainChunk.js';
-import { BeaconSite } from '#src/interactive/beaconSite.js';
-import { Projects } from '#src/interactive/projects.js';
-import { Shaders } from '#src/shaders.js';
-import { BeaconFactory } from '#src/interactive/beaconFactory.js';
+import * as THREE from "three";
+import * as RAPIER from "@dimforge/rapier3d-compat";
+import * as SEEDRANDOM from "seedrandom";
+import * as utils from "#src/utils.js";
+import { VertexShaderAlgorithmCopy } from "#src/interactive/worldGeneration/vertexShaderAlgorithmCopy.js";
+import { TerrainChunk } from "#src/interactive/worldGeneration/terrainChunk.js";
+import { BeaconSite } from "#src/interactive/beaconSite.js";
+import { Projects } from "#src/interactive/projects.js";
+import { Shaders } from "#src/shaders.js";
+import { BeaconFactory } from "#src/interactive/beaconFactory.js";
 
 export class Terrain {
-    #vertexShader;
-    #fragmentShader;
+	#vertexShader;
+	#fragmentShader;
 
-    /**
-     * 
-     * @param {THREE.Scene} scene 
-     * @param {RAPIER.World} physicsWorld 
-     * @param {number} renderingDistance 
-     * @param {string} seed 
-     * @param {BeaconFactory} beaconFactory 
-     */
-    constructor(scene, physicsWorld, renderingDistance, seed, beaconFactory) {
-        this.scene = scene;
-        this.physicsWorld = physicsWorld;
-        this.beaconFactory = beaconFactory;
-        this.random = new Math.seedrandom(seed);
+	/**
+	 *
+	 * @param {THREE.Scene} scene
+	 * @param {RAPIER.World} physicsWorld
+	 * @param {number} renderingDistance
+	 * @param {string} seed
+	 * @param {BeaconFactory} beaconFactory
+	 */
+	constructor(scene, physicsWorld, renderingDistance, seed, beaconFactory) {
+		this.scene = scene;
+		this.physicsWorld = physicsWorld;
+		this.beaconFactory = beaconFactory;
+		this.random = new Math.seedrandom(seed);
 
-        this.#vertexShader = Shaders.terrainVert;
-        this.#fragmentShader = Shaders.terrainFrag;
-        
-        this.chunkMap = new Map();
-        const renderDistanceMultiplier = 1;
-        this.chunkSize = {
-            w: renderingDistance * renderDistanceMultiplier, 
-            d: renderingDistance * renderDistanceMultiplier
-        };
-        this.chunkGeometry = new THREE.PlaneGeometry(
-            this.chunkSize.w, 
-            this.chunkSize.d, 
-            this.chunkSize.w, 
-            this.chunkSize.d
-        );
-        const heightLimit = utils.seededFloat(this.random, 15, 40);
-        const freq = utils.seededFloat(this.random, 0.001, 0.01);
-        const octaves = utils.seededInt(this.random, 6, 8);
-        const lacunarity = utils.seededFloat(this.random, 1.9, 2.1);
-        const persistence = utils.seededFloat(this.random, 0.4, 0.5);
-        const vertexSeed = this.random();
-        this.shaderVertexAlgorithm = new VertexShaderAlgorithmCopy(vertexSeed, heightLimit, freq, octaves, lacunarity, persistence);
-        this.chunkMaterial = new THREE.ShaderMaterial({
-        uniforms: THREE.UniformsUtils.merge([
-                THREE.UniformsLib.fog,
-                {
-                    seed: {value: vertexSeed},
-                    heightLimit: {value: heightLimit},
-                    freq: {value: freq},
-                    octaves: {value: octaves},
-                    lacunarity: {value: lacunarity},
-                    persistence: {value: persistence},
-                    terrainColor: {value: utils.getCssColorAsThreeColor("--terrain-color")},
-                    pointSize: {value: 0.2},
-                }
-            ]),
-            
-            vertexShader: this.#vertexShader,
-            fragmentShader: this.#fragmentShader,
-            fog: true
-        });
+		this.#vertexShader = Shaders.terrainVert;
+		this.#fragmentShader = Shaders.terrainFrag;
 
-        this.beaconFactory.vac = this.shaderVertexAlgorithm;
-        
-        this.createBeaconPlacements(Projects.getAllIDs());
+		this.chunkMap = new Map();
+		const renderDistanceMultiplier = 1;
+		this.chunkSize = {
+			w: renderingDistance * renderDistanceMultiplier,
+			d: renderingDistance * renderDistanceMultiplier,
+		};
+		this.chunkGeometry = new THREE.PlaneGeometry(
+			this.chunkSize.w,
+			this.chunkSize.d,
+			this.chunkSize.w,
+			this.chunkSize.d,
+		);
+		const heightLimit = utils.seededFloat(this.random, 15, 40);
+		const freq = utils.seededFloat(this.random, 0.001, 0.01);
+		const octaves = utils.seededInt(this.random, 6, 8);
+		const lacunarity = utils.seededFloat(this.random, 1.9, 2.1);
+		const persistence = utils.seededFloat(this.random, 0.4, 0.5);
+		const vertexSeed = this.random();
+		this.shaderVertexAlgorithm = new VertexShaderAlgorithmCopy(
+			vertexSeed,
+			heightLimit,
+			freq,
+			octaves,
+			lacunarity,
+			persistence,
+		);
+		this.chunkMaterial = new THREE.ShaderMaterial({
+			uniforms: THREE.UniformsUtils.merge([
+				THREE.UniformsLib.fog,
+				{
+					seed: { value: vertexSeed },
+					heightLimit: { value: heightLimit },
+					freq: { value: freq },
+					octaves: { value: octaves },
+					lacunarity: { value: lacunarity },
+					persistence: { value: persistence },
+					terrainColor: {
+						value: utils.getCssColorAsThreeColor("--terrain-color"),
+					},
+					pointSize: { value: 0.2 },
+				},
+			]),
 
-        this.loadChunk(0, 0);
-    }
+			vertexShader: this.#vertexShader,
+			fragmentShader: this.#fragmentShader,
+			fog: true,
+		});
 
-    createBeaconPlacements(projectIds) {
-        this.beaconPlacements = [];
+		this.beaconFactory.vac = this.shaderVertexAlgorithm;
 
-        const positions = this.generateBeaconPositions(
-            2000, 
-            2000, 
-            this.chunkSize.w, 
-            projectIds.length
-        );
-        for (let i = 0; i < positions.length; i++) {
-            const position = positions[i];
-            this.beaconPlacements.push({
-                projectId: projectIds[i], 
-                position
-            });
-        }
-    }
+		this.createBeaconPlacements(Projects.getAllIDs());
 
-    generateBeaconPositions(width, height, minDistance, count) {
-        const positions = [];
-        
-        const minDistSq = minDistance * minDistance;
-        let attempts = 0;
+		this.loadChunk(0, 0);
+	}
 
-        while (positions.length < count && attempts++ < 10000) {
-            const x = utils.seededFloat(this.random, -width * 0.5, width * 0.5);
-            const z = utils.seededFloat(this.random, -height * 0.5, height * 0.5);
+	createBeaconPlacements(projectIds) {
+		this.beaconPlacements = [];
 
-            let valid = true;
+		const positions = this.generateBeaconPositions(
+			2000,
+			2000,
+			this.chunkSize.w,
+			projectIds.length,
+		);
+		for (let i = 0; i < positions.length; i++) {
+			const position = positions[i];
+			this.beaconPlacements.push({
+				projectId: projectIds[i],
+				position,
+			});
+		}
+	}
 
-            activeLoop: for (const p of positions) {
-                const dx = x - p.x;
-                const dz = z - p.z;
+	generateBeaconPositions(width, height, minDistance, count) {
+		const positions = [];
 
-                if (dx*dx + dz*dz < minDistSq) {
-                    valid = false;
-                    break activeLoop;
-                }
-            }
+		const minDistSq = minDistance * minDistance;
+		let attempts = 0;
 
-            if (valid) {
-                positions.push(new THREE.Vector3(x, 0, z));
-            }
-        }
+		while (positions.length < count && attempts++ < 10000) {
+			const x = utils.seededFloat(this.random, -width * 0.5, width * 0.5);
+			const z = utils.seededFloat(
+				this.random,
+				-height * 0.5,
+				height * 0.5,
+			);
 
-        return positions;
-    }
+			let valid = true;
 
-    loadChunk(x, z) {
-        const key = `${x},${z}`;
-        if (!this.chunkMap.has(key)) {
-            const chunkKey = this.getFarChunk(x, z);
-            let chunk = this.chunkMap.get(chunkKey);
-            if (chunk != null) {
-                if (chunkKey !== key) { 
-                    chunk.relocateTo(x * this.chunkSize.w, z * this.chunkSize.d);
-                    this.applyDisplacement(chunk.physicsGeometry, chunk.renderObject.matrixWorld, chunk.physicsObject);
+			activeLoop: for (const p of positions) {
+				const dx = x - p.x;
+				const dz = z - p.z;
 
-                    this.destroyBeacons(chunk);
+				if (dx * dx + dz * dz < minDistSq) {
+					valid = false;
+					break activeLoop;
+				}
+			}
 
-                    this.chunkMap.set(key, chunk);
-                    const deletedSuccessfully = this.chunkMap.delete(chunkKey);
+			if (valid) {
+				positions.push(new THREE.Vector3(x, 0, z));
+			}
+		}
 
-                    this.createBeacons(chunk, x, z);
-                }
-            } else {
-                chunk = this.createChunk(this.chunkGeometry, this.chunkMaterial, x, z);
-                this.chunkMap.set(key, chunk);
+		return positions;
+	}
 
-                this.createBeacons(chunk, x, z);
-            }
-        }
-    }
+	loadChunk(x, z) {
+		const key = `${x},${z}`;
+		if (!this.chunkMap.has(key)) {
+			const chunkKey = this.getFarChunk(x, z);
+			let chunk = this.chunkMap.get(chunkKey);
+			if (chunk != null) {
+				if (chunkKey !== key) {
+					chunk.relocateTo(
+						x * this.chunkSize.w,
+						z * this.chunkSize.d,
+					);
+					this.applyDisplacement(
+						chunk.physicsGeometry,
+						chunk.renderObject.matrixWorld,
+						chunk.physicsObject,
+					);
 
-    createBeacons(chunk, x, z) {
-        for (let i = 0; i < this.beaconPlacements.length; i++) {
-            const placement = this.beaconPlacements[i];
-            const p = placement.position;
-            const cp = this.toChunkCoordinates(p);
-            if (x === cp.x && z === cp.z) {
-                const beaconSite = this.beaconFactory.create(p.x, p.z, placement.projectId);
-                chunk.addObject(beaconSite);
-            }
-        }
-    }
+					this.destroyBeacons(chunk);
 
-    destroyBeacons(chunk) {
-        chunk.clearObjects();
-    }
+					this.chunkMap.set(key, chunk);
+					const deletedSuccessfully = this.chunkMap.delete(chunkKey);
 
-    getFarChunk(x, z) {
-        let maxDist = 0;
-        let chunkKey = null;
-        if (this.chunkMap.size > 0) {
-            this.chunkMap.forEach((v, k) => {
-                const cx = Number.parseInt(k.split(",")[0]);
-                const cz = Number.parseInt(k.split(",")[1]);
-    
-                if (Math.abs(x - cx) >= 5 || Math.abs(z - cz) >= 5) {
-                    let dx = Math.abs(x - cx);
-                    dx *= dx;
-                    let dz = Math.abs(z - cz);
-                    dz *= dz;
-                    const sqDist = dx + dz;
-                    if (sqDist > maxDist) {
-                        maxDist = sqDist;
-                        chunkKey = k;
-                    }
-                }
-            });
-        }
+					this.createBeacons(chunk, x, z);
+				}
+			} else {
+				chunk = this.createChunk(
+					this.chunkGeometry,
+					this.chunkMaterial,
+					x,
+					z,
+				);
+				this.chunkMap.set(key, chunk);
 
-        return chunkKey;
-    }
+				this.createBeacons(chunk, x, z);
+			}
+		}
+	}
 
-    createChunk(chunkGeometry, chunkMaterial, x, z) {
-        const points = new THREE.Points(chunkGeometry, chunkMaterial);
-        points.position.set(x * this.chunkSize.w, 0, z * this.chunkSize.d);
-        points.rotation.set(
-            -90 * THREE.MathUtils.DEG2RAD, 
-            0 * THREE.MathUtils.DEG2RAD, 
-            0 * THREE.MathUtils.DEG2RAD
-        );
-        this.scene.add(points);            
+	createBeacons(chunk, x, z) {
+		for (let i = 0; i < this.beaconPlacements.length; i++) {
+			const placement = this.beaconPlacements[i];
+			const p = placement.position;
+			const cp = this.toChunkCoordinates(p);
+			if (x === cp.x && z === cp.z) {
+				const beaconSite = this.beaconFactory.create(
+					p.x,
+					p.z,
+					placement.projectId,
+				);
+				chunk.addObject(beaconSite);
+			}
+		}
+	}
 
-        let q = points.getWorldQuaternion(new THREE.Quaternion());
-        let p = points.getWorldPosition(new THREE.Vector3());
-        const bodyDescription = RAPIER.RigidBodyDesc.fixed().setRotation({
-            x: q.x, y: q.y, z: q.z, w: q.w
-        }).setTranslation(p.x, p.y, p.z);
+	destroyBeacons(chunk) {
+		chunk.clearObjects();
+	}
 
-        const body = this.physicsWorld.createRigidBody(bodyDescription);
-        const physicsMeshResolution = 0.1;
-        const physicsGeometry = new THREE.PlaneGeometry(
-            this.chunkSize.w, 
-            this.chunkSize.d,
-            Math.round(this.chunkSize.w * physicsMeshResolution),
-            Math.round(this.chunkSize.d * physicsMeshResolution)
-        );
-        this.applyDisplacement(physicsGeometry, points.matrixWorld, body);
+	getFarChunk(x, z) {
+		let maxDist = 0;
+		let chunkKey = null;
+		if (this.chunkMap.size > 0) {
+			this.chunkMap.forEach((v, k) => {
+				const cx = Number.parseInt(k.split(",")[0]);
+				const cz = Number.parseInt(k.split(",")[1]);
 
-        const chunk = new TerrainChunk(points, body, physicsGeometry);
-        return chunk;
-    }
+				if (Math.abs(x - cx) >= 5 || Math.abs(z - cz) >= 5) {
+					let dx = Math.abs(x - cx);
+					dx *= dx;
+					let dz = Math.abs(z - cz);
+					dz *= dz;
+					const sqDist = dx + dz;
+					if (sqDist > maxDist) {
+						maxDist = sqDist;
+						chunkKey = k;
+					}
+				}
+			});
+		}
 
-    applyDisplacement(geometry, ltwMatrix, rb) {
-        let vertices = geometry.attributes.position;
-        let vertex = new THREE.Vector3();
-        let vertexWS = new THREE.Vector3();
-        for (let i = 0; i < vertices.count; i++) {
-            vertex.fromBufferAttribute(vertices, i);
-            vertexWS.copy(vertex).applyMatrix4(ltwMatrix);
-            let height = this.shaderVertexAlgorithm.getHeight(vertexWS.x, vertexWS.z);
+		return chunkKey;
+	}
 
-            vertices.setZ(i, height);
-        }
-        
-        vertices.needsUpdate = true;
+	createChunk(chunkGeometry, chunkMaterial, x, z) {
+		const points = new THREE.Points(chunkGeometry, chunkMaterial);
+		points.position.set(x * this.chunkSize.w, 0, z * this.chunkSize.d);
+		points.rotation.set(
+			-90 * THREE.MathUtils.DEG2RAD,
+			0 * THREE.MathUtils.DEG2RAD,
+			0 * THREE.MathUtils.DEG2RAD,
+		);
+		this.scene.add(points);
 
-        const colliderDescription = RAPIER.ColliderDesc.trimesh(geometry.attributes.position.array, geometry.index.array);
-        while (rb.numColliders() > 0) {
-            this.physicsWorld.removeCollider(rb.collider(0), true);
-        }
-        const collider = this.physicsWorld.createCollider(colliderDescription, rb);
-    }
+		let q = points.getWorldQuaternion(new THREE.Quaternion());
+		let p = points.getWorldPosition(new THREE.Vector3());
+		const bodyDescription = RAPIER.RigidBodyDesc.fixed()
+			.setRotation({
+				x: q.x,
+				y: q.y,
+				z: q.z,
+				w: q.w,
+			})
+			.setTranslation(p.x, p.y, p.z);
 
-    update(playerPosition) {
-        const rawX = playerPosition.x / this.chunkSize.w;
-        const rawZ = playerPosition.z / this.chunkSize.d;
-        const px = Math.round(rawX);
-        const pz = Math.round(rawZ);
-        for (let x = px - 2; x <= px + 2; x++) {
-            for (let z = pz - 2; z <= pz + 2; z++) {
-                this.loadChunk(x, z);
-            }
-        }
-    }
+		const body = this.physicsWorld.createRigidBody(bodyDescription);
+		const physicsMeshResolution = 0.1;
+		const physicsGeometry = new THREE.PlaneGeometry(
+			this.chunkSize.w,
+			this.chunkSize.d,
+			Math.round(this.chunkSize.w * physicsMeshResolution),
+			Math.round(this.chunkSize.d * physicsMeshResolution),
+		);
+		this.applyDisplacement(physicsGeometry, points.matrixWorld, body);
 
-    toChunkCoordinates(position) {
-        const x = Math.round(position.x / this.chunkSize.w);
-        const z = Math.round(position.z / this.chunkSize.d);
+		const chunk = new TerrainChunk(points, body, physicsGeometry);
+		return chunk;
+	}
 
-        return {x, z};
-    }
+	applyDisplacement(geometry, ltwMatrix, rb) {
+		let vertices = geometry.attributes.position;
+		let vertex = new THREE.Vector3();
+		let vertexWS = new THREE.Vector3();
+		for (let i = 0; i < vertices.count; i++) {
+			vertex.fromBufferAttribute(vertices, i);
+			vertexWS.copy(vertex).applyMatrix4(ltwMatrix);
+			let height = this.shaderVertexAlgorithm.getHeight(
+				vertexWS.x,
+				vertexWS.z,
+			);
 
-    render(gameState) {
-        for (let c of [...this.chunkMap.values()]) {
-            c.render(gameState);
-        }
-    }
+			vertices.setZ(i, height);
+		}
 
-    updateColors() {
-        this.chunkMaterial.uniforms.terrainColor.value.set(utils.getCssColorAsThreeColor("--terrain-color"));
-    }
+		vertices.needsUpdate = true;
+
+		const colliderDescription = RAPIER.ColliderDesc.trimesh(
+			geometry.attributes.position.array,
+			geometry.index.array,
+		);
+		while (rb.numColliders() > 0) {
+			this.physicsWorld.removeCollider(rb.collider(0), true);
+		}
+		const collider = this.physicsWorld.createCollider(
+			colliderDescription,
+			rb,
+		);
+	}
+
+	update(playerPosition) {
+		const rawX = playerPosition.x / this.chunkSize.w;
+		const rawZ = playerPosition.z / this.chunkSize.d;
+		const px = Math.round(rawX);
+		const pz = Math.round(rawZ);
+		for (let x = px - 2; x <= px + 2; x++) {
+			for (let z = pz - 2; z <= pz + 2; z++) {
+				this.loadChunk(x, z);
+			}
+		}
+	}
+
+	toChunkCoordinates(position) {
+		const x = Math.round(position.x / this.chunkSize.w);
+		const z = Math.round(position.z / this.chunkSize.d);
+
+		return { x, z };
+	}
+
+	render(gameState) {
+		for (let c of [...this.chunkMap.values()]) {
+			c.render(gameState);
+		}
+	}
+
+	updateColors() {
+		this.chunkMaterial.uniforms.terrainColor.value.set(
+			utils.getCssColorAsThreeColor("--terrain-color"),
+		);
+	}
 }

@@ -9,7 +9,7 @@
 	border: 0.1rem dashed var(--hud-text-color);
 }
 
-html:not(.interactive) #game-ui{
+html:not(.interactive) #game-ui {
 	display: none;
 }
 
@@ -19,7 +19,7 @@ html:not(.interactive) #game-ui{
 }
 
 /* --- HUD --- */
-#game-ui .hud{
+#game-ui .hud {
 	position: absolute;
 	top: 15%;
 
@@ -79,12 +79,12 @@ html:not(.interactive) #game-ui{
 
 	opacity: 0;
 	background:
-        linear-gradient(
-            135deg,
-            color-mix(in srgb, var(--accent-color) 20%, transparent),
-            transparent 50%
-        ),
-        var(--background-color);
+		linear-gradient(
+			135deg,
+			color-mix(in srgb, var(--accent-color) 20%, transparent),
+			transparent 50%
+		),
+		var(--background-color);
 	border: 0.1rem dashed var(--accent-color);
 	font-family: var(--game-ui-font-family);
 	color: var(--normal-text-color);
@@ -204,7 +204,7 @@ html:not(.interactive) #game-ui{
 .compass-pointer {
 	position: absolute;
 	top: 0%;
-	
+
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -216,20 +216,15 @@ html:not(.interactive) #game-ui{
 
 .compass-pointer-outer {
 	position: relative;
-	
+
 	width: 5cqi;
 	height: 5cqi;
-	
+
 	display: flex;
 	align-items: center;
 	justify-content: center;
 
-	clip-path: polygon(
-		50% 0%,
-		100% 50%,
-		50% 100%,
-		0% 50%
-	);
+	clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
 
 	/* --color is added through code. */
 	background-color: var(--color);
@@ -238,22 +233,13 @@ html:not(.interactive) #game-ui{
 .compass-pointer-inner {
 	z-index: 1;
 
-    position: absolute;
-    inset: 15%;
+	position: absolute;
+	inset: 15%;
 
-	clip-path: polygon(
-		50% 0%,
-		100% 50%,
-		50% 100%,
-		0% 50%
-	);
+	clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
 
 	/* --color is added through code. */
-	background-color: color-mix(
-		in hsl, 
-		var(--color), 
-		black 30%
-	);
+	background-color: color-mix(in hsl, var(--color), black 30%);
 }
 
 .compass-pointer-label {
@@ -330,12 +316,12 @@ html:not(.interactive) #game-ui{
 
 	opacity: 0;
 	background:
-        linear-gradient(
-            135deg,
-            color-mix(in srgb, var(--color) 20%, transparent),
-            transparent 50%
-        ),
-        color-mix(in srgb, var(--background-color) 90%, transparent);
+		linear-gradient(
+			135deg,
+			color-mix(in srgb, var(--color) 20%, transparent),
+			transparent 50%
+		),
+		color-mix(in srgb, var(--background-color) 90%, transparent);
 	border: 0.1rem dashed var(--color);
 	font-family: var(--game-ui-font-family);
 	color: var(--normal-text-color);
@@ -348,7 +334,7 @@ html:not(.interactive) #game-ui{
 	pointer-events: auto;
 }
 
-#project-card .content{
+#project-card .content {
 	margin: 10cqi;
 
 	font-size: 4cqi;
@@ -372,7 +358,7 @@ html:not(.interactive) #game-ui{
 	font-size: 8cqi;
 	text-align: center;
 	line-height: 0;
-	
+
 	border: none;
 	color: var(--button-normal-color);
 	background-color: transparent;

@@ -2,13 +2,13 @@
 	background: none;
 	border: none;
 	cursor: pointer;
-	
+
 	font-family: var(--font-family);
 	font-weight: 600;
 	font-size: 1rem;
 	text-transform: uppercase;
 	padding: 0.6rem;
-	
+
 	color: var(--button-normal-color);
 	transition: color 0.3s;
 }
@@ -23,7 +23,7 @@ html.pointer-locked .switch:hover {
 
 .footer-navigation a {
 	padding: 0.6rem;
-	
+
 	color: var(--button-normal-color);
 	text-decoration: none;
 	font-weight: 600;

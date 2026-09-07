@@ -19,13 +19,13 @@ main {
 	position: relative;
 	overflow: hidden;
 	flex: 1;
-	
+
 	display: flex;
 	flex-direction: column;
-	
+
 	place-items: center;
 	justify-content: center;
-	
+
 	z-index: 10;
 }
 
@@ -36,7 +36,7 @@ main > *:not(#game) {
 footer {
 	display: flex;
 	justify-content: space-between;
-	
+
 	flex-shrink: 0;
 }
 

@@ -2,26 +2,25 @@
  * Box emitter shape for the Quarks.
  */
 export class BoxEmitter {
-    type = 'box';
+	type = "box";
 
-    constructor(size) {
-        this.size = size;
-    }
+	constructor(size) {
+		this.size = size;
+	}
 
-    update(system, delta) {
-    }
+	update(system, delta) {}
 
-    initialize(p, emissionState) {
-        p.position.set(
-            (Math.random() - 0.5) * this.size.x,
-            (Math.random() - 0.5) * this.size.y,
-            (Math.random() - 0.5) * this.size.z
-        );
+	initialize(p, emissionState) {
+		p.position.set(
+			(Math.random() - 0.5) * this.size.x,
+			(Math.random() - 0.5) * this.size.y,
+			(Math.random() - 0.5) * this.size.z,
+		);
 
-        p.velocity.copy(p.position).normalize().multiplyScalar(p.startSpeed);
-    }
+		p.velocity.copy(p.position).normalize().multiplyScalar(p.startSpeed);
+	}
 
-    clone() {
-        return new BoxEmitter(this.size.clone());
-    }
+	clone() {
+		return new BoxEmitter(this.size.clone());
+	}
 }

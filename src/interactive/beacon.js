@@ -9,63 +9,73 @@ import { ParticlesBurst } from "#src/interactive/particlesBurst.js";
  * Handles beacon behavior.
  */
 export class Beacon extends Interactable {
-    /**
-     * 
-     * @param {THREE.Material} orbMaterial 
-     * @param {THREE.Mesh} orbMesh 
-     * @param {Object} projectData 
-     * @param {THREE.PerspectiveCamera} camera 
-     * @param {QUARKS.ParticleSystem} particles 
-     * @param {ParticlesBurst} interactionParticlesBurst 
-     */
-    constructor(orbMaterial, orbMesh, projectData, camera, interactionParticlesBurst) {
-        super();
+	/**
+	 *
+	 * @param {THREE.Material} orbMaterial
+	 * @param {THREE.Mesh} orbMesh
+	 * @param {Object} projectData
+	 * @param {THREE.PerspectiveCamera} camera
+	 * @param {QUARKS.ParticleSystem} particles
+	 * @param {ParticlesBurst} interactionParticlesBurst
+	 */
+	constructor(
+		orbMaterial,
+		orbMesh,
+		projectData,
+		camera,
+		interactionParticlesBurst,
+	) {
+		super();
 
-        this.orbMesh = orbMesh;
-        this.orbMaterial = orbMaterial;
-        this.projectData = projectData;
-        this.camera = camera;
+		this.orbMesh = orbMesh;
+		this.orbMaterial = orbMaterial;
+		this.projectData = projectData;
+		this.camera = camera;
 
-        this.interactable = true;
+		this.interactable = true;
 
-        this.orbMesh.userData.interactable = this;
-        Interactables.register(this.orbMesh);
+		this.orbMesh.userData.interactable = this;
+		Interactables.register(this.orbMesh);
 
-        this.interactionParticlesBurst = interactionParticlesBurst;
+		this.interactionParticlesBurst = interactionParticlesBurst;
 
-        this.worldPosition = this.orbMesh.getWorldPosition(new THREE.Vector3());
-    }
-    
-    update(gameState) {
-        // Update material
-        if (this.orbMaterial != undefined) {
-            this.orbMaterial.uniforms.uCameraWorldPosition.value = gameState.camera.getWorldPosition(new THREE.Vector3());
-            this.orbMaterial.uniforms.uTimeSeconds.value = gameState.elapsedTime * 0.001;
-        }
+		this.worldPosition = this.orbMesh.getWorldPosition(new THREE.Vector3());
+	}
 
-        const distance = this.camera.getWorldPosition(new THREE.Vector3()).distanceTo(this.orbMesh.getWorldPosition(new THREE.Vector3()));
-        const threshold = 40;
-        if (distance < threshold) {
-            const t = 1 - distance / threshold;
-            this.camera.fov = THREE.MathUtils.lerp(75, 120, t*t);
-            this.camera.updateProjectionMatrix();
-        }
-    }
+	update(gameState) {
+		// Update material
+		if (this.orbMaterial != undefined) {
+			this.orbMaterial.uniforms.uCameraWorldPosition.value =
+				gameState.camera.getWorldPosition(new THREE.Vector3());
+			this.orbMaterial.uniforms.uTimeSeconds.value =
+				gameState.elapsedTime * 0.001;
+		}
 
-    interact() {
-        if (this.isInteractable()) {
-            console.log("Interacting!");
+		const distance = this.camera
+			.getWorldPosition(new THREE.Vector3())
+			.distanceTo(this.orbMesh.getWorldPosition(new THREE.Vector3()));
+		const threshold = 40;
+		if (distance < threshold) {
+			const t = 1 - distance / threshold;
+			this.camera.fov = THREE.MathUtils.lerp(75, 120, t * t);
+			this.camera.updateProjectionMatrix();
+		}
+	}
 
-            this.interactionParticlesBurst.play(this.worldPosition);
-            ProjectCard.show(this.projectData);
-        }
-    }
+	interact() {
+		if (this.isInteractable()) {
+			console.log("Interacting!");
 
-    isInteractable() {
-        return this.interactable;
-    }
+			this.interactionParticlesBurst.play(this.worldPosition);
+			ProjectCard.show(this.projectData);
+		}
+	}
 
-    dispose() {
-        Interactables.unregister(this);
-    }
+	isInteractable() {
+		return this.interactable;
+	}
+
+	dispose() {
+		Interactables.unregister(this);
+	}
 }

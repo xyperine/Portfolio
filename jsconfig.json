@@ -1,9 +1,9 @@
 {
-    "compilerOptions": {
-        "baseUrl": ".",
-        "paths": {
-            "#src/*": ["src/*"]
-        },
-        "checkJs": false
-    }
+	"compilerOptions": {
+		"baseUrl": ".",
+		"paths": {
+			"#src/*": ["src/*"]
+		},
+		"checkJs": false
+	}
 }

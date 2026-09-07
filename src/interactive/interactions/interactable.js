@@ -1,9 +1,5 @@
 export class Interactable {
-    interact() {
+	interact() {}
 
-    }
-
-    isInteractable() {
-        
-    }
+	isInteractable() {}
 }
