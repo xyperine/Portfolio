@@ -1,0 +1,8 @@
+{
+    "complexity": {
+        "ignore": [
+            ".git",
+            "/node-modules"
+        ]
+    }
+}

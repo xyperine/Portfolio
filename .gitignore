@@ -1,2 +1,6 @@
 # npm modules
 [Nn]ode_modules/*
+
+# genese cpx
+[Gg]enese/*
+ast.json
