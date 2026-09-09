@@ -7,14 +7,8 @@ import { Shaders } from "#src/shaders.js";
 import { Projects } from "#src/projects.js";
 
 export class SimpleWorld extends World {
-	#terrainVertexShader;
-	#terrainFragmentShader;
-
 	constructor() {
 		super();
-
-		this.#terrainVertexShader = Shaders.terrainVert;
-		this.#terrainFragmentShader = Shaders.terrainFrag;
 
 		this.init();
 	}
@@ -24,6 +18,7 @@ export class SimpleWorld extends World {
 
 		this.random = new Math.seedrandom();
 
+		// Scene
 		const backgroundColor =
 			utils.getCssColorAsThreeColor("--background-color");
 		this.scene = new THREE.Scene();
@@ -89,8 +84,8 @@ export class SimpleWorld extends World {
 				},
 			]),
 
-			vertexShader: this.#terrainVertexShader,
-			fragmentShader: this.#terrainFragmentShader,
+			vertexShader: Shaders.terrainVert,
+			fragmentShader: Shaders.terrainFrag,
 			fog: true,
 		});
 		this.points = new THREE.Points(terrainGeometry, this.pointsMaterial);
@@ -101,6 +96,13 @@ export class SimpleWorld extends World {
 		);
 		this.scene.add(this.points);
 
+		// Projects
+		for (const id of Projects.getAllIDs()) {
+			const projectData = Projects.get(id);
+			this.createProjectCardElement(projectData);
+		}
+
+		// Events
 		const mainElement = document.querySelector("main");
 		this.onWindowResized = () => {
 			this.resize(mainElement.clientWidth, mainElement.clientHeight);
@@ -108,12 +110,8 @@ export class SimpleWorld extends World {
 		window.addEventListener("resize", this.onWindowResized);
 		this.resize(mainElement.clientWidth, mainElement.clientHeight);
 
+		// Diagnostics
 		this.fpsCounter = new FPSCounter();
-
-		for (const id of Projects.getAllIDs()) {
-			const projectData = Projects.get(id);
-			this.createProjectCardElement(projectData);
-		}
 	}
 
 	createProjectCardElement(projectData) {
@@ -121,6 +119,7 @@ export class SimpleWorld extends World {
 
 		const element = document.createElement("div");
 		element.classList.add("project-card");
+		element.style.setProperty("--color", projectData.interactive.color);
 		cardsContainer.appendChild(element);
 
 		const content = document.createElement("div");
@@ -151,8 +150,6 @@ export class SimpleWorld extends World {
 		learnElement.textContent = "learn more >>";
 		learnElement.setAttribute("href", projectData.link);
 		content.appendChild(learnElement);
-
-		element.style.setProperty("--color", projectData.interactive.color);
 
 		return element;
 	}
