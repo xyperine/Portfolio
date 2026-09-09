@@ -47,14 +47,18 @@ html.interactive .projects-container {
 	font-family: var(--game-ui-font-family);
 
 	position: absolute;
-	bottom: 10%;
+	bottom: 10cqi;
 
 	color: var(--button-normal-color);
 	text-decoration: none;
 	font-size: 5cqi;
 	font-weight: 600;
 	text-transform: uppercase;
-	line-height: 0;
+	line-height: 1;
 
 	transition: color 0.3s;
+}
+
+.projects-container .project-card .learn:focus {
+	outline-color: var(--color);
 }
