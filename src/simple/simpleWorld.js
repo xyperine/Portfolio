@@ -97,6 +97,7 @@ export class SimpleWorld extends World {
 		this.scene.add(this.points);
 
 		// Projects
+		this.projectsContainer = document.querySelector(".projects-container");
 		for (const id of Projects.getAllIDs()) {
 			const projectData = Projects.get(id);
 			this.createProjectCardElement(projectData);
@@ -115,12 +116,10 @@ export class SimpleWorld extends World {
 	}
 
 	createProjectCardElement(projectData) {
-		const cardsContainer = document.querySelector(".projects-container");
-
 		const element = document.createElement("div");
 		element.classList.add("project-card");
 		element.style.setProperty("--color", projectData.interactive.color);
-		cardsContainer.appendChild(element);
+		this.projectsContainer.appendChild(element);
 
 		const content = document.createElement("div");
 		content.classList.add("content");
@@ -185,6 +184,8 @@ export class SimpleWorld extends World {
 	}
 
 	dispose() {
+		this.projectsContainer.replaceChildren();
+
 		this.scene.traverse((object) => {
 			if (object.geometry) {
 				object.geometry.dispose();
