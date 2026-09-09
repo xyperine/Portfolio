@@ -72,48 +72,6 @@ export class Glider {
 		this.altitude = 0;
 
 		this.yVelocity = 0;
-
-		this.shoot = () => {
-			const origin = this.camera.getWorldPosition(new THREE.Vector3());
-			const direction = new THREE.Vector3(0, 0, -1).applyQuaternion(
-				this.camera.getWorldQuaternion(new THREE.Quaternion()),
-			);
-			const ray = new RAPIER.Ray(
-				{ x: origin.x, y: origin.y, z: origin.z },
-				{ x: direction.x, y: direction.y, z: direction.z },
-			);
-			const maxToi = 999.0;
-			let solid = true;
-			let hit = this.physicsWorld.castRayAndGetNormal(ray, maxToi, solid);
-			if (hit != null) {
-				const point = ray.pointAt(hit.timeOfImpact);
-				console.debug("Collider", hit.collider, "hit at point", point);
-
-				if (hit.collider != null) {
-					const force = 10;
-					const impulseDirection = new RAPIER.Vector3(
-						-hit.normal.x,
-						-hit.normal.y,
-						-hit.normal.z,
-					);
-					const impulse = new RAPIER.Vector3(
-						impulseDirection.x * force,
-						impulseDirection.y * force,
-						impulseDirection.z * force,
-					);
-					hit.collider.parent().applyImpulse(
-						{
-							x: impulse.x,
-							y: impulse.y,
-							z: impulse.z,
-						},
-						true,
-					);
-				}
-			}
-		};
-		this.mainElement = document.querySelector("main");
-		this.mainElement.addEventListener("mousedown", this.shoot);
 	}
 
 	findInitialAltitude() {
@@ -346,7 +304,5 @@ export class Glider {
 
 	dispose() {
 		this.scene.remove(this.root);
-
-		this.mainElement.removeEventListener("mousedown", this.shoot);
 	}
 }
