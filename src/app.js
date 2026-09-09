@@ -2,6 +2,7 @@ import RAPIER from "@dimforge/rapier3d-compat";
 import { InteractiveWorld } from "#src/interactive/interactiveWorld.js";
 import { SimpleWorld } from "#src/simple/simpleWorld.js";
 import { Shaders } from "#src/shaders.js";
+import { Projects } from "#src/projects.js";
 
 /**
  * Controlls site behavior.
@@ -44,6 +45,7 @@ export class App {
 		});
 
 		await Shaders.init();
+		await Projects.init();
 
 		this.changeWorld();
 	}

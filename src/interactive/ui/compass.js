@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { Projects } from "#src/interactive/projects.js";
+import { Projects } from "#src/projects.js";
 
 export class Compass {
 	constructor() {

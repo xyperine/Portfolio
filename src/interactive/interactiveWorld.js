@@ -12,7 +12,6 @@ import { Terrain } from "#src/interactive/worldGeneration/terrain.js";
 import { TemperatureMap } from "#src/interactive/worldGeneration/temperatureMap.js";
 import { PlanetGenerator } from "#src/interactive/worldGeneration/planetGenerator.js";
 import { Compass } from "#src/interactive/ui/compass.js";
-import { Projects } from "#src/interactive/projects.js";
 import { Interactables } from "#src/interactive/interactions/interactables.js";
 import { Teleporter } from "#src/interactive/teleporter.js";
 import { ProjectCard } from "#src/interactive/ui/projectCard.js";
@@ -29,7 +28,6 @@ export class InteractiveWorld extends World {
 	}
 
 	async init() {
-		await Projects.init();
 		Interactables.init();
 
 		this.input = new Input();

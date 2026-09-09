@@ -2,7 +2,7 @@ import * as THREE from "three";
 import * as RAPIER from "@dimforge/rapier3d-compat";
 import * as utils from "#src/utils.js";
 import { VertexShaderAlgorithmCopy } from "#src/interactive/worldGeneration/vertexShaderAlgorithmCopy.js";
-import { Projects } from "#src/interactive/projects.js";
+import { Projects } from "#src/projects.js";
 import { Shaders } from "#src/shaders.js";
 import { Beacon } from "#src/interactive/beacon.js";
 

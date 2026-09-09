@@ -5,7 +5,7 @@ import * as utils from "#src/utils.js";
 import { VertexShaderAlgorithmCopy } from "#src/interactive/worldGeneration/vertexShaderAlgorithmCopy.js";
 import { TerrainChunk } from "#src/interactive/worldGeneration/terrainChunk.js";
 import { BeaconSite } from "#src/interactive/beaconSite.js";
-import { Projects } from "#src/interactive/projects.js";
+import { Projects } from "#src/projects.js";
 import { Shaders } from "#src/shaders.js";
 import { BeaconFactory } from "#src/interactive/beaconFactory.js";
 
