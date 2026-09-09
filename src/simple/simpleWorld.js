@@ -4,6 +4,7 @@ import * as SEEDRANDOM from "seedrandom";
 import { World } from "#src/world.js";
 import { FPSCounter } from "#src/fpsCounter.js";
 import { Shaders } from "#src/shaders.js";
+import { Projects } from "#src/interactive/projects.js";
 
 export class SimpleWorld extends World {
 	#terrainVertexShader;
@@ -108,6 +109,56 @@ export class SimpleWorld extends World {
 		this.resize(mainElement.clientWidth, mainElement.clientHeight);
 
 		this.fpsCounter = new FPSCounter();
+
+		await Projects.init();
+		for (const id of Projects.getAllIDs()) {
+			const projectData = Projects.get(id);
+			this.createProjectCardElement(projectData);
+		}
+	}
+
+	createProjectCardElement(projectData) {
+		const cardsContainer = document.querySelector(".projects-container");
+
+		const element = document.createElement("div");
+		element.classList.add("project-card");
+		cardsContainer.appendChild(element);
+
+		const content = document.createElement("div");
+		content.classList.add("content");
+		element.appendChild(content);
+		
+		const coverElement = document.createElement("img");
+		coverElement.setAttribute("src", projectData.coverImage);
+		content.appendChild(coverElement);
+
+		const titleElement = document.createElement("div");
+		titleElement.classList.add("title");
+		titleElement.textContent = projectData.name;
+		content.appendChild(titleElement);
+
+		const metaTagElement = document.createElement("div");
+		metaTagElement.classList.add("meta-tag")
+		metaTagElement.textContent = projectData.metaTag;
+		content.appendChild(metaTagElement);
+
+		const descriptionElement = document.createElement("div");
+		descriptionElement.classList.add("description")
+		descriptionElement.textContent = projectData.description;
+		content.appendChild(descriptionElement);
+
+		const learnElement = document.createElement("a");
+		learnElement.classList.add("learn");
+		learnElement.textContent = "learn more >>";
+		learnElement.setAttribute("href", projectData.link);
+		content.appendChild(learnElement);
+
+		element.style.setProperty(
+			"--color",
+			projectData.interactive.color,
+		);
+
+		return element;
 	}
 
 	update(elapsedTime) {

@@ -1,15 +1,14 @@
 .projects-container {
-	/*
-	border: 0.1rem solid Sblue;
-	*/
-
 	max-height: 100%;
 	max-width: 90%;
 
+	width: 80%;
+	height: 80%;
+
 	display: grid;
-	grid-template-columns: 30% 30% 30%;
-	grid-template-rows: 50% 50%;
-	gap: 10px;
+	grid-template-columns: 30cqmin 30cqmin 30cqmin;
+	grid-template-rows: 40cqmin 40cqmin;
+	gap: 4cqmin;
 
 	place-content: center;
 	justify-self: center;
@@ -23,27 +22,39 @@ html.interactive .projects-container {
 	display: none;
 }
 
-.project-entry {
-	/*
-	border: 0.1rem solid green;
-	*/
+.projects-container .project-card {
+	position: relative;
+	container-type: inline-size;
 
-	padding: 1rem;
-	margin: 0.2rem;
-	width: 60%;
-
-	text-align: left;
-	font-size: 0.75cqi;
-
-	max-height: 60%;
-}
-
-.project-entry .cover-image {
-	display: block;
+	pointer-events: auto;
 	width: 100%;
-	border-radius: 1rem;
+	height: auto;
+
+	background:
+		linear-gradient(
+			135deg,
+			color-mix(in srgb, var(--color) 20%, transparent),
+			transparent 50%
+		),
+		color-mix(in srgb, var(--background-color) 90%, transparent);
+	border: none;
+	outline: 0.1rem dashed var(--color);
+	font-family: var(--game-ui-font-family);
+	color: var(--normal-text-color);
 }
 
-.project-entry .description {
-	margin-top: 0.1rem;
+.project-card .learn {
+	font-family: var(--game-ui-font-family);
+
+	position: absolute;
+	bottom: 10%;
+
+	color: var(--button-normal-color);
+	text-decoration: none;
+	font-size: 5cqi;
+	font-weight: 600;
+	text-transform: uppercase;
+	line-height: 0;
+
+	transition: color 0.3s;
 }
