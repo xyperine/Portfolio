@@ -17,6 +17,7 @@ header {
 
 main {
 	container-type: size;
+	container-name: main-element;
 
 	position: relative;
 	overflow: hidden;

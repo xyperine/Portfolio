@@ -1,5 +1,5 @@
 .projects-container {
-	max-height: 100%;
+	max-height: 90%;
 	max-width: 90%;
 
 	width: 80%;
@@ -13,9 +13,6 @@
 	place-content: center;
 	justify-self: center;
 	justify-items: center;
-
-	min-height: 0;
-	flex: 1;
 }
 
 html.interactive .projects-container {
@@ -61,4 +58,98 @@ html.interactive .projects-container {
 
 .projects-container .project-card .learn:focus {
 	outline-color: var(--color);
+}
+
+@container main-element (min-aspect-ratio: 5/3) {
+	.projects-container {
+		--column-width: max(min(33%, 100cqh), 60cqh);
+
+		width: 90%;
+
+		display: grid;
+		grid-template-columns:
+			var(--column-width)
+			var(--column-width);
+		grid-template-rows: 30% 30% 30%;
+		gap: 4cqh;
+
+		place-content: center;
+		justify-self: center;
+		justify-items: center;
+
+		min-height: 0;
+		flex: 1;
+	}
+
+	.projects-container .project-card {
+		position: relative;
+		container-type: size;
+
+		pointer-events: auto;
+
+		background:
+			linear-gradient(
+				135deg,
+				color-mix(in srgb, var(--color) 20%, transparent),
+				transparent 50%
+			),
+			color-mix(in srgb, var(--background-color) 90%, transparent);
+		border: none;
+		outline: 0.1rem dashed var(--color);
+		font-family: var(--game-ui-font-family);
+		color: var(--normal-text-color);
+	}
+
+	.projects-container .project-card .content {
+		margin: 10cqh;
+
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-start;
+		gap: 10cqh;
+		z-index: 1;
+	}
+
+	.projects-container .project-card img {
+		height: 80cqh;
+		width: auto;
+	}
+
+	.projects-container .project-card .text-content {
+		position: relative;
+		max-width: 50%;
+
+		display: flex;
+		flex-direction: column;
+		gap: 2cqh;
+		z-index: 1;
+
+		font-size: 7cqh;
+	}
+
+	.projects-container .project-card .title {
+		margin-top: 0;
+		font-weight: bold;
+		font-size: 10cqh;
+		font-family: var(--game-ui-font-family);
+	}
+
+	.projects-container .project-card .learn {
+		position: absolute;
+		bottom: 10cqh;
+		right: 10cqh;
+
+		font-family: var(--game-ui-font-family);
+
+		color: var(--button-normal-color);
+		text-decoration: none;
+		font-size: 8cqh;
+		font-weight: 600;
+		text-transform: uppercase;
+		line-height: 1;
+
+		z-index: 2;
+
+		transition: color 0.3s;
+	}
 }

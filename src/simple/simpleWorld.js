@@ -129,20 +129,24 @@ export class SimpleWorld extends World {
 		coverElement.setAttribute("src", projectData.coverImage);
 		content.appendChild(coverElement);
 
+		const textContentElement = document.createElement("div");
+		textContentElement.classList.add("text-content");
+		content.appendChild(textContentElement);
+
 		const titleElement = document.createElement("div");
 		titleElement.classList.add("title");
 		titleElement.textContent = projectData.name;
-		content.appendChild(titleElement);
+		textContentElement.appendChild(titleElement);
 
 		const metaTagElement = document.createElement("div");
 		metaTagElement.classList.add("meta-tag");
 		metaTagElement.textContent = projectData.metaTag;
-		content.appendChild(metaTagElement);
+		textContentElement.appendChild(metaTagElement);
 
 		const descriptionElement = document.createElement("div");
 		descriptionElement.classList.add("description");
 		descriptionElement.textContent = projectData.description;
-		content.appendChild(descriptionElement);
+		textContentElement.appendChild(descriptionElement);
 
 		const learnElement = document.createElement("a");
 		learnElement.classList.add("learn");
