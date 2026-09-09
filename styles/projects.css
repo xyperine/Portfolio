@@ -43,7 +43,7 @@ html.interactive .projects-container {
 	color: var(--normal-text-color);
 }
 
-.project-card .learn {
+.projects-container .project-card .learn {
 	font-family: var(--game-ui-font-family);
 
 	position: absolute;
