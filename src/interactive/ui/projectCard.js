@@ -8,20 +8,20 @@ export class ProjectCard {
 	static init(inputManager) {
 		this.inputManager = inputManager;
 
-		this.element = document.querySelector("#project-card");
-		this.titleElement = document.querySelector("#project-card .title");
-		this.metaTagElement = document.querySelector("#project-card .meta-tag");
+		this.element = document.querySelector(".project-card");
+		this.titleElement = document.querySelector(".project-card .title");
+		this.metaTagElement = document.querySelector(".project-card .meta-tag");
 		this.descriptionElement = document.querySelector(
-			"#project-card .description",
+			".project-card .description",
 		);
-		this.coverElement = document.querySelector("#project-card img");
-		this.learnElement = document.querySelector("#project-card .learn");
-		this.closeElement = document.querySelector("#project-card .close");
+		this.coverElement = document.querySelector(".project-card img");
+		this.learnElement = document.querySelector(".project-card .learn");
+		this.closeElement = document.querySelector(".project-card .close");
 
 		this.onElementFocused = (event) => {
 			event.target.blur();
 		};
-		document.querySelectorAll("#project-card *").forEach((e) => {
+		document.querySelectorAll(".project-card *").forEach((e) => {
 			e.tabIndex = -1;
 			e.addEventListener("focusin", this.onElementFocused);
 		});
@@ -70,7 +70,7 @@ export class ProjectCard {
 
 		this.element.removeEventListener("click", this.onMouseClick);
 		this.closeElement.removeEventListener("click", this.onCloseButtonClick);
-		document.querySelectorAll("#project-card *").forEach((e) => {
+		document.querySelectorAll(".project-card *").forEach((e) => {
 			e.removeEventListener("focusin", this.onElementFocused);
 		});
 	}
