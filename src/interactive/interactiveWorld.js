@@ -344,8 +344,6 @@ export class InteractiveWorld extends World {
 		Interactables.dispose();
 		ProjectCard.dispose();
 
-		this.input.unlockPointer();
-
 		// Unsubscribe
 		this.mainElement.removeEventListener("click", this.onMouseClickCanvas);
 		window.removeEventListener("resize", this.onWindowResized);

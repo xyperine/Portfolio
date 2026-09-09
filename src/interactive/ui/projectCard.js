@@ -66,7 +66,8 @@ export class ProjectCard {
 	}
 
 	static dispose() {
-		this.hide();
+		this.mainElement.style.pointerEvents = "auto";
+		this.element.classList.remove("visible");
 
 		this.element.removeEventListener("click", this.onMouseClick);
 		this.closeElement.removeEventListener("click", this.onCloseButtonClick);

@@ -99,6 +99,8 @@ export class Input {
 	}
 
 	dispose() {
+		this.unlockPointer();
+
 		window.removeEventListener("keydown", this.#onKeyDown);
 		window.removeEventListener("keyup", this.#onKeyUp);
 		document.removeEventListener("mousemove", this.#onMouseMoved);
