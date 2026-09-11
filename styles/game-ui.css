@@ -137,14 +137,14 @@ html:not(.interactive) #game-ui {
 
 /* --- COMPASS --- */
 #game-ui #compass {
-	container-type: inline-size;
+	container-type: size;
 
 	position: absolute;
 	top: 1rem;
 	left: 50%;
 	transform: translate(-50%, 0%);
 	width: 30%;
-	height: 6cqi;
+	height: 12cqmin;
 
 	overflow: hidden;
 	pointer-events: none;
@@ -179,24 +179,24 @@ html:not(.interactive) #game-ui {
 
 .compass-tick {
 	width: 1px;
-	height: 2cqi;
+	height: 12cqmin;
 
 	background: gray;
 }
 
 .compass-tick-label {
-	margin-top: 1cqi;
+	margin-top: 4.8cqmin;
 
 	font-weight: normal;
-	font-size: 2cqi;
+	font-size: 9.6cqmin;
 	color: gray;
 }
 
 .compass-label {
-	margin-top: 1cqi;
+	margin-top: 4.8cqmin;
 	height: 100%;
 
-	font-size: 2.4cqi;
+	font-size: 11.56cqmin;
 	font-weight: bold;
 	color: gray;
 }
@@ -209,16 +209,16 @@ html:not(.interactive) #game-ui {
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	gap: 1cqi;
+	gap: 4.8cqmin;
 
-	font-size: 4cqi;
+	font-size: 19.2cqmin;
 }
 
 .compass-pointer-outer {
 	position: relative;
 
-	width: 5cqi;
-	height: 5cqi;
+	width: 24cqmin;
+	height: 24cqmin;
 
 	display: flex;
 	align-items: center;
