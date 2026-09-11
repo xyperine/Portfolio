@@ -62,14 +62,14 @@ html:not(.interactive) #game-ui {
 
 	color: var(--hud-text-color);
 	font-family: var(--game-ui-font-family);
-	font-size: 0.8cqi;
+	font-size: 1.6cqmin;
 }
 
 #game-ui .controls {
 	container-type: inline-size;
 
 	position: absolute;
-	width: 25cqmax;
+	width: 50cqmin;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
@@ -85,7 +85,8 @@ html:not(.interactive) #game-ui {
 			transparent 50%
 		),
 		var(--background-color);
-	border: 0.1rem dashed var(--accent-color);
+	border: none;
+	outline: 0.1rem dashed var(--accent-color);
 	font-family: var(--game-ui-font-family);
 	color: var(--normal-text-color);
 
