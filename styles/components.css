@@ -57,5 +57,6 @@ html.pointer-locked .switch:hover {
 }
 
 #subtitle {
+	font-size: 1rem;
 	font-weight: 500;
 }

@@ -17,6 +17,7 @@ html {
 
 h1 {
 	font-family: var(--font-family);
+	font-size: 2rem;
 
 	color: var(--heading-text-color);
 }
