@@ -1,3 +1,4 @@
+// --- OPERATIONS ---
 float opSmoothUnion( float a, float b, float k ) {
     k *= 4.0;
     float h = max(k-abs(a-b),0.0);
@@ -74,6 +75,7 @@ float trapDistance(vec3 z, int trapMode) {
     return trap;
 }
 
+// --- SHAPES ---
 struct SDOutput {
     float dist;
     float trap;
@@ -101,7 +103,6 @@ float sdTorus( vec3 p, vec2 t ) {
   vec2 q = vec2(length(p.xz)-t.x,p.y);
   return length(q)-t.y;
 }
-
 
 SDOutput sdCube4D(vec4 p, float s) {
     vec4 d = abs(p) - s;

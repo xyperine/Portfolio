@@ -76,12 +76,21 @@ SDOutput quaternionJuliaScene(vec3 p) {
 
 SDOutput mandelboxScene(vec3 p) {
     float angle = uTimeSeconds;
+    
     mat3 rotation = rotation3D(2, 1, angle * 0.8);
     rotation *= rotation3D(1, 0, angle * 0.7);
+    const float scale = 0.45;
+    SDOutput mandelbox = sdMandelbox((rotation * p) / scale);
+    mandelbox.dist *= scale;
 
-    const float scale = 0.35;
-    SDOutput final = sdMandelbox((rotation * p) / scale);
-    final.dist *= scale;
+    mat4 rotation4 = rotation4D(0, 3, angle * 1.1);
+    rotation4 *= rotation4D(2, 1, angle * 0.8);
+    rotation4 *= rotation4D(1, 0, angle * 0.7);
+    rotation4 *= rotation4D(3, 1, angle * 1.1);
+    rotation4 *= rotation4D(2, 3, angle);
+    SDOutput filterShape = sd24Cell(rotation4 * vec4(p, 0.0), 3.0);
+
+    SDOutput final = SDOutput(opIntersection(mandelbox.dist, filterShape.dist), mandelbox.trap);
     return final;
 }
 
