@@ -23,7 +23,7 @@ html:not(.interactive) #game-ui {
 	position: absolute;
 	top: 15%;
 
-	gap: 0.2cqi;
+	gap: 0.4cqmin;
 }
 
 .hud #hud-title {
@@ -32,26 +32,26 @@ html:not(.interactive) #game-ui {
 
 	color: var(--hud-text-color);
 	font-family: var(--game-ui-font-family);
-	font-size: 0.8cqi;
-	letter-spacing: 0.08cqi;
+	font-size: 1.6cqmin;
+	letter-spacing: 0.16cqmin;
 }
 
 .hud hr {
 	border: none;
-	border-top: 0.1cqi dashed var(--hud-text-color);
+	border-top: 0.2cqmin dashed var(--hud-text-color);
 }
 
 .hud .hud-entry {
 	display: grid;
-	grid-template-columns: 5cqi auto;
+	grid-template-columns: 10cqmin auto;
 
 	margin-top: 0;
 	margin-bottom: 0;
 
 	color: var(--hud-text-color);
 	font-family: var(--game-ui-font-family);
-	font-size: 0.8cqi;
-	letter-spacing: 0.08cqi;
+	font-size: 1.6cqmin;
+	letter-spacing: 0.16cqmin;
 }
 
 /* --- CONTROLS --- */
