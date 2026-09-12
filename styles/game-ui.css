@@ -282,8 +282,8 @@ html:not(.interactive) #game-ui {
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	width: 1cqmax;
-	height: 1cqmax;
+	width: 2cqmin;
+	height: 2cqmin;
 	background-color: var(--accent-color);
 
 	clip-path: polygon(
@@ -300,6 +300,23 @@ html:not(.interactive) #game-ui {
 		45% 45%,
 		45% 0%
 	);
+}
+
+#interact-label {
+	position: absolute;
+	top: calc(50% + 2rem);
+	left: 50%;
+	transform: translate(-50%, -50%);
+
+	color: var(--accent-color);
+	font-family: var(--game-ui-font-family);
+	font-size: 1rem;
+
+	opacity: 0;
+}
+
+#interact-label.visible {
+	opacity: 1;
 }
 
 /* --- PROJECT CARD --- */
