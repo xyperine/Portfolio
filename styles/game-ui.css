@@ -324,7 +324,7 @@ html:not(.interactive) #game-ui {
 	container-type: inline-size;
 
 	position: absolute;
-	width: 25cqmax;
+	width: 50cqmin;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
