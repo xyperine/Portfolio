@@ -144,7 +144,7 @@ html:not(.interactive) #game-ui {
 	top: 1rem;
 	left: 50%;
 	transform: translate(-50%, 0%);
-	width: 30%;
+	width: min(30%, 60cqmin);
 	height: 12cqmin;
 
 	overflow: hidden;
