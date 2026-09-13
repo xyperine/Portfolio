@@ -8,13 +8,18 @@ export class Interactor {
 
 		this.currentInteractable = null;
 
-		this.interactElement = document.querySelector("#game-ui #interact-label");
+		this.interactElement = document.querySelector(
+			"#game-ui #interact-label",
+		);
 	}
 
 	update() {
 		this.currentInteractable = this.findInteractable();
 
-		this.interactElement.classList.toggle("visible", this.currentInteractable != null);
+		this.interactElement.classList.toggle(
+			"visible",
+			this.currentInteractable != null,
+		);
 	}
 
 	findInteractable() {
