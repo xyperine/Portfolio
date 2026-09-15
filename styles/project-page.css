@@ -4,7 +4,7 @@
 @import url("./components.css");
 
 header {
-	border-bottom: 0.1rem dashed var(--accent-color);
+	border-bottom: 0.1rem dashed var(--color);
 }
 
 header a {
@@ -25,19 +25,27 @@ main .content {
 	height: 75%;
 	padding: 2cqmin max(calc((100% - 150cqmin) * 0.5), 20%);
 
+	display: flex;
+	flex-direction: column;
+
 	background-color: var(--background-color);
-	border-top: 0.1rem dashed var(--accent-color);
-	border-bottom: 0.1rem dashed var(--accent-color);
+	border-top: 0.1rem dashed var(--color);
+	border-bottom: 0.1rem dashed var(--color);
 	font-family: var(--font-family);
 	font-size: 2cqmin;
+
+	overflow-y: auto;
+}
+
+.content .title {
+	text-transform: uppercase;
 }
 
 .content a {
-	position: absolute;
-	left: 50%;
-	bottom: 2cqmin;
-	transform: translate(-50%, 0);
+	position: static;
+	align-self: center;
 	padding: 1.2cqmin;
+	margin-top: auto;
 
 	color: var(--button-normal-color);
 	text-decoration: none;
@@ -47,9 +55,15 @@ main .content {
 }
 
 .content a:hover {
-	color: var(--accent-color);
+	color: var(--color);
+}
+
+.description p,
+.tech p, 
+.implementation-details p {
+	white-space: pre-line;
 }
 
 footer {
-	border-top: 0.1rem dashed var(--accent-color);
+	border-top: 0.1rem dashed var(--color);
 }

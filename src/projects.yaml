@@ -4,52 +4,97 @@ projects:
         metaTag: "Tool"
         description: "Unity plugin for automating project setup."
         coverImage: "img/Conifer Init cover.png"
-        link: "#"
+        link: "project-page.html?id=conifer_init"
 
         interactive:
             number: 1
             color: "hsl(105, 70%, 50%)"
+        
+        page:
+            backgroundImage: "img/Conifer Init cover.png"
+            description: |
+                Conifer Init automates some common Unity project setup tasks such as folder structure creation, package installation, asset import, and project configuration.
+                
+                The feature set is based solely on what I need to do to set up a Unity project. I made this tool to automate and standardize the setup process for my future Unity projects, saving time and resources that can be spent on more important tasks.
+            tech: |
+                - Unity and C#
+                - IMGUI for editor window
+            implementationDetails: |
+                - Settings Profiles - tool configuration profiles reusable across many projects.
+                - Asset database operations
+                - Package management operations
+                - Automated testing with GitHub Pages
+                - Automated documentation generation with Doxygen and GitHub Pages
+            storeLink: "https://github.com/xyperine/Conifer-Init"
 
     icons_creator:
         name: "Icons Creator"
         metaTag: "Tool"
         description: "Tool for creating icons of 3D objects in Unity."
         coverImage: "img/Icons Creator cover.png"
-        link: "#"
+        link: "project-page.html?id=icons_creator"
 
         interactive:
             number: 2
             color: "hsl(180, 70%, 50%)"
+
+        page:
+            backgroundImage: "img/Icons Creator cover.png"
+            description: "ci"
+            tech: "unity c# imgui"
+            implementationDetails: "bla bla bla"
+            storeLink: "https://github.com/xyperine/Conifer-Init"
 
     reality_grid:
         name: "Reality Grid"
         metaTag: "Game"
         description: "Incremental game about climbing up layers of simulations."
         coverImage: "img/Reality Grid cover.jpg"
-        link: "#"
+        link: "project-page.html?id=reality_grid"
 
         interactive:
             number: 3
             color: "hsl(30, 70%, 50%)"
+        
+        page:
+            backgroundImage: "img/Reality Grid cover.jpg"
+            description: "ci"
+            tech: "unity c#"
+            implementationDetails: "bla bla bla"
+            storeLink: "https://github.com/xyperine/Conifer-Init"
 
     dots_killer:
         name: "Dots Killer"
         metaTag: "Game"
         description: "PC/Web/Android incremental game."
         coverImage: "img/Dots Killer cover.png"
-        link: "#"
+        link: "project-page.html?id=dots_killer"
 
         interactive:
             number: 4
             color: "hsl(330, 70%, 50%)"
+        
+        page:
+            backgroundImage: "img/Dots Killer cover.png"
+            description: "ci"
+            tech: "zenject unity c#"
+            implementationDetails: "bla bla bla"
+            storeLink: "https://github.com/xyperine/Conifer-Init"
 
     debug:
         name: "DEBUG"
         metaTag: "Game"
         description: "Defend yourself against swarms of bugs!"
         coverImage: "img/Debug cover.jpg"
-        link: "#"
+        link: "project-page.html?id=debug"
 
         interactive:
             number: 5
             color: "hsl(225, 70%, 50%)"
+        
+        page:
+            backgroundImage: "img/Debug cover.jpg"
+            description: "ci"
+            tech: "dots/ecs unity c#"
+            implementationDetails: "bla bla bla"
+            storeLink: "https://github.com/xyperine/Conifer-Init"
