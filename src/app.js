@@ -64,9 +64,7 @@ export class App {
 	}
 
 	#onDarkModeChanged(enabled) {
-		this.#darkModeSwitch.textContent = enabled
-			? "Dark"
-			: "Light";
+		this.#darkModeSwitch.textContent = enabled ? "Dark" : "Light";
 
 		this.#world.updateColors();
 	}

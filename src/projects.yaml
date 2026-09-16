@@ -9,12 +9,12 @@ projects:
         interactive:
             number: 1
             color: "hsl(105, 70%, 50%)"
-        
+
         page:
             backgroundImage: "img/Conifer Init cover.png"
             description: |
                 Conifer Init automates some common Unity project setup tasks such as folder structure creation, package installation, asset import, and project configuration.
-                
+
                 The feature set is based solely on what I need to do to set up a Unity project. I made this tool to automate and standardize the setup process for my future Unity projects, saving time and resources that can be spent on more important tasks.
             technology: |
                 - Unity and C#
@@ -57,7 +57,7 @@ projects:
         interactive:
             number: 3
             color: "hsl(30, 70%, 50%)"
-        
+
         page:
             backgroundImage: "img/Reality Grid cover.jpg"
             description: "ci"
@@ -75,7 +75,7 @@ projects:
         interactive:
             number: 4
             color: "hsl(330, 70%, 50%)"
-        
+
         page:
             backgroundImage: "img/Dots Killer cover.png"
             description: "ci"
@@ -93,7 +93,7 @@ projects:
         interactive:
             number: 5
             color: "hsl(225, 70%, 50%)"
-        
+
         page:
             backgroundImage: "img/Debug cover.jpg"
             description: "ci"

@@ -41,7 +41,7 @@ main .content {
 
 .content .title {
 	text-transform: uppercase;
-	color: var(--normal-text-color)
+	color: var(--normal-text-color);
 }
 
 .content a {
@@ -68,9 +68,8 @@ main .content {
 	border-top: 0.2rem dashed var(--color);
 }
 
-
 .description p,
-.technology p, 
+.technology p,
 .features p {
 	/* Helps with multiline strings contaning new-line characters */
 	white-space: pre-line;

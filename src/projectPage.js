@@ -12,8 +12,8 @@ const projects = yaml.parse(text).projects;
 
 const project = projects[projectId];
 if (!project) {
-    document.body.textContent = "Project not found.";
-    throw new Error(`Unknown project: ${projectId}`);
+	document.body.textContent = "Project not found.";
+	throw new Error(`Unknown project: ${projectId}`);
 }
 
 // Apply project data
@@ -22,17 +22,20 @@ document.title = `${project.name} | Arthur Mordvinov`;
 document.body.style.setProperty("--color", project.interactive.color);
 
 document.querySelector(".content .title").textContent = project.name;
-document.querySelector(".content .tagged-title .meta-tag").textContent = project.metaTag;
+document.querySelector(".content .tagged-title .meta-tag").textContent =
+	project.metaTag;
 document.querySelector(".short-description").textContent = project.description;
 document.querySelector(".description p").textContent = project.page.description;
 document.querySelector(".technology p").textContent = project.page.technology;
 document.querySelector(".features p").textContent = project.page.features;
-document.querySelector(".content a").setAttribute("href", project.page.storeLink);
+document
+	.querySelector(".content a")
+	.setAttribute("href", project.page.storeLink);
 
 // Dark mode
 theme.initializeDarkMode();
 const darkModeSwitch = document.querySelector("#dark-mode-switch");
-darkModeSwitch.addEventListener("click", event => {
-    theme.toggleDarkMode();
-    darkModeSwitch.textContent = theme.getDarkMode() ? "DARK" : "LIGHT";
+darkModeSwitch.addEventListener("click", (event) => {
+	theme.toggleDarkMode();
+	darkModeSwitch.textContent = theme.getDarkMode() ? "DARK" : "LIGHT";
 });
