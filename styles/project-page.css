@@ -3,10 +3,6 @@
 @import url("./layout.css");
 @import url("./components.css");
 
-header a {
-	text-decoration: none;
-}
-
 main {
 	background-color: color-mix(in srgb, var(--color) 30%, transparent);
 }
