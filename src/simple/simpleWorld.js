@@ -152,6 +152,8 @@ export class SimpleWorld extends World {
 		learnElement.classList.add("learn");
 		learnElement.textContent = "learn more >>";
 		learnElement.setAttribute("href", projectData.link);
+		learnElement.setAttribute("target", "_blank");
+		learnElement.setAttribute("rel", "noopener noreferrer");
 		content.appendChild(learnElement);
 
 		return element;
