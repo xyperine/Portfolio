@@ -1,3 +1,4 @@
+import * as theme from "#src/theme.js";
 import RAPIER from "@dimforge/rapier3d-compat";
 import { InteractiveWorld } from "#src/interactive/interactiveWorld.js";
 import { SimpleWorld } from "#src/simple/simpleWorld.js";
@@ -20,7 +21,6 @@ export class App {
 
 	async #init() {
 		this.#settings = {
-			darkMode: false,
 			interactive: false,
 		};
 
@@ -32,10 +32,11 @@ export class App {
 
 		await RAPIER.init();
 
+		theme.initializeDarkMode();
 		this.#darkModeSwitch.addEventListener("click", () => {
-			this.#settings.darkMode = !this.#settings.darkMode;
+			theme.toggleDarkMode();
 
-			this.#onDarkModeChanged(this.#settings.darkMode);
+			this.#onDarkModeChanged(theme.getDarkMode());
 		});
 
 		this.#modeSwitch.addEventListener("click", () => {
@@ -62,15 +63,10 @@ export class App {
 		this.changeWorld();
 	}
 
-	#onDarkModeChanged(newValue) {
-		this.#darkModeSwitch.textContent = this.#settings.darkMode
+	#onDarkModeChanged(enabled) {
+		this.#darkModeSwitch.textContent = enabled
 			? "Dark"
 			: "Light";
-
-		document.documentElement.classList.toggle(
-			"dark",
-			this.#settings.darkMode,
-		);
 
 		this.#world.updateColors();
 	}

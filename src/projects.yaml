@@ -16,10 +16,12 @@ projects:
                 Conifer Init automates some common Unity project setup tasks such as folder structure creation, package installation, asset import, and project configuration.
                 
                 The feature set is based solely on what I need to do to set up a Unity project. I made this tool to automate and standardize the setup process for my future Unity projects, saving time and resources that can be spent on more important tasks.
-            tech: |
+            technology: |
                 - Unity and C#
                 - IMGUI for editor window
-            implementationDetails: |
+                - GitHub Pages
+                - Doxygen
+            features: |
                 - Settings Profiles - tool configuration profiles reusable across many projects.
                 - Asset database operations
                 - Package management operations
@@ -41,8 +43,8 @@ projects:
         page:
             backgroundImage: "img/Icons Creator cover.png"
             description: "ci"
-            tech: "unity c# imgui"
-            implementationDetails: "bla bla bla"
+            technology: "unity c# imgui"
+            features: "bla bla bla"
             storeLink: "https://github.com/xyperine/Conifer-Init"
 
     reality_grid:
@@ -59,8 +61,8 @@ projects:
         page:
             backgroundImage: "img/Reality Grid cover.jpg"
             description: "ci"
-            tech: "unity c#"
-            implementationDetails: "bla bla bla"
+            technology: "unity c#"
+            features: "bla bla bla"
             storeLink: "https://github.com/xyperine/Conifer-Init"
 
     dots_killer:
@@ -77,8 +79,8 @@ projects:
         page:
             backgroundImage: "img/Dots Killer cover.png"
             description: "ci"
-            tech: "zenject unity c#"
-            implementationDetails: "bla bla bla"
+            technology: "zenject unity c#"
+            features: "bla bla bla"
             storeLink: "https://github.com/xyperine/Conifer-Init"
 
     debug:
@@ -95,6 +97,6 @@ projects:
         page:
             backgroundImage: "img/Debug cover.jpg"
             description: "ci"
-            tech: "dots/ecs unity c#"
-            implementationDetails: "bla bla bla"
+            technology: "dots/ecs unity c#"
+            features: "bla bla bla"
             storeLink: "https://github.com/xyperine/Conifer-Init"

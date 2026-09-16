@@ -20,6 +20,13 @@
 				}
 			}
 		</script>
+
+		<!-- Preload dark mode to avoid white flash. -->
+		<script>
+			if (localStorage.getItem("darkMode") === "true") {
+				document.documentElement.classList.add("dark");
+			}
+		</script>
 	</head>
 	<body>
 		<header>

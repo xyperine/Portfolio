@@ -1,4 +1,5 @@
 import * as yaml from "yaml";
+import * as theme from "#src/theme.js";
 
 // Get project id
 const params = new URLSearchParams(window.location.search);
@@ -15,18 +16,23 @@ if (!project) {
     throw new Error(`Unknown project: ${projectId}`);
 }
 
-console.log(project)
-
 // Apply project data
 document.title = `${project.name} | Arthur Mordvinov`;
 
 document.body.style.setProperty("--color", project.interactive.color);
 
-document.querySelector(".background").setAttribute("src", project.page.backgroundImage);
-
-document.querySelector(".title").textContent = project.name;
-document.querySelector(".sd").textContent = project.description;
+document.querySelector(".content .title").textContent = project.name;
+document.querySelector(".content .tagged-title .meta-tag").textContent = project.metaTag;
+document.querySelector(".short-description").textContent = project.description;
 document.querySelector(".description p").textContent = project.page.description;
-document.querySelector(".tech p").textContent = project.page.tech;
-document.querySelector(".implementation-details p").textContent = project.page.implementationDetails;
+document.querySelector(".technology p").textContent = project.page.technology;
+document.querySelector(".features p").textContent = project.page.features;
 document.querySelector(".content a").setAttribute("href", project.page.storeLink);
+
+// Dark mode
+theme.initializeDarkMode();
+const darkModeSwitch = document.querySelector("#dark-mode-switch");
+darkModeSwitch.addEventListener("click", event => {
+    theme.toggleDarkMode();
+    darkModeSwitch.textContent = theme.getDarkMode() ? "DARK" : "LIGHT";
+});
