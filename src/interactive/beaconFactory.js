@@ -66,11 +66,7 @@ export class BeaconFactory {
 			return this.particleSystems.get(projectData.interactive.number);
 		}
 
-		const color = new THREE.Color(projectData.color).offsetHSL(
-			0,
-			0,
-			0.2,
-		);
+		const color = new THREE.Color(projectData.color).offsetHSL(0, 0, 0.2);
 		const ps = new QUARKS.ParticleSystem({
 			duration: 10,
 			looping: true,
@@ -134,11 +130,7 @@ export class BeaconFactory {
 			);
 		}
 
-		const color = new THREE.Color(projectData.color).offsetHSL(
-			0,
-			0,
-			0.2,
-		);
+		const color = new THREE.Color(projectData.color).offsetHSL(0, 0, 0.2);
 		const ps = new QUARKS.ParticleSystem({
 			duration: 5,
 			looping: false,

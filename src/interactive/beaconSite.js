@@ -192,9 +192,7 @@ export class BeaconSite {
 					uTimeSeconds: { value: 0 },
 					uCameraWorldPosition: { value: new THREE.Vector3() },
 					uPrimaryColor: {
-						value: new THREE.Color(
-							this.projectData.color,
-						),
+						value: new THREE.Color(this.projectData.color),
 					},
 					uProjectNumber: { value: shapeID },
 				},

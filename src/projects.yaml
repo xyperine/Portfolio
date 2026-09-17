@@ -11,7 +11,9 @@ projects:
             number: 1
 
         page:
-            backgroundImage: "img/Conifer Init cover.png"
+            media:
+                type: "youtube"
+                src: https://www.youtube.com/embed/5E8Atag36eY?si=FqS3YL0YYeqyxfOd
             description: |
                 Conifer Init automates some common Unity project setup tasks such as folder structure creation, package installation, asset import, and project configuration.
 
@@ -41,11 +43,24 @@ projects:
             number: 2
 
         page:
-            backgroundImage: "img/Icons Creator cover.png"
-            description: "ci"
-            technology: "unity c# imgui"
-            features: "bla bla bla"
-            storeLink: "https://github.com/xyperine/Conifer-Init"
+            media:
+                type: "youtube"
+                src: "https://www.youtube.com/embed/5UHYbbjXDpM?si=6CMcJIE1WjeILplt"
+            description: |
+                This tool can create icons of any 3D object imported in Unity: prefabs, models, and objects on the opened scenes. Also you can make icons out of entire folders containing 3D objects.
+
+                I did this tool to learn more about tooling and editor coding. It is based on a tool that I originally created for a game I was working on, but it was quite limited and required a lot of manual work to do to create icons. So I took the initial version of the tool, improved it, removed any external dependencies, and decided to make it public.
+            technology: |
+                - Unity and C#
+                - IMGUI
+                - URP
+            features: |
+                - Custom background and border
+                - Can process entire folders with meshes and prefabs
+                - Configure object size, icon resolution, icon name, and other parameters
+                - Realtime preview
+                - Batch export
+            storeLink: "https://github.com/xyperine/Icons-Creator"
 
     reality_grid:
         name: "Reality Grid"
@@ -59,7 +74,9 @@ projects:
             number: 3
 
         page:
-            backgroundImage: "img/Reality Grid cover.jpg"
+            media:
+                type: "youtube"
+                src: "https://www.youtube.com/embed/5UHYbbjXDpM?si=6CMcJIE1WjeILplt"
             description: "ci"
             technology: "unity c#"
             features: "bla bla bla"
@@ -77,7 +94,9 @@ projects:
             number: 4
 
         page:
-            backgroundImage: "img/Dots Killer cover.png"
+            media:
+                type: "youtube"
+                src: "https://www.youtube.com/embed/5UHYbbjXDpM?si=6CMcJIE1WjeILplt"
             description: "ci"
             technology: "zenject unity c#"
             features: "bla bla bla"
@@ -95,7 +114,9 @@ projects:
             number: 5
 
         page:
-            backgroundImage: "img/Debug cover.jpg"
+            media:
+                type: "youtube"
+                src: "https://www.youtube.com/embed/5UHYbbjXDpM?si=6CMcJIE1WjeILplt"
             description: "ci"
             technology: "dots/ecs unity c#"
             features: "bla bla bla"

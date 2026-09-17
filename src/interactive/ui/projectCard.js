@@ -49,10 +49,7 @@ export class ProjectCard {
 		this.descriptionElement.textContent = projectData.description;
 		this.coverElement.setAttribute("src", projectData.coverImage);
 		this.learnElement.setAttribute("href", projectData.link);
-		this.element.style.setProperty(
-			"--color",
-			projectData.color,
-		);
+		this.element.style.setProperty("--color", projectData.color);
 
 		this.mainElement.style.pointerEvents = "none";
 		this.element.classList.add("visible");

@@ -32,6 +32,49 @@ document
 	.querySelector(".content a")
 	.setAttribute("href", project.page.storeLink);
 
+const mediaContainer = document.querySelector(".content .media");
+const media = createMedia(project.page.media);
+mediaContainer.appendChild(media);
+
+function createMedia(mediaData) {
+	switch (mediaData.type) {
+		case "youtube":
+			return createYoutube(mediaData.src);
+		case "image":
+			return createImage(mediaData.src, mediaData.alt);
+		default:
+			return null;
+	}
+}
+
+function createYoutube(src) {
+	const iframe = document.createElement("iframe");
+	iframe.src = src;
+	iframe.title = "Project video";
+	iframe.style.border = "none";
+	iframe.allow = `
+		accelerometer;
+		autoplay;
+		clipboard-write;
+		encrypted-media;
+		gyroscope;
+		picture-in-picture;
+		web-share;
+	`;
+	iframe.referrerPolicy = "strict-origin-when-cross-origin";
+	iframe.allowFullscreen = true;
+
+	return iframe;
+}
+
+function createImage(src, alt) {
+	const img = document.createElement("img");
+	img.src = src;
+	img.alt = alt;
+
+	return img;
+}
+
 // Dark mode
 theme.initializeDarkMode();
 const darkModeSwitch = document.querySelector("#dark-mode-switch");
