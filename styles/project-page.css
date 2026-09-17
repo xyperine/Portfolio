@@ -32,7 +32,8 @@ main .content {
 	margin-right: auto;
 }
 
-.content iframe {
+.content .media img,
+.content .media iframe {
 	width: 100%;
 	align-self: center;
 	aspect-ratio: 16/9;

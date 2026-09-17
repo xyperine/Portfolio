@@ -33,3 +33,7 @@ p {
 	font-weight: 300;
 	color: var(--normal-text-color);
 }
+
+img {
+	color: var(--normal-text-color)
+}

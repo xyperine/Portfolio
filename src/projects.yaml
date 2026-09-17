@@ -75,11 +75,19 @@ projects:
 
         page:
             media:
-                type: "youtube"
-                src: "https://www.youtube.com/embed/5UHYbbjXDpM?si=6CMcJIE1WjeILplt"
-            description: "ci"
-            technology: "unity c#"
-            features: "bla bla bla"
+                type: "image"
+                src: "img/Reality Grid media.png"
+                alt: "Screenshot"
+            description: |
+                Gradually unlock cells and upgrades and climb up the layers of simulations.
+            technology: |
+                - Unity and C#
+                - ShaderGraph
+            features: |
+                - Game state persistence
+                - Achievements
+                - Prestige mechanic
+                - Upgrades
             storeLink: "https://github.com/xyperine/Conifer-Init"
 
     dots_killer:
@@ -95,12 +103,24 @@ projects:
 
         page:
             media:
-                type: "youtube"
-                src: "https://www.youtube.com/embed/5UHYbbjXDpM?si=6CMcJIE1WjeILplt"
-            description: "ci"
-            technology: "zenject unity c#"
-            features: "bla bla bla"
-            storeLink: "https://github.com/xyperine/Conifer-Init"
+                type: "image"
+                src: "img/Dots Killer media.png"
+                alt: "Screenshot"
+            description: |
+                Kill the dots and buy upgrades to boost your progression and reach the goal.
+            technology: |
+                - Unity and C#
+                - URP
+                - Zenject
+                - Super Unity Build
+                - Unity Localization
+                - Input System
+            features: |
+                - Game state persistence
+                - Upgrades
+                - Multiplatform (Standalone, Android, WebGL)
+                - Automated build
+            storeLink: "https://xyperine.itch.io/dots-killer"
 
     debug:
         name: "DEBUG"
@@ -115,9 +135,23 @@ projects:
 
         page:
             media:
-                type: "youtube"
-                src: "https://www.youtube.com/embed/5UHYbbjXDpM?si=6CMcJIE1WjeILplt"
-            description: "ci"
-            technology: "dots/ecs unity c#"
-            features: "bla bla bla"
-            storeLink: "https://github.com/xyperine/Conifer-Init"
+                type: "image"
+                src: "img/Debug media.png"
+                alt: "Screenshot"
+            description: |
+                Kill bugs, buy upgrades in the terminal, and earn points. Survive for as long as possible.
+            technology: |
+                - Unity and C#
+                - ECS
+                - URP
+                - VFX Graph
+                - Input System
+                - Agents Navigation
+            features: |
+                - Dynamic player controller
+                - Upgrades
+                - Enemies climbing walls
+                - Pick-ups
+                - Stable performance with many enemies at once
+                - Hit and kill indicators
+            storeLink: "https://xyperine.itch.io/debug"
