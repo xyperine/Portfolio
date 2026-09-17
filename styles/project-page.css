@@ -16,7 +16,18 @@ main .content {
 	display: flex;
 	flex-direction: column;
 
-	background-color: var(--background-color);
+	background:
+		linear-gradient(
+			135deg,
+			color-mix(in srgb, var(--color) 15%, transparent),
+			transparent 30%
+		),
+		linear-gradient(
+			315deg,
+			color-mix(in srgb, var(--color) 10%, transparent),
+			transparent 15%
+		),
+		var(--background-color);
 	font-family: var(--font-family);
 	font-size: 2cqmin;
 
