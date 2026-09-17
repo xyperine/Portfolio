@@ -75,9 +75,8 @@ projects:
 
         page:
             media:
-                type: "image"
-                src: "img/Reality Grid media.png"
-                alt: "Screenshot"
+                type: "youtube"
+                src: "https://www.youtube.com/embed/G-EwCYx-U2U?si=u1FLTpdM7tdrUtHK"
             description: |
                 Gradually unlock cells and upgrades and climb up the layers of simulations.
             technology: |
@@ -135,9 +134,8 @@ projects:
 
         page:
             media:
-                type: "image"
-                src: "img/Debug media.png"
-                alt: "Screenshot"
+                type: "youtube"
+                src: "https://www.youtube.com/embed/VJDCgtBSHC8?si=h7D42fKnph47Uu8q"
             description: |
                 Kill bugs, buy upgrades in the terminal, and earn points. Survive for as long as possible.
             technology: |

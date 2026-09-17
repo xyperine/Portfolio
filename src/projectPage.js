@@ -42,6 +42,8 @@ function createMedia(mediaData) {
 			return createYoutube(mediaData.src);
 		case "image":
 			return createImage(mediaData.src, mediaData.alt);
+		case "video":
+			return createVideo(mediaData.src);
 		default:
 			return null;
 	}
@@ -73,6 +75,17 @@ function createImage(src, alt) {
 	img.alt = alt;
 
 	return img;
+}
+
+function createVideo(src) {
+	const video = document.createElement("video");
+	video.src = src;
+	video.title = "Project video";
+	video.autoplay = true;
+	video.muted = false;
+	video.controls = HTMLFormControlsCollection;
+
+	return video;
 }
 
 // Dark mode
