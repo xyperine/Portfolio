@@ -19,7 +19,7 @@ if (!project) {
 // Apply project data
 document.title = `${project.name} | Arthur Mordvinov`;
 
-document.body.style.setProperty("--color", project.interactive.color);
+document.body.style.setProperty("--color", project.color);
 
 document.querySelector(".content .title").textContent = project.name;
 document.querySelector(".content .tagged-title .meta-tag").textContent =

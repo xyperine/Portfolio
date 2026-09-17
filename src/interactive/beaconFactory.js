@@ -66,7 +66,7 @@ export class BeaconFactory {
 			return this.particleSystems.get(projectData.interactive.number);
 		}
 
-		const color = new THREE.Color(projectData.interactive.color).offsetHSL(
+		const color = new THREE.Color(projectData.color).offsetHSL(
 			0,
 			0,
 			0.2,
@@ -134,7 +134,7 @@ export class BeaconFactory {
 			);
 		}
 
-		const color = new THREE.Color(projectData.interactive.color).offsetHSL(
+		const color = new THREE.Color(projectData.color).offsetHSL(
 			0,
 			0,
 			0.2,

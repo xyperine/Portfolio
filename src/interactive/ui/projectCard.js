@@ -51,7 +51,7 @@ export class ProjectCard {
 		this.learnElement.setAttribute("href", projectData.link);
 		this.element.style.setProperty(
 			"--color",
-			projectData.interactive.color,
+			projectData.color,
 		);
 
 		this.mainElement.style.pointerEvents = "none";

@@ -62,7 +62,7 @@ export class Compass {
 		const project = Projects.get(beacon.projectId);
 		const pointer = this.createPointer(
 			project.interactive.number,
-			project.interactive.color,
+			project.color,
 			beacon.position,
 		);
 		this.points.push(pointer);

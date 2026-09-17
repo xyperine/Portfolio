@@ -118,7 +118,7 @@ export class SimpleWorld extends World {
 	createProjectCardElement(projectData) {
 		const element = document.createElement("div");
 		element.classList.add("project-card");
-		element.style.setProperty("--color", projectData.interactive.color);
+		element.style.setProperty("--color", projectData.color);
 		this.projectsContainer.appendChild(element);
 
 		const content = document.createElement("div");
