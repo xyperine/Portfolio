@@ -38,6 +38,7 @@ export class App {
 
 			this.#onDarkModeChanged(theme.getDarkMode());
 		});
+		this.#onDarkModeChanged(theme.getDarkMode());
 
 		this.#modeSwitch.addEventListener("click", () => {
 			this.#settings.interactive = !this.#settings.interactive;
@@ -66,7 +67,7 @@ export class App {
 	#onDarkModeChanged(enabled) {
 		this.#darkModeSwitch.textContent = enabled ? "Dark" : "Light";
 
-		this.#world.updateColors();
+		this.#world?.updateColors();
 	}
 
 	changeWorld() {

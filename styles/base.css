@@ -35,5 +35,5 @@ p {
 }
 
 img {
-	color: var(--normal-text-color)
+	color: var(--normal-text-color);
 }

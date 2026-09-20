@@ -95,3 +95,4 @@ darkModeSwitch.addEventListener("click", (event) => {
 	theme.toggleDarkMode();
 	darkModeSwitch.textContent = theme.getDarkMode() ? "DARK" : "LIGHT";
 });
+darkModeSwitch.textContent = theme.getDarkMode() ? "DARK" : "LIGHT";
