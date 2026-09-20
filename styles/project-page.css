@@ -4,18 +4,6 @@
 @import url("./components.css");
 
 main {
-	background-color: color-mix(in srgb, var(--color) 30%, transparent);
-}
-
-main .content {
-	position: absolute;
-	width: 75%;
-	height: 100%;
-	padding: 2cqmin;
-
-	display: flex;
-	flex-direction: column;
-
 	background:
 		linear-gradient(
 			135deg,
@@ -28,6 +16,18 @@ main .content {
 			transparent 15%
 		),
 		var(--background-color);
+}
+
+main .content {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	padding: 2cqmin;
+
+	display: flex;
+	flex-direction: column;
+
+	background: none;
 	font-family: var(--font-family);
 	font-size: 2cqmin;
 
@@ -37,8 +37,8 @@ main .content {
 }
 
 .content > * {
-	width: min(60%, 800px);
-	max-width: min(60%, 800px);
+	width: min(40%, 800px);
+	max-width: min(40%, 800px);
 	margin-left: auto;
 	margin-right: auto;
 }
@@ -57,8 +57,9 @@ main .content {
 	color: var(--normal-text-color);
 }
 
-.content a {
-	position: static;
+.content #view-project {
+	position: relative;
+	top: 2cqmin;
 	align-self: center;
 	padding: 1.2cqmin;
 	margin-top: auto;
@@ -71,7 +72,7 @@ main .content {
 	transition: color 0.3s;
 }
 
-.content a:hover {
+.content #view-project:hover {
 	color: var(--color);
 }
 

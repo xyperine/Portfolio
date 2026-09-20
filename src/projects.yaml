@@ -20,7 +20,7 @@ projects:
                 The feature set is based solely on what I need to do to set up a Unity project. I made this tool to automate and standardize the setup process for my future Unity projects, saving time and resources that can be spent on more important tasks.
             technology: |
                 - Unity and C#
-                - IMGUI for editor window
+                - IMGUI
                 - GitHub Pages
                 - Doxygen
             features: |
@@ -53,10 +53,9 @@ projects:
             technology: |
                 - Unity and C#
                 - IMGUI
-                - URP
             features: |
                 - Custom background and border
-                - Can process entire folders with meshes and prefabs
+                - Process entire folders with meshes and prefabs
                 - Configure object size, icon resolution, icon name, and other parameters
                 - Realtime preview
                 - Batch export
@@ -118,6 +117,7 @@ projects:
                 - Game state persistence
                 - Upgrades
                 - Multiplatform (Standalone, Android, WebGL)
+                - Localization
                 - Automated build
             storeLink: "https://xyperine.itch.io/dots-killer"
 
