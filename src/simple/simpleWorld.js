@@ -112,7 +112,10 @@ export class SimpleWorld extends World {
 		this.resize(mainElement.clientWidth, mainElement.clientHeight);
 
 		// Diagnostics
-		this.fpsCounter = new FPSCounter();
+		this.showFps = false;
+		if (this.showFps) {
+			this.fpsCounter = new FPSCounter();
+		}
 	}
 
 	createProjectCardElement(projectData) {
@@ -172,7 +175,9 @@ export class SimpleWorld extends World {
 			this.points.position.z -= threshold * 2;
 		}
 
-		this.fpsCounter.update();
+		if (this.showFps) {
+			this.fpsCounter.update();
+		}
 
 		this.renderer.render(this.scene, this.camera);
 	}

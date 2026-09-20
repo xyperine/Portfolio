@@ -39,14 +39,13 @@ export class InteractiveWorld extends World {
 
 		ProjectCard.init(this.inputManager);
 
-		this.physicsDebug = false;
 		this.renderingDistance = 180;
-
+		
 		this.random = new Math.seedrandom();
-
+		
 		this.planetGenerator = new PlanetGenerator(this.random());
 		this.planetInfo = this.planetGenerator.generate();
-
+		
 		this.gravity = utils.seededGaussianConstrained(
 			this.random,
 			0.2,
@@ -54,15 +53,15 @@ export class InteractiveWorld extends World {
 			1,
 			1,
 		);
-
+		
 		// Scene
 		const backgroundColor =
-			utils.getCssColorAsThreeColor("--background-color");
+		utils.getCssColorAsThreeColor("--background-color");
 		this.scene = new THREE.Scene();
 		this.scene.background = backgroundColor;
 		const fog = new THREE.Fog(backgroundColor, 40, this.renderingDistance);
 		this.scene.fog = fog;
-
+		
 		// Renderer
 		this.renderer = new THREE.WebGLRenderer({
 			canvas: this.renderingCanvas,
@@ -73,10 +72,10 @@ export class InteractiveWorld extends World {
 			this.update(elapsedTime);
 		});
 		this.timer = new THREE.Timer();
-
+		
 		this.particlesRenderer = new QUARKS.BatchedParticleRenderer();
 		this.scene.add(this.particlesRenderer);
-
+		
 		// Camera
 		this.camera = new THREE.PerspectiveCamera(
 			75,
@@ -85,7 +84,7 @@ export class InteractiveWorld extends World {
 			this.renderingDistance,
 		);
 		this.scene.add(this.camera);
-
+		
 		// Events
 		this.gameElement = document.querySelector("#game");
 		this.onWindowResized = () => {
@@ -96,13 +95,13 @@ export class InteractiveWorld extends World {
 		};
 		window.addEventListener("resize", this.onWindowResized);
 		this.onWindowResized();
-
+		
 		this.mainElement = document.querySelector("main");
 		this.onMouseClickCanvas = async () => {
 			await this.input.requestPointerLock();
 		};
 		this.mainElement.addEventListener("click", this.onMouseClickCanvas);
-
+		
 		this.onPointerLockChange = () => {
 			const pointerLocked = document.pointerLockElement != null;
 			document.documentElement.classList.toggle(
@@ -114,13 +113,13 @@ export class InteractiveWorld extends World {
 			"pointerlockchange",
 			this.onPointerLockChange,
 		);
-
+		
 		this.physicsWorld = new RAPIER.World({
 			x: 0,
 			y: -9.81 * this.gravity,
 			z: 0,
 		});
-
+		
 		this.beaconFactory = new BeaconFactory(
 			this.scene,
 			this.physicsWorld,
@@ -139,10 +138,10 @@ export class InteractiveWorld extends World {
 			this.planetInfo,
 			this.random().toString(),
 		);
-
+		
 		// Make sure the terrain collider is registered.
 		this.physicsWorld.step();
-
+		
 		this.interactor = new Interactor(10, this.camera);
 		this.glider = new Glider(
 			this.camera,
@@ -157,20 +156,20 @@ export class InteractiveWorld extends World {
 			this.glider,
 			this.terrain.shaderVertexAlgorithm,
 		);
-
+		
 		this.hud = new Hud(this.glider, this.planetInfo.name, this.gravity);
 		this.compass = new Compass();
-
+		
 		for (let beacon of this.terrain.beaconPlacements) {
 			this.compass.trackBeacon(beacon);
 		}
-
+		
 		this.ambientParticles = new QUARKS.ParticleSystem({
 			duration: 10,
 			looping: true,
 			worldSpace: true,
 			prewarm: true,
-
+			
 			startLife: new QUARKS.IntervalValue(3, 6),
 			startSpeed: new QUARKS.ConstantValue(0),
 			startSize: new QUARKS.IntervalValue(0.1, 0.3),
@@ -179,7 +178,7 @@ export class InteractiveWorld extends World {
 				new THREE.Vector4(0.35, 0.35, 0.35, 1),
 				new THREE.Vector4(0.65, 0.65, 0.65, 1),
 			),
-
+			
 			emissionOverTime: new QUARKS.ConstantValue(200),
 			shape: new BoxEmitter(
 				new THREE.Vector3(
@@ -188,14 +187,14 @@ export class InteractiveWorld extends World {
 					this.renderingDistance * 2,
 				),
 			),
-
+			
 			material: new THREE.MeshBasicMaterial({
 				color: 0xffffff,
 				transparent: true,
 				fog: true,
 			}),
 			renderMode: QUARKS.RenderMode.Mesh,
-
+			
 			behaviors: [
 				new QUARKS.TurbulenceField(
 					new THREE.Vector3(100, 100, 100),
@@ -209,7 +208,7 @@ export class InteractiveWorld extends World {
 					new QUARKS.ConstantValue(0),
 					new QUARKS.ConstantValue(0.2),
 				),
-
+				
 				new QUARKS.SizeOverLife(
 					new QUARKS.PiecewiseBezier([
 						[new QUARKS.Bezier(0, 1, 1, 0), 0],
@@ -219,22 +218,26 @@ export class InteractiveWorld extends World {
 		});
 		this.scene.add(this.ambientParticles.emitter);
 		this.particlesRenderer.addSystem(this.ambientParticles);
-
+		
 		// Diagnostics
+		this.physicsDebug = false;
 		if (this.physicsDebug) {
 			this.debugPhysics();
 		}
-
-		this.fpsCounter = new FPSCounter();
+		
+		this.showFps = false;
+		if (this.showFps) {
+			this.fpsCounter = new FPSCounter();
+		}
 	}
-
+	
 	debugPhysics() {
 		let { vertices, colors } = this.physicsWorld.debugRender();
-
+		
 		const g = new THREE.BufferGeometry();
 		g.setAttribute("position", new THREE.BufferAttribute(vertices, 3));
 		g.setAttribute("color", new THREE.BufferAttribute(colors, 4));
-
+		
 		const m = new THREE.LineBasicMaterial({
 			vertexColors: true,
 		});
@@ -313,7 +316,9 @@ export class InteractiveWorld extends World {
 		this.hud.update();
 		this.compass.update(gameState);
 
-		this.fpsCounter.update();
+		if (this.showFps) {
+			this.fpsCounter.update();
+		}
 
 		this.renderer.render(this.scene, this.camera);
 	}
