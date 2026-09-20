@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import * as RAPIER from "@dimforge/rapier3d-compat";
+import * as RAPIER from "rapier";
 import { Input } from "#src/interactive/input.js";
 import { TemperatureMap } from "#src/interactive/worldGeneration/temperatureMap.js";
 import { InputManager } from "#src/interactive/inputManager.js";

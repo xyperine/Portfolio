@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import * as RAPIER from "@dimforge/rapier3d-compat";
+import * as RAPIER from "rapier";
 import * as utils from "#src/utils.js";
 import { VertexShaderAlgorithmCopy } from "#src/interactive/worldGeneration/vertexShaderAlgorithmCopy.js";
 import { Projects } from "#src/projects.js";

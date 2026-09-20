@@ -1,5 +1,5 @@
 import * as theme from "#src/theme.js";
-import RAPIER from "@dimforge/rapier3d-compat";
+import RAPIER from "rapier";
 import { InteractiveWorld } from "#src/interactive/interactiveWorld.js";
 import { SimpleWorld } from "#src/simple/simpleWorld.js";
 import { Shaders } from "#src/shaders.js";

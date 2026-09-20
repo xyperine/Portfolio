@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import * as QUARKS from "three.quarks";
-import * as RAPIER from "@dimforge/rapier3d-compat";
+import * as RAPIER from "rapier";
 import { BeaconSite } from "#src/interactive/beaconSite.js";
 import { Beacon } from "#src/interactive/beacon.js";
 import { VertexShaderAlgorithmCopy } from "#src/interactive/worldGeneration/vertexShaderAlgorithmCopy.js";
