@@ -43,7 +43,7 @@ export class Terrain {
 			this.chunkSize.d,
 		);
 		const heightLimit = utils.seededFloat(this.random, 15, 40);
-		const freq = utils.seededFloat(this.random, 0.001, 0.01);
+		const freq = utils.seededFloat(this.random, 0.002, 0.006);
 		const octaves = utils.seededInt(this.random, 6, 8);
 		const lacunarity = utils.seededFloat(this.random, 1.9, 2.1);
 		const persistence = utils.seededFloat(this.random, 0.4, 0.5);
