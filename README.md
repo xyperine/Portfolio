@@ -3,7 +3,7 @@
 ## Table of Contents 📋
 * [About ℹ️](#about-ℹ️)
 * [License 📜](#license-)
-* [Contributing 🛠️](#contributing-)
+* [Contributing 🛠️](#contributing-%EF%B8%8F)
 * [Support 💝](#support-)
 
 ## About ℹ️
