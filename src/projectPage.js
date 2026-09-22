@@ -6,7 +6,7 @@ const params = new URLSearchParams(window.location.search);
 const projectId = params.get("id");
 
 // Get project data
-const response = await fetch("src/projects.yaml");
+const response = await fetch("data/projects.yaml");
 const text = await response.text();
 const projects = yaml.parse(text).projects;
 

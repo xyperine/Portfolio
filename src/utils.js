@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import * as SEEDRANDOM from "seedrandom";
+import seedrandom from "seedrandom";
 import * as yaml from "yaml";
 
 export async function loadAsText(url) {
@@ -100,7 +100,7 @@ export function metresToFeet(m) {
 }
 
 export function createSeededRandom(seed) {
-	return new Math.seedrandom(seed);
+	return new seedrandom(seed);
 }
 
 export function seededRandomElement(random, array) {

@@ -224,23 +224,16 @@ html:not(.interactive) #game-ui {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-
-	clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-
-	/* --color is added through code. */
-	background-color: var(--color);
 }
 
 .compass-pointer-inner {
 	z-index: 1;
 
 	position: absolute;
-	inset: 15%;
+	width: 100%;
+	height: 100%;
 
-	clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-
-	/* --color is added through code. */
-	background-color: color-mix(in hsl, var(--color), black 30%);
+	--inner-color: color-mix(in hsl, var(--color), black 30%);
 }
 
 .compass-pointer-label {
@@ -340,7 +333,7 @@ html:not(.interactive) #game-ui {
 			transparent 50%
 		),
 		color-mix(in srgb, var(--background-color) 90%, transparent);
-	border: 0.1rem dashed var(--color);
+	outline: 0.1rem dashed var(--color);
 	font-family: var(--game-ui-font-family);
 	color: var(--normal-text-color);
 

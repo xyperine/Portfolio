@@ -1,8 +1,9 @@
 import * as THREE from "three";
+import * as utils from "#src/utils.js";
 import { Projects } from "#src/projects.js";
 
 export class Compass {
-	constructor() {
+	async init() {
 		this.compassElement = document.querySelector("#compass");
 		this.stripElement = document.querySelector("#compass-strip");
 
@@ -56,6 +57,8 @@ export class Compass {
 		}
 
 		this.points = [];
+
+		this.pointerSvg = await utils.loadAsText("img/Compass Pointer.svg");
 	}
 
 	trackBeacon(beacon) {
@@ -78,9 +81,14 @@ export class Compass {
 		outer.classList.add("compass-pointer-outer");
 		element.appendChild(outer);
 
-		const inner = document.createElement("div");
+		const container = document.createElement("div");
+		container.innerHTML = this.pointerSvg;
+
+		const inner = container.firstElementChild;
 		inner.classList.add("compass-pointer-inner");
 		outer.appendChild(inner);
+
+		console.log(inner);
 
 		const label = document.createElement("div");
 		label.classList.add("compass-pointer-label");

@@ -1,11 +1,11 @@
 import * as utils from "#src/utils.js";
-import * as SEEDRANDOM from "seedrandom";
+import seedrandom from "seedrandom";
 import { SimplexNoise } from "three/addons/math/SimplexNoise.js";
 import { Temperature } from "#src/interactive/worldGeneration/temperature.js";
 
 export class TemperatureMap {
 	constructor(planetInfo, seed) {
-		this.random = new Math.seedrandom(seed);
+		this.random = new seedrandom(seed);
 		this.simplex = new SimplexNoise(new R(seed));
 
 		const equilibriumKelvin = this.calculateEquilibrium(planetInfo);
@@ -57,6 +57,6 @@ export class TemperatureMap {
 
 class R {
 	constructor(seed) {
-		this.random = new Math.seedrandom(seed);
+		this.random = new seedrandom(seed);
 	}
 }

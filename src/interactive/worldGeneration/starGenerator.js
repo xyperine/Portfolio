@@ -1,10 +1,10 @@
 import * as utils from "#src/utils.js";
-import * as SEEDRANDOM from "seedrandom";
+import seedrandom from "seedrandom";
 import { Star } from "#src/interactive/worldGeneration/star.js";
 
 export class StarGenerator {
 	constructor(seed) {
-		this.random = new Math.seedrandom(seed);
+		this.random = new seedrandom(seed);
 	}
 
 	generate() {

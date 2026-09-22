@@ -1,10 +1,10 @@
 import * as utils from "#src/utils.js";
-import * as SEEDRANDOM from "seedrandom";
+import seedrandom from "seedrandom";
 import { PlanetName } from "#src/interactive/worldGeneration/planetName.js";
 
 export class PlanetNameGenerator {
 	constructor(seed) {
-		this.random = new Math.seedrandom(seed);
+		this.random = new seedrandom(seed);
 	}
 
 	generate(index) {

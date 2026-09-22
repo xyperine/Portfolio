@@ -5,7 +5,7 @@ import * as utils from "#src/utils.js";
  */
 export class Projects {
 	static async init() {
-		const projectsFilePath = "src/projects.yaml";
+		const projectsFilePath = "data/projects.yaml";
 		const data = await utils.loadYaml(projectsFilePath);
 
 		this.map = new Map(Object.entries(data.projects));

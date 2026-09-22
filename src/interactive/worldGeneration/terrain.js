@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import * as RAPIER from "rapier";
-import * as SEEDRANDOM from "seedrandom";
+import seedrandom from "seedrandom";
 import * as utils from "#src/utils.js";
 import { VertexShaderAlgorithmCopy } from "#src/interactive/worldGeneration/vertexShaderAlgorithmCopy.js";
 import { TerrainChunk } from "#src/interactive/worldGeneration/terrainChunk.js";
@@ -25,7 +25,7 @@ export class Terrain {
 		this.scene = scene;
 		this.physicsWorld = physicsWorld;
 		this.beaconFactory = beaconFactory;
-		this.random = new Math.seedrandom(seed);
+		this.random = new seedrandom(seed);
 
 		this.#vertexShader = Shaders.terrainVert;
 		this.#fragmentShader = Shaders.terrainFrag;

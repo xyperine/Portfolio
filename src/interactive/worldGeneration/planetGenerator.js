@@ -1,11 +1,12 @@
 import * as utils from "#src/utils.js";
+import seedrandom from "seedrandom";
 import { PlanetNameGenerator } from "#src/interactive/worldGeneration/planetNameGenerator.js";
 import { PlanetInfo } from "#src/interactive/worldGeneration/planetInfo.js";
 import { StarGenerator } from "#src/interactive/worldGeneration/starGenerator.js";
 
 export class PlanetGenerator {
 	constructor(seed) {
-		this.random = new Math.seedrandom(seed);
+		this.random = new seedrandom(seed);
 		this.nameGenerator = new PlanetNameGenerator(this.random().toString());
 		this.starGenerator = new StarGenerator(this.random().toString());
 	}

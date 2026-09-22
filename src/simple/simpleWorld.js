@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import * as utils from "#src/utils.js";
-import * as SEEDRANDOM from "seedrandom";
+import seedrandom from "seedrandom";
 import { World } from "#src/world.js";
 import { FPSCounter } from "#src/fpsCounter.js";
 import { Shaders } from "#src/shaders.js";
@@ -16,7 +16,7 @@ export class SimpleWorld extends World {
 	async init() {
 		this.terrainSize = new THREE.Vector2(600, 400);
 
-		this.random = new Math.seedrandom();
+		this.random = new seedrandom();
 
 		// Scene
 		const backgroundColor =
