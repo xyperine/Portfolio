@@ -5,7 +5,7 @@ const int EProjectID_CONIFER_INIT = 0;
 const int EProjectID_ICONS_CREATOR = 1;
 const int EProjectID_REALITY_GRID = 2;
 const int EProjectID_DOTS_KILLER = 3;
-const int EProjectID_GENESIS_CONSTRUCTA = 4;
+const int EProjectID_DEBUG = 4;
 
 uniform float uTimeSeconds;
 uniform vec3 uPrimaryColor;
@@ -125,7 +125,7 @@ SDOutput mapScene(vec3 p) {
             return quaternionJuliaScene(p);
         case EProjectID_DOTS_KILLER:
             return mandelboxScene(p);
-        case EProjectID_GENESIS_CONSTRUCTA:
+        case EProjectID_DEBUG:
             return twentyFourCellScene(p);
         default:
             return SDOutput(0.0, 0.0);
@@ -194,7 +194,7 @@ vec3 colorScene(MarchData data) {
             vec3 col = palette(trap);
             return col;
         }
-        case EProjectID_GENESIS_CONSTRUCTA: {
+        case EProjectID_DEBUG: {
             vec3 col = palette(float(data.iterations) * 1e-2);
             return col;
         }
