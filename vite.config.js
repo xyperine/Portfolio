@@ -2,7 +2,7 @@ import { fileURLToPath, URL } from "node:url";
 
 /** @type {import('vite').UserConfig} */
 export default {
-	base: "./",
+	base: "/Portfolio/",
 	resolve: {
 		alias: {
 			"#src": fileURLToPath(new URL("./src", import.meta.url)),
