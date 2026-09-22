@@ -58,7 +58,8 @@ export class Compass {
 
 		this.points = [];
 
-		this.pointerSvg = await utils.loadAsText("img/Compass Pointer.svg");
+		const pointerSvgPath = "img/compass-pointer.svg";
+		this.pointerSvg = await utils.loadAsText(pointerSvgPath);
 	}
 
 	trackBeacon(beacon) {
