@@ -1,155 +1,155 @@
 projects:
-    conifer_init:
-        name: "Conifer Init"
-        metaTag: "Tool"
-        description: "Unity plugin for automating project setup."
-        coverImage: "img/conifer-init-cover.png"
-        link: "project-page.html?id=conifer_init"
-        color: "hsl(105, 70%, 50%)"
+  conifer_init:
+    name: "Conifer Init"
+    metaTag: "Tool"
+    description: "Unity plugin for automating project setup."
+    coverImage: "img/conifer-init-cover.png"
+    link: "project-page.html?id=conifer_init"
+    color: "hsl(105, 70%, 50%)"
 
-        interactive:
-            number: 1
+    interactive:
+      number: 1
 
-        page:
-            media:
-                type: "youtube"
-                src: https://www.youtube.com/embed/5E8Atag36eY?si=FqS3YL0YYeqyxfOd
-            description: |
-                Conifer Init automates some common Unity project setup tasks such as folder structure creation, package installation, asset import, and project configuration.
+    page:
+      media:
+        type: "youtube"
+        src: https://www.youtube.com/embed/5E8Atag36eY?si=FqS3YL0YYeqyxfOd
+      description: |
+        Conifer Init automates some common Unity project setup tasks such as folder structure creation, package installation, asset import, and project configuration.
 
-                The feature set is based solely on what I need to do to set up a Unity project. I made this tool to automate and standardize the setup process for my future Unity projects, saving time and resources that can be spent on more important tasks.
-            technology: |
-                - Unity and C#
-                - IMGUI
-                - GitHub Pages
-                - Doxygen
-            features: |
-                - Settings Profiles - tool configuration profiles reusable across many projects.
-                - Asset database operations
-                - Package management operations
-                - Automated testing with GitHub Pages
-                - Automated documentation generation with Doxygen and GitHub Pages
-            storeLink: "https://github.com/xyperine/Conifer-Init"
+        The feature set is based solely on what I need to do to set up a Unity project. I made this tool to automate and standardize the setup process for my future Unity projects, saving time and resources that can be spent on more important tasks.
+      technology: |
+        - Unity and C#
+        - IMGUI
+        - GitHub Pages
+        - Doxygen
+      features: |
+        - Settings Profiles - tool configuration profiles reusable across many projects.
+        - Asset database operations
+        - Package management operations
+        - Automated testing with GitHub Pages
+        - Automated documentation generation with Doxygen and GitHub Pages
+      storeLink: "https://github.com/xyperine/Conifer-Init"
 
-    icons_creator:
-        name: "Icons Creator"
-        metaTag: "Tool"
-        description: "Tool for creating icons of 3D objects in Unity."
-        coverImage: "img/icons-creator-cover.png"
-        link: "project-page.html?id=icons_creator"
-        color: "hsl(180, 70%, 50%)"
+  icons_creator:
+    name: "Icons Creator"
+    metaTag: "Tool"
+    description: "Tool for creating icons of 3D objects in Unity."
+    coverImage: "img/icons-creator-cover.png"
+    link: "project-page.html?id=icons_creator"
+    color: "hsl(180, 70%, 50%)"
 
-        interactive:
-            number: 2
+    interactive:
+      number: 2
 
-        page:
-            media:
-                type: "youtube"
-                src: "https://www.youtube.com/embed/5UHYbbjXDpM?si=6CMcJIE1WjeILplt"
-            description: |
-                This tool can create icons of any 3D object imported in Unity: prefabs, models, and objects on the opened scenes. Also you can make icons out of entire folders containing 3D objects.
+    page:
+      media:
+        type: "youtube"
+        src: "https://www.youtube.com/embed/5UHYbbjXDpM?si=6CMcJIE1WjeILplt"
+      description: |
+        This tool can create icons of any 3D object imported in Unity: prefabs, models, and objects on the opened scenes. Also you can make icons out of entire folders containing 3D objects.
 
-                I did this tool to learn more about tooling and editor coding. It is based on a tool that I originally created for a game I was working on, but it was quite limited and required a lot of manual work to do to create icons. So I took the initial version of the tool, improved it, removed any external dependencies, and decided to make it public.
-            technology: |
-                - Unity and C#
-                - IMGUI
-            features: |
-                - Custom background and border
-                - Process entire folders with meshes and prefabs
-                - Configure object size, icon resolution, icon name, and other parameters
-                - Realtime preview
-                - Batch export
-            storeLink: "https://github.com/xyperine/Icons-Creator"
+        I did this tool to learn more about tooling and editor coding. It is based on a tool that I originally created for a game I was working on, but it was quite limited and required a lot of manual work to do to create icons. So I took the initial version of the tool, improved it, removed any external dependencies, and decided to make it public.
+      technology: |
+        - Unity and C#
+        - IMGUI
+      features: |
+        - Custom background and border
+        - Process entire folders with meshes and prefabs
+        - Configure object size, icon resolution, icon name, and other parameters
+        - Realtime preview
+        - Batch export
+      storeLink: "https://github.com/xyperine/Icons-Creator"
 
-    reality_grid:
-        name: "Reality Grid"
-        metaTag: "Game"
-        description: "Incremental game about climbing up layers of simulations."
-        coverImage: "img/reality-grid-cover.jpg"
-        link: "project-page.html?id=reality_grid"
-        color: "hsl(30, 70%, 50%)"
+  reality_grid:
+    name: "Reality Grid"
+    metaTag: "Game"
+    description: "Incremental game about climbing up layers of simulations."
+    coverImage: "img/reality-grid-cover.jpg"
+    link: "project-page.html?id=reality_grid"
+    color: "hsl(30, 70%, 50%)"
 
-        interactive:
-            number: 3
+    interactive:
+      number: 3
 
-        page:
-            media:
-                type: "youtube"
-                src: "https://www.youtube.com/embed/G-EwCYx-U2U?si=u1FLTpdM7tdrUtHK"
-            description: |
-                Gradually unlock cells and upgrades and climb up the layers of simulations.
-            technology: |
-                - Unity and C#
-                - ShaderGraph
-            features: |
-                - Game state persistence
-                - Achievements
-                - Prestige mechanic
-                - Upgrades
-            storeLink: "https://xyperine.itch.io/reality-grid"
+    page:
+      media:
+        type: "youtube"
+        src: "https://www.youtube.com/embed/G-EwCYx-U2U?si=u1FLTpdM7tdrUtHK"
+      description: |
+        Gradually unlock cells and upgrades and climb up the layers of simulations.
+      technology: |
+        - Unity and C#
+        - ShaderGraph
+      features: |
+        - Game state persistence
+        - Achievements
+        - Prestige mechanic
+        - Upgrades
+      storeLink: "https://xyperine.itch.io/reality-grid"
 
-    dots_killer:
-        name: "Dots Killer"
-        metaTag: "Game"
-        description: "PC/Web/Android incremental game."
-        coverImage: "img/dots-killer-cover.png"
-        link: "project-page.html?id=dots_killer"
-        color: "hsl(330, 70%, 50%)"
+  dots_killer:
+    name: "Dots Killer"
+    metaTag: "Game"
+    description: "PC/Web/Android incremental game."
+    coverImage: "img/dots-killer-cover.png"
+    link: "project-page.html?id=dots_killer"
+    color: "hsl(330, 70%, 50%)"
 
-        interactive:
-            number: 4
+    interactive:
+      number: 4
 
-        page:
-            media:
-                type: "image"
-                src: "img/dots-killer-media.png"
-                alt: "Screenshot"
-            description: |
-                Kill the dots and buy upgrades to boost your progression and reach the goal.
-            technology: |
-                - Unity and C#
-                - URP
-                - Zenject
-                - Super Unity Build
-                - Unity Localization
-                - Input System
-            features: |
-                - Game state persistence
-                - Upgrades
-                - Multiplatform (Standalone, Android, WebGL)
-                - Localization
-                - Automated build
-            storeLink: "https://xyperine.itch.io/dots-killer"
+    page:
+      media:
+        type: "image"
+        src: "img/dots-killer-media.png"
+        alt: "Screenshot"
+      description: |
+        Kill the dots and buy upgrades to boost your progression and reach the goal.
+      technology: |
+        - Unity and C#
+        - URP
+        - Zenject
+        - Super Unity Build
+        - Unity Localization
+        - Input System
+      features: |
+        - Game state persistence
+        - Upgrades
+        - Multiplatform (Standalone, Android, WebGL)
+        - Localization
+        - Automated build
+      storeLink: "https://xyperine.itch.io/dots-killer"
 
-    debug:
-        name: "DEBUG"
-        metaTag: "Game"
-        description: "Defend yourself against swarms of bugs!"
-        coverImage: "img/debug-cover.jpg"
-        link: "project-page.html?id=debug"
-        color: "hsl(225, 70%, 50%)"
+  debug:
+    name: "DEBUG"
+    metaTag: "Game"
+    description: "Defend yourself against swarms of bugs!"
+    coverImage: "img/debug-cover.jpg"
+    link: "project-page.html?id=debug"
+    color: "hsl(225, 70%, 50%)"
 
-        interactive:
-            number: 5
+    interactive:
+      number: 5
 
-        page:
-            media:
-                type: "youtube"
-                src: "https://www.youtube.com/embed/VJDCgtBSHC8?si=h7D42fKnph47Uu8q"
-            description: |
-                Kill bugs, buy upgrades in the terminal, and earn points. Survive for as long as possible.
-            technology: |
-                - Unity and C#
-                - ECS
-                - URP
-                - VFX Graph
-                - Input System
-                - Agents Navigation
-            features: |
-                - Dynamic player controller
-                - Upgrades
-                - Enemies climbing walls
-                - Pick-ups
-                - Stable performance with many enemies at once
-                - Hit and kill indicators
-            storeLink: "https://xyperine.itch.io/debug"
+    page:
+      media:
+        type: "youtube"
+        src: "https://www.youtube.com/embed/VJDCgtBSHC8?si=h7D42fKnph47Uu8q"
+      description: |
+        Kill bugs, buy upgrades in the terminal, and earn points. Survive for as long as possible.
+      technology: |
+        - Unity and C#
+        - ECS
+        - URP
+        - VFX Graph
+        - Input System
+        - Agents Navigation
+      features: |
+        - Dynamic player controller
+        - Upgrades
+        - Enemies climbing walls
+        - Pick-ups
+        - Stable performance with many enemies at once
+        - Hit and kill indicators
+      storeLink: "https://xyperine.itch.io/debug"

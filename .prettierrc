@@ -2,5 +2,14 @@
 	"tabWidth": 4,
 	"useTabs": true,
 	"bracketSameLine": false,
-	"htmlWhitespaceSensitivity": "ignore"
+	"htmlWhitespaceSensitivity": "ignore",
+
+	"overrides": [
+		{
+			"files": "*.yaml",
+			"options": {
+				"tabWidth": 2
+			}
+		}
+	]
 }
